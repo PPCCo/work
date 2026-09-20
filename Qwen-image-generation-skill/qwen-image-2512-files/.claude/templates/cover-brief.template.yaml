@@ -1,0 +1,78 @@
+# Cover brief - one per book. Everything the art, typography and review steps
+# need, decided once. Copy to projects/<id>/visuals/cover/cover-brief.yaml.
+schema: cover-brief/1
+
+project:
+  id: ""
+  working_title: ""
+  subtitle: ""
+  series: ""            # series id, or empty for a standalone
+  series_position: null
+  audience: ""          # early-reader-6-8 | middle-grade-9-12 | teen-13-17 | adult-general
+  book_type: ""         # coloring-book | puzzle-book | activity-book | workbook |
+                        # productivity-journal | illustrated-nonfiction | nonfiction-general
+  author_name: ""
+  imprint: ""
+
+physical:
+  trim: ""              # 8.5x11, 6x9, ...
+  pages: 0              # FINAL page count; provisional counts produce provisional covers
+  paper: white          # white | cream | color-standard
+  binding: paperback    # paperback | hardcover
+  page_count_is_final: false
+
+channels:               # which deliverables this book needs
+  - kdp-print
+  - kdp-ebook
+  # - apple-books
+  # - etsy
+  # - ebay
+  # - audiobook
+
+art_direction:
+  pack: ""              # from .claude/assets/cover_style_packs.json
+  palette: []           # hex codes; inherit from the series if there is one
+  type_zone: top-third  # top-third | top-half | bottom-third | center-band
+  hero_subject: ""
+  hero_action: ""
+  setting: ""
+  back_subject: ""      # low contrast; leave empty to derive from the setting
+  spine_treatment: ""   # "carry background colour" unless the spine is wide
+  locked_by_series: false
+
+concepts:               # three, decided before any generation
+  - name: ""
+    idea: ""
+    why_it_fits: ""
+    risk: ""
+
+typography:
+  title_font: ""
+  body_font: ""
+  title_font_licence: ""
+  body_font_licence: ""
+  align: center
+
+copy:
+  back_headline: ""
+  blurb: []
+  bullets: []
+  publisher_line: ""
+  keywords: []
+  categories: []
+
+claims_to_verify:       # every number that appears on the cover
+  - claim: ""
+    source_in_interior: ""
+
+provenance:
+  model: "Qwen-Image-2512 (Q8_0)"
+  variant: ""           # full | lightning
+  upscaler: ""
+  seeds: []
+  ai_disclosure_prepared: false
+
+approvals:
+  art_director: ""
+  reviewer: ""
+  human_gate: ""

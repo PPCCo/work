@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "cover-spec",
+  "description": "Output of cover_spec.py. The single source of cover geometry for a book. Every downstream step reads it rather than recalculating.",
+  "type": "object",
+  "required": ["schema", "input", "spine", "wrap", "zones", "ebook", "warnings"],
+  "properties": {
+    "schema": {"const": "cover-spec/1"},
+    "title": {"type": ["string", "null"]},
+    "audience": {"type": ["string", "null"],
+      "enum": ["early-reader-6-8", "middle-grade-9-12", "teen-13-17", "adult-general", null]},
+    "book_type": {"type": ["string", "null"]},
+    "input": {
+      "type": "object",
+      "required": ["trim", "pages", "paper", "binding", "dpi"],
+      "properties": {
+        "trim": {"type": "string"},
+        "trim_w_in": {"type": "number"},
+        "trim_h_in": {"type": "number"},
+        "pages": {"type": "integer", "minimum": 1},
+        "paper": {"enum": ["white", "cream", "color-standard", "color-premium"]},
+        "binding": {"enum": ["paperback", "hardcover"]},
+        "dpi": {"type": "integer", "minimum": 300},
+        "paper_thickness_per_page": {"type": "number"},
+        "cover_thickness_allowance": {"type": "number"}
+      }
+    },
+    "spine": {
+      "type": "object",
+      "required": ["width_in", "width_px", "text_allowed"],
+      "properties": {
+        "width_in": {"type": "number"},
+        "width_px": {"type": "integer"},
+        "text_allowed": {"type": "boolean"},
+        "text_clearance_in": {"type": "number"}
+      }
+    },
+    "wrap": {
+      "type": "object",
+      "required": ["total_w_in", "total_h_in", "total_w_px", "total_h_px", "bleed_in", "safe_margin_in"],
+      "properties": {
+        "total_w_in": {"type": "number"}, "total_h_in": {"type": "number"},
+        "total_w_px": {"type": "integer"}, "total_h_px": {"type": "integer"},
+        "bleed_in": {"type": "number"}, "safe_margin_in": {"type": "number"},
+        "hardcover_wrap_in": {"type": "number"}, "hardcover_hinge_in": {"type": "number"}
+      }
+    },
+    "zones": {
+      "type": "object",
+      "required": ["front", "back", "spine", "front_safe", "back_safe", "barcode"],
+      "additionalProperties": {"$ref": "#/definitions/rect"}
+    },
+    "ebook": {
+      "type": "object",
+      "required": ["w_px", "h_px"],
+      "properties": {"w_px": {"type": "integer"}, "h_px": {"type": "integer"},
+                     "ratio": {"type": "number"}, "color": {"type": "string"}}
+    },
+    "art_targets": {"type": "object"},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "verify": {"type": "string"}
+  },
+  "definitions": {
+    "rect": {
+      "type": "object",
+      "required": ["x_in", "y_in", "w_in", "h_in", "x_px", "y_px", "w_px", "h_px"],
+      "properties": {
+        "x_in": {"type": "number"}, "y_in": {"type": "number"},
+        "w_in": {"type": "number"}, "h_in": {"type": "number"},
+        "x_px": {"type": "integer"}, "y_px": {"type": "integer"},
+        "w_px": {"type": "integer"}, "h_px": {"type": "integer"}
+      }
+    }
+  }
+}

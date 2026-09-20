@@ -1,0 +1,133 @@
+{
+  "_comment": "Print and channel constants for cover production. VERIFY BEFORE EACH RELEASE: retailer specs change. The authoritative check for any KDP print cover is the template KDP generates for your exact trim size, page count and paper type - these numbers exist so a cover can be designed before that template is pulled, not so the template can be skipped.",
+  "verified_against_public_docs": "2026-09",
+  "units": "inches unless stated",
+
+  "paper_thickness_per_page": {
+    "white": 0.002252,
+    "cream": 0.0025,
+    "color-standard": 0.002347,
+    "color-premium": 0.002347
+  },
+
+  "binding": {
+    "paperback": {
+      "bleed": 0.125,
+      "safe_margin": 0.25,
+      "cover_thickness_allowance": 0.0,
+      "cover_thickness_allowance_alt": 0.06,
+      "min_pages": 24,
+      "min_pages_for_spine_text": 79,
+      "spine_text_clearance": 0.0625,
+      "_note": "Public sources disagree on whether KDP paperback spine adds a ~0.06in cover-stock allowance. Default is 0.0 (page count x paper thickness). If KDP's generated template is wider than this calculation, rerun with --cover-thickness 0.06 and re-export."
+    },
+    "hardcover": {
+      "bleed": 0.125,
+      "safe_margin": 0.25,
+      "cover_thickness_allowance": 0.125,
+      "wrap": 0.625,
+      "hinge": 0.375,
+      "spine_clearance": 0.625,
+      "min_pages": 75,
+      "min_pages_for_spine_text": 79
+    }
+  },
+
+  "trim_sizes": {
+    "5x8": [5.0, 8.0],
+    "5.25x8": [5.25, 8.0],
+    "5.5x8.5": [5.5, 8.5],
+    "6x9": [6.0, 9.0],
+    "7x10": [7.0, 10.0],
+    "7.5x9.25": [7.5, 9.25],
+    "8x10": [8.0, 10.0],
+    "8.5x8.5": [8.5, 8.5],
+    "8.5x11": [8.5, 11.0]
+  },
+
+  "trim_recommendations": {
+    "coloring-book": "8.5x11",
+    "puzzle-book": "8.5x11",
+    "activity-book": "8.5x11",
+    "workbook": "8.5x11",
+    "productivity-journal": "6x9",
+    "illustrated-nonfiction": "8x10",
+    "picture-book": "8.5x8.5",
+    "nonfiction-general": "6x9",
+    "middle-grade-nonfiction": "6x9",
+    "teen-nonfiction": "5.5x8.5"
+  },
+
+  "barcode_zone": {
+    "width": 2.0,
+    "height": 1.2,
+    "margin_from_trim": 0.25,
+    "corner": "bottom-right-of-back-cover",
+    "rule": "Fill with a solid light colour (white, cream or light grey). No artwork, no text, no gradient, no dark background."
+  },
+
+  "print_file": {
+    "dpi": 300,
+    "max_dpi": 600,
+    "formats": ["pdf", "png", "jpg"],
+    "preferred_format": "pdf",
+    "color_profile_preferred": "CMYK US Web Coated (SWOP) v2",
+    "color_profile_accepted": "RGB",
+    "max_file_mb": 650,
+    "fonts": "embedded, or text converted to outlines"
+  },
+
+  "channels": {
+    "kdp-ebook": {
+      "label": "Amazon KDP / Kindle ebook cover",
+      "pixels": [1600, 2560],
+      "ratio": 1.6,
+      "min_long_edge_px": 1000,
+      "formats": ["jpg", "tiff"],
+      "color": "sRGB",
+      "max_file_mb": 50,
+      "notes": "Front cover only. No spine, no back, no bleed. First contact with the reader is a thumbnail roughly 80-160px wide in search results."
+    },
+    "kdp-print": {
+      "label": "Amazon KDP paperback / hardcover wrap",
+      "computed": true,
+      "formats": ["pdf", "png"],
+      "color": "CMYK preferred, RGB accepted",
+      "notes": "Single full-wrap file: back cover, spine, front cover, left to right, with bleed on all four outer edges."
+    },
+    "apple-books": {
+      "label": "Apple Books marketing image",
+      "min_short_edge_px": 1400,
+      "recommended_pixels": [1600, 2560],
+      "formats": ["jpg", "png"],
+      "color": "RGB",
+      "notes": "Never upscale a smaller image to reach the minimum; blurry or pixelated art is rejected. A separate in-book cover image is also needed unless the tool generates one."
+    },
+    "ebay": {
+      "label": "eBay listing image",
+      "recommended_pixels": [1600, 1600],
+      "min_long_edge_px": 500,
+      "formats": ["jpg", "png"],
+      "color": "sRGB",
+      "notes": "Square-ish gallery images crop better. For a physical book, photograph or mock up the printed product; for a digital download, show the cover plus a contents preview."
+    },
+    "etsy": {
+      "label": "Etsy listing image",
+      "recommended_pixels": [2000, 2000],
+      "ratio": "1:1 primary, 4:3 accepted",
+      "formats": ["jpg", "png"],
+      "color": "sRGB",
+      "notes": "Etsy buyers are shopping for printables. Listing image 1 is the cover; images 2-10 should show interior pages, what is included, and the print size."
+    },
+    "audiobook": {
+      "label": "Audiobook cover",
+      "pixels": [3000, 3000],
+      "ratio": "1:1",
+      "formats": ["jpg"],
+      "color": "RGB",
+      "notes": "Square. Never crop the ebook cover to make this - it needs its own composition."
+    }
+  },
+
+  "thumbnail_test_widths_px": [80, 120, 240]
+}

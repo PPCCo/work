@@ -1,0 +1,51 @@
+{
+  "_comment": "A brief describes one consistent SET of images. Everything shared by the set lives at the top; only what changes per image goes in 'images'. Keeping it this way is what stops page 7 from looking like a different book. 'variant' is 'full' or 'lightning' (Qwen-Image-2512's two speed tiers) - lightning here since this is a fast flat-vector pack; the negative prompt is unused at this tier.",
+  "pack": "chunky_vector",
+  "age": "5-7",
+  "aspect": "square",
+  "variant": "lightning",
+  "character_sheet": "a small round hedgehog named Pip with a cream face, rust-brown spines, round black eyes and a tiny green scarf",
+  "palette": [
+    "#F4A259",
+    "#5B8E7D",
+    "#F25C54",
+    "#3D405B",
+    "#F6F1E2"
+  ],
+  "images": [
+    {
+      "id": "01-wakes-up",
+      "subject": "a small round hedgehog",
+      "action": "stretching after a nap",
+      "expression": "sleepy and content, eyes half closed",
+      "setting": "a cosy burrow doorway at sunrise",
+      "props": [
+        "a striped blanket",
+        "an acorn cup"
+      ],
+      "candidates": 4
+    },
+    {
+      "id": "02-finds-mushroom",
+      "subject": "a small round hedgehog",
+      "action": "peering up at a tall spotted mushroom",
+      "expression": "curious, eyebrows raised",
+      "setting": "a mossy forest floor",
+      "props": [
+        "two ferns"
+      ],
+      "candidates": 4
+    },
+    {
+      "id": "03-shares-lunch",
+      "subject": "a small round hedgehog and a bluebird",
+      "action": "sharing a handful of berries",
+      "expression": "both smiling at each other",
+      "setting": "a flat tree stump table",
+      "props": [
+        "a berry basket"
+      ],
+      "candidates": 4
+    }
+  ]
+}

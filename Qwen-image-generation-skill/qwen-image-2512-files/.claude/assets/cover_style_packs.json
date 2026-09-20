@@ -1,0 +1,294 @@
+{
+  "_comment": "Cover art direction packs. These extend (and override) the interior packs in the qwen-kids-art skill's assets/style_packs.json. A cover is not an interior illustration: it has one hero subject, a silhouette that survives an 80px thumbnail, and deliberate empty space where type will be set. The signature is pasted verbatim so every book in a series matches. 'negative' is a starter negative-prompt list per pack - it only does anything on the 'full' runtime tier (real CFG); Qwen-Image's negative channel is inert at 'lightning' (CFG forced to 1.0). This file previously targeted FLUX.2 [klein], which had no working negative prompt at all.",
+  "version": 2,
+  "audience_bands": {
+    "early-reader-6-8": {
+      "label": "early reader",
+      "max_subjects": 2,
+      "max_props": 3,
+      "detail_phrase": "simple bold shapes with a few playful details and generous clear space",
+      "line_weight": "thick uniform outlines",
+      "energy": "high, bright, immediately joyful",
+      "buyer": "a parent or grandparent scanning a grid of thumbnails on a phone",
+      "default_pack": "kids_activity_bold"
+    },
+    "middle-grade-9-12": {
+      "label": "middle grade",
+      "max_subjects": 3,
+      "max_props": 4,
+      "detail_phrase": "clear shapes with richer decorative detail and a sense of adventure",
+      "line_weight": "medium-weight clean outlines",
+      "energy": "adventurous and slightly aspirational, never babyish",
+      "buyer": "a parent buying for a child who insists on choosing themselves",
+      "default_pack": "middle_grade_adventure"
+    },
+    "teen-13-17": {
+      "label": "teen",
+      "max_subjects": 2,
+      "max_props": 3,
+      "detail_phrase": "confident graphic composition with strong negative space",
+      "line_weight": "crisp edges",
+      "energy": "cool, designed, closer to adult non-fiction than to children's art",
+      "buyer": "the teen themselves, or a parent who wants the teen to actually open it",
+      "default_pack": "teen_graphic_bold"
+    },
+    "adult-general": {
+      "label": "adult",
+      "max_subjects": 2,
+      "max_props": 3,
+      "detail_phrase": "restrained composition with a single clear focal idea",
+      "line_weight": "clean precise edges",
+      "energy": "calm, credible, premium",
+      "buyer": "a browser deciding in under two seconds whether this looks professionally published",
+      "default_pack": "adult_nonfiction_minimal"
+    }
+  },
+  "packs": {
+    "kids_activity_bold": {
+      "description": "Coloring, puzzle and activity book covers for 6-8. Loud, flat, cheerful.",
+      "audiences": [
+        "early-reader-6-8"
+      ],
+      "signature": "bold flat vector cover illustration, thick even outlines, simple geometric shapes, flat solid fills of single colours, bright high-contrast children's activity book style",
+      "palette": [
+        "#FFC93C",
+        "#2EC4B6",
+        "#FF5964",
+        "#1B2A41",
+        "#FFF8E7"
+      ],
+      "light": "flat even lighting, shapes evenly lit",
+      "composition": "one large hero subject filling the lower two thirds, facing the viewer, whole subject inside the frame",
+      "background": "a flat bright background colour with two or three large simple shapes",
+      "require_tokens": [
+        "flat",
+        "vector"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "muted",
+        "moody",
+        "dark",
+        "gritty",
+        "bokeh"
+      ],
+      "word_budget": [
+        55,
+        120
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "top-third",
+      "negative": "gradient, photorealistic, photo, muted, moody, dark, gritty, watermark, signature, extra limbs, blurry, text, lettering"
+    },
+    "kids_illustrated_scene": {
+      "description": "Illustrated non-fiction and picture-book covers for 6-8. Warmer, painted.",
+      "audiences": [
+        "early-reader-6-8"
+      ],
+      "signature": "soft gouache cover illustration, visible brush texture, warm saturated palette, rounded friendly character design, classic children's picture book art",
+      "palette": [
+        "#F2A65A",
+        "#77B28C",
+        "#E07A5F",
+        "#3D405B",
+        "#FAF3E0"
+      ],
+      "light": "warm golden afternoon light with gentle soft shadows",
+      "composition": "one hero subject in the lower half, clear silhouette against a simple sky",
+      "background": "a softly painted background with loose simple shapes and an open upper area",
+      "require_tokens": [
+        "gouache"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "8k",
+        "ultra detailed",
+        "dark",
+        "gritty"
+      ],
+      "word_budget": [
+        60,
+        130
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "top-third",
+      "negative": "photorealistic, photo, 8k, ultra detailed, dark, gritty, watermark, signature, extra limbs, blurry, text, lettering"
+    },
+    "middle_grade_adventure": {
+      "description": "9-12 non-fiction and activity covers. Dynamic, a bit cinematic, never cutesy.",
+      "audiences": [
+        "middle-grade-9-12"
+      ],
+      "signature": "bold stylised illustration with clean shapes and strong silhouettes, rich saturated colour, dramatic simplified lighting, modern middle-grade book cover art",
+      "palette": [
+        "#0F4C81",
+        "#F6AE2D",
+        "#F26419",
+        "#2F4858",
+        "#F6F5F3"
+      ],
+      "light": "dramatic directional light with a strong rim highlight on the hero subject",
+      "composition": "hero subject centred in the lower two thirds seen from a slightly low angle, strong readable silhouette",
+      "background": "a simplified graphic environment with depth suggested by two or three flat layers",
+      "require_tokens": [
+        "silhouette"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "babyish",
+        "pastel nursery",
+        "chibi"
+      ],
+      "word_budget": [
+        60,
+        130
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "top-third",
+      "negative": "photorealistic, photo, babyish, pastel nursery, chibi, watermark, signature, extra limbs, blurry, text, lettering"
+    },
+    "teen_graphic_bold": {
+      "description": "13-17 covers. Design-led, confident, closer to adult non-fiction.",
+      "audiences": [
+        "teen-13-17"
+      ],
+      "signature": "bold graphic poster-style cover artwork, limited colour palette, strong geometric composition, high contrast shapes with generous negative space, contemporary editorial design",
+      "palette": [
+        "#111111",
+        "#F5F1EA",
+        "#FF4D2E",
+        "#2B6CB0",
+        "#9AE6B4"
+      ],
+      "light": "single hard light source producing clean graphic shadows",
+      "composition": "one central symbolic object on a plain field, large empty area held clear for typography",
+      "background": "a single flat field of colour with one subtle geometric texture",
+      "require_tokens": [
+        "graphic",
+        "negative space"
+      ],
+      "forbid_tokens": [
+        "cute",
+        "cartoon animal",
+        "nursery",
+        "pastel",
+        "photorealistic",
+        "shot on"
+      ],
+      "word_budget": [
+        55,
+        120
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "bottom-third",
+      "negative": "cute, cartoon animal, nursery, pastel, photorealistic, photo, watermark, signature, blurry, text, lettering"
+    },
+    "adult_nonfiction_minimal": {
+      "description": "Adult non-fiction, productivity and journals. Type-led; the art is a supporting mark.",
+      "audiences": [
+        "adult-general"
+      ],
+      "signature": "minimal editorial cover artwork, one simple symbolic shape, restrained two-tone palette, generous flat background, premium modern non-fiction design",
+      "palette": [
+        "#1A1A2E",
+        "#E9E5DC",
+        "#C8553D",
+        "#588157",
+        "#F2F2F2"
+      ],
+      "light": "even soft light with the faintest shadow",
+      "composition": "one small symbolic mark centred low in the frame, the rest of the field deliberately empty",
+      "background": "a single flat background colour with subtle paper grain",
+      "require_tokens": [
+        "minimal"
+      ],
+      "forbid_tokens": [
+        "cartoon",
+        "cute",
+        "childish",
+        "busy",
+        "cluttered",
+        "photorealistic",
+        "shot on"
+      ],
+      "word_budget": [
+        45,
+        110
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "top-half",
+      "negative": "cartoon, cute, childish, busy, cluttered, photorealistic, photo, watermark, signature, blurry, text, lettering"
+    },
+    "adult_puzzle_clean": {
+      "description": "Adult puzzle, sudoku, crossword and large-print covers. Legible, orderly, shelf-credible.",
+      "audiences": [
+        "adult-general"
+      ],
+      "signature": "clean geometric cover artwork, orderly grid motif, crisp flat shapes, confident two-colour scheme, large-print friendly puzzle book design",
+      "palette": [
+        "#12355B",
+        "#FFD166",
+        "#F7F7F7",
+        "#D1495B",
+        "#3A6351"
+      ],
+      "light": "flat even lighting with crisp edges",
+      "composition": "a grid or pattern motif filling the lower half of the frame, the upper half held as a plain field",
+      "background": "a plain flat background with a subtle repeating geometric pattern",
+      "require_tokens": [
+        "geometric"
+      ],
+      "forbid_tokens": [
+        "cartoon",
+        "childish",
+        "cute",
+        "photorealistic",
+        "shot on",
+        "busy"
+      ],
+      "word_budget": [
+        45,
+        110
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "cover_front"
+      },
+      "type_zone": "top-half",
+      "negative": "cartoon, childish, cute, photorealistic, photo, busy, watermark, signature, blurry, text, lettering"
+    }
+  },
+  "type_zones": {
+    "top-third": "the entire upper third of the image is a calm uncluttered area of plain flat colour",
+    "top-half": "the entire upper half of the image is a calm uncluttered area of plain flat colour",
+    "bottom-third": "the entire lower third of the image is a calm uncluttered area of plain flat colour",
+    "center-band": "a wide calm horizontal band across the middle of the image is plain flat colour",
+    "none": ""
+  },
+  "face_recipes": {
+    "front": "Hero art with the type zone held clear. This is the only face that has to work as a thumbnail.",
+    "back": "A quiet extension of the same world at low contrast, so blurb text sits on it legibly. Fewer subjects, no focal point competing with the copy, and nothing in the barcode corner.",
+    "spine": "Usually no generation at all: extend the front cover's background colour. Only generate spine art when the spine is wider than about 0.6 inches and the series is strong enough to carry a repeating motif."
+  }
+}

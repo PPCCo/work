@@ -1,0 +1,435 @@
+{
+  "_comment": "Style packs for Qwen-Image-2512 (Q8_0) kids' art. 'signature' is pasted verbatim into every prompt in the pack so a whole set looks like one artist made it. 'negative' is a starter negative-prompt list for this medium - it only does anything on the 'full' runtime tier (real CFG); on 'lightning' it is correctly left unused, since CFG is forced to 1.0 there. Edit signatures/negatives/palettes for a WHOLE set at once, never per image. This file replaced the FLUX.2 [klein] 4B version of itself; runtime.variant values changed from base/distilled to full/lightning to match Qwen-Image-2512's two speed tiers.",
+  "version": 4,
+  "aspect_presets": {
+    "square": [
+      1024,
+      1024
+    ],
+    "portrait": [
+      1024,
+      1360
+    ],
+    "landscape": [
+      1360,
+      1024
+    ],
+    "spread": [
+      1440,
+      816
+    ],
+    "page": [
+      1216,
+      1600
+    ]
+  },
+  "age_bands": {
+    "2-4": {
+      "label": "toddler",
+      "max_subjects": 1,
+      "max_props": 2,
+      "detail_phrase": "very simple shapes, large friendly features, generous empty space",
+      "line_weight": "very thick uniform black outlines"
+    },
+    "5-7": {
+      "label": "early reader",
+      "max_subjects": 2,
+      "max_props": 3,
+      "detail_phrase": "simple clear shapes with a few playful details",
+      "line_weight": "thick uniform black outlines"
+    },
+    "8-10": {
+      "label": "older child",
+      "max_subjects": 3,
+      "max_props": 5,
+      "detail_phrase": "clear shapes with richer decorative detail",
+      "line_weight": "medium-weight clean black outlines"
+    },
+    "early-reader-6-8": {
+      "label": "early reader 6-8",
+      "max_subjects": 2,
+      "max_props": 3,
+      "detail_phrase": "simple clear shapes with a few playful details",
+      "line_weight": "thick uniform black outlines"
+    },
+    "middle-grade-9-12": {
+      "label": "middle grade 9-12",
+      "max_subjects": 3,
+      "max_props": 5,
+      "detail_phrase": "clear shapes with richer decorative detail",
+      "line_weight": "medium-weight clean black outlines"
+    },
+    "teen-13-17": {
+      "label": "teen 13-17",
+      "max_subjects": 3,
+      "max_props": 6,
+      "detail_phrase": "confident composition with strong negative space and finer detail",
+      "line_weight": "crisp clean black outlines"
+    },
+    "adult-general": {
+      "label": "adult",
+      "max_subjects": 4,
+      "max_props": 8,
+      "detail_phrase": "restrained composition with a single clear focal idea and fine detail",
+      "line_weight": "fine precise black outlines"
+    }
+  },
+  "packs": {
+    "coloring_page": {
+      "description": "Black-and-white line art for a child to colour in. No shading, no grey, no fill.",
+      "signature": "clean black-and-white coloring book line art, {line_weight}, every shape fully closed, flat pure white background, large open areas left blank ready for colouring, printable children's coloring page",
+      "palette": [],
+      "light": "even flat lighting, every shape evenly lit",
+      "composition": "single centred subject, whole subject inside the frame, wide white margin around the edges",
+      "background": "plain white background with a few simple ground shapes",
+      "require_tokens": [
+        "line art",
+        "white background",
+        "black"
+      ],
+      "forbid_tokens": [
+        "watercolor",
+        "gouache",
+        "shading",
+        "shadow",
+        "gradient",
+        "texture",
+        "grayscale",
+        "greyscale",
+        "painterly",
+        "soft light",
+        "colorful",
+        "vibrant colors",
+        "3d render",
+        "photo"
+      ],
+      "word_budget": [
+        40,
+        85
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "page",
+        "notes": "Line art is where the 4-step distilled model fails most (broken or doubled lines). Draft on distilled if you want, but render the keeper on base."
+      },
+      "negative": "shading, grey, gradient, texture, photorealistic, colour, watermark, signature, extra limbs, blurry, broken lines, open outlines"
+    },
+    "chunky_vector": {
+      "description": "Bold flat vector shapes, board-book / preschool app look. Very forgiving, best default for toddlers.",
+      "signature": "bold flat vector illustration, thick even outlines, simple geometric shapes, flat solid fills of single colours, modern children's board book style",
+      "palette": [
+        "#F4A259",
+        "#5B8E7D",
+        "#F25C54",
+        "#3D405B",
+        "#F6F1E2"
+      ],
+      "light": "flat even lighting, shapes evenly lit",
+      "composition": "centred subject, full body in frame, plenty of clear space around it",
+      "background": "simple flat colour background with two or three large simple shapes",
+      "require_tokens": [
+        "flat",
+        "vector"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "bokeh",
+        "shot on",
+        "gradient mesh",
+        "hyperdetailed"
+      ],
+      "word_budget": [
+        45,
+        100
+      ],
+      "runtime": {
+        "variant": "lightning",
+        "aspect": "square",
+        "notes": "Flat shapes survive 4-step sampling well. Cheapest pack to iterate on."
+      },
+      "negative": "gradient, photorealistic, photo, bokeh, bevel, drop shadow, watermark, signature, extra limbs, blurry, muddy colours"
+    },
+    "storybook_gouache": {
+      "description": "Soft painted picture-book illustration. Warm, classic, reads as 'real book art'.",
+      "signature": "soft gouache picture book illustration, visible brush texture, warm muted palette, rounded friendly character design, classic children's storybook art",
+      "palette": [
+        "#E8C07D",
+        "#9EBC8A",
+        "#D08C60",
+        "#6B705C",
+        "#FDF6EC"
+      ],
+      "light": "warm afternoon light, gentle soft shadows",
+      "composition": "subject in the near foreground, simple depth with a soft background",
+      "background": "softly painted background with loose simple shapes",
+      "require_tokens": [
+        "gouache",
+        "storybook"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "8k",
+        "ultra detailed",
+        "hyperrealistic"
+      ],
+      "word_budget": [
+        55,
+        110
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "spread",
+        "notes": "Brush texture needs the extra steps. Distilled drafts look plasticky."
+      },
+      "negative": "photorealistic, photo, 3d render, watermark, signature, extra limbs, blurry, harsh lighting, muddy colours"
+    },
+    "soft_watercolor": {
+      "description": "Gentle watercolor with paper grain. Good for bedtime, animals, nature.",
+      "signature": "gentle watercolor illustration on textured paper, soft blended washes, delicate ink linework, airy pastel palette, calm nursery art style",
+      "palette": [
+        "#A8DADC",
+        "#F1FAEE",
+        "#F4ACB7",
+        "#B5C99A",
+        "#FFE8D6"
+      ],
+      "light": "soft diffused daylight",
+      "composition": "subject centred with generous white paper space around it",
+      "background": "pale wash background fading into white paper",
+      "require_tokens": [
+        "watercolor"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "neon",
+        "high contrast",
+        "hyperdetailed"
+      ],
+      "word_budget": [
+        50,
+        105
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "portrait",
+        "notes": "Washes go muddy at 4 steps. Base only for keepers."
+      },
+      "negative": "photorealistic, photo, neon, high contrast, watermark, signature, extra limbs, blurry, harsh outlines"
+    },
+    "cut_paper_collage": {
+      "description": "Layered paper craft look. Very distinctive, hides small-model anatomy errors well.",
+      "signature": "cut paper collage illustration, layered construction paper shapes with visible torn edges, subtle drop shadows between layers, bright craft palette, handmade children's craft style",
+      "palette": [
+        "#FFB703",
+        "#219EBC",
+        "#FB8500",
+        "#8ECAE6",
+        "#023047"
+      ],
+      "light": "soft overhead light casting small shadows between paper layers",
+      "composition": "flat front-on view, subject centred and fully visible",
+      "background": "solid coloured paper background with two or three simple cut shapes",
+      "require_tokens": [
+        "paper",
+        "collage"
+      ],
+      "forbid_tokens": [
+        "photorealistic",
+        "photo",
+        "shot on",
+        "smooth 3d",
+        "glossy render"
+      ],
+      "word_budget": [
+        50,
+        105
+      ],
+      "runtime": {
+        "variant": "lightning",
+        "aspect": "square",
+        "notes": "Hard-edged shapes hold up at 4 steps."
+      },
+      "negative": "photorealistic, photo, smooth 3d, glossy render, watermark, signature, extra limbs, blurry"
+    },
+    "friendly_3d": {
+      "description": "Rounded toy-like 3D render. Use sparingly; the most expensive pack to get right.",
+      "signature": "cute stylised 3d render, soft rounded toy-like forms, smooth matte surfaces, big expressive eyes, bright cheerful lighting, modern animated short film look",
+      "palette": [
+        "#FFD166",
+        "#06D6A0",
+        "#EF476F",
+        "#118AB2",
+        "#FFF3E2"
+      ],
+      "light": "soft three-point studio lighting with gentle rim light",
+      "composition": "three-quarter view, full body in frame, shallow simple background",
+      "background": "simple pastel gradient studio background",
+      "require_tokens": [
+        "3d render"
+      ],
+      "forbid_tokens": [
+        "photorealistic human",
+        "photo of a child",
+        "shot on",
+        "uncanny"
+      ],
+      "word_budget": [
+        55,
+        110
+      ],
+      "runtime": {
+        "variant": "full",
+        "aspect": "square",
+        "notes": "Needs the base model; distilled 3d looks melted around hands and ears."
+      },
+      "negative": "photorealistic human, uncanny, watermark, signature, extra limbs, blurry, melted hands, distorted face"
+    }
+  },
+  "banned_everywhere": {
+    "negation_patterns": [
+      "\\bno \\b",
+      "\\bnot \\b",
+      "\\bwithout\\b",
+      "\\bavoid\\b",
+      "\\bnever\\b",
+      "\\bfree of\\b",
+      "\\bexcept\\b",
+      "\\bdon't\\b",
+      "\\bdoesn't\\b",
+      "--no\\b"
+    ],
+    "sd_syntax": [
+      "\\(\\s*[^)]*:\\s*[0-9.]+\\s*\\)",
+      "\\[[^\\]]*\\|[^\\]]*\\]",
+      "\\bBREAK\\b",
+      "<lora:",
+      "\\bembedding:",
+      "\\{[^}]*\\|[^}]*\\}"
+    ],
+    "quality_tags": [
+      "masterpiece",
+      "best quality",
+      "high quality",
+      "ultra detailed",
+      "hyperdetailed",
+      "8k",
+      "4k",
+      "uhd",
+      "trending on artstation",
+      "award winning",
+      "highly detailed",
+      "intricate details",
+      "sharp focus, professional",
+      "cinematic lighting, dramatic"
+    ],
+    "brand_names": [
+      "disney",
+      "pixar",
+      "dreamworks",
+      "studio ghibli",
+      "ghibli",
+      "peppa pig",
+      "bluey",
+      "paw patrol",
+      "mickey mouse",
+      "minions",
+      "pokemon",
+      "pokémon",
+      "hello kitty",
+      "sanrio",
+      "marvel",
+      "lego",
+      "barbie",
+      "sesame street",
+      "elsa",
+      "spiderman",
+      "spider-man",
+      "super mario",
+      "frozen movie",
+      "cocomelon"
+    ],
+    "unsafe_for_kids": [
+      "afraid",
+      "alcohol",
+      "bared teeth",
+      "beer",
+      "bikini",
+      "bleeding",
+      "blood",
+      "bloody",
+      "burning",
+      "cigarette",
+      "cleavage",
+      "corpse",
+      "creepy",
+      "crying in fear",
+      "dead",
+      "demon",
+      "drowning",
+      "drugs",
+      "evil",
+      "fangs",
+      "frightened",
+      "gore",
+      "grave",
+      "growling",
+      "gun",
+      "hanging",
+      "horror",
+      "knife",
+      "lingerie",
+      "menacing",
+      "midriff",
+      "naked",
+      "nightmare",
+      "noose",
+      "nude",
+      "on fire",
+      "punching",
+      "rifle",
+      "scared",
+      "scary",
+      "screaming",
+      "seductive",
+      "sexy",
+      "sinister",
+      "smoking",
+      "stabbing",
+      "swimsuit",
+      "sword fight",
+      "terrified",
+      "terrifying",
+      "thigh",
+      "threatening",
+      "tombstone",
+      "weapon",
+      "wound",
+      "zombie"
+    ],
+    "real_person_risk": [
+      "photorealistic child",
+      "photorealistic girl",
+      "photorealistic boy",
+      "real child",
+      "actual child",
+      "photo of a child",
+      "photo of my daughter",
+      "photo of my son",
+      "my daughter's face",
+      "my son's face",
+      "likeness of",
+      "looks exactly like the photo"
+    ]
+  },
+  "_audience_note": "The four hyphenated keys mirror the audience values used by the publish-book framework, so --age accepts either an age range or an audience value.",
+  "magic_suffix": {
+    "_comment": "Qwen-Image's own reference pipeline appends one of these fixed phrases for photographic/cinematic output. It is NOT applied to any pack below - all of them are flat/illustrative, and the suffix fights that. Available via build_prompt.py --magic-suffix if you add a photoreal pack.",
+    "en": ", Ultra HD, 4K, cinematic composition.",
+    "zh": "，超清，4K，电影级构图。"
+  }
+}
