@@ -1,0 +1,665 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://drawthings.ai/schemas/draw-things-cli-config-override.json",
+  "title": "Draw Things CLI \u2014 generation configuration override",
+  "description": "Schema for the JSON accepted by `draw-things-cli generate --config-json '<...>'` or `--config-file <path>` (the `JSGenerationConfiguration` wire format, the same schema used by Draw Things' scripting API). This is a PARTIAL override: any field you omit falls back to the resolved model's recommended settings, then to the engine defaults shown below. Unknown keys are silently ignored (JSONDecoder default behavior), they do not raise an error. `model` is always overwritten by the CLI's resolved --model value, so setting it here has no effect. Reverse-engineered from drawthingsai/draw-things-community @ main: Libraries/Scripting/Sources/ScriptModels.swift (field list), Libraries/DataModels/PreGeneratedSPM/config_data_model_generated.swift (enums + defaults). Field names/behavior may change as the project evolves \u2014 re-derive against a newer checkout if this drifts.",
+  "type": "object",
+  "additionalProperties": true,
+  "$defs": {
+    "sampler": {
+      "type": "integer",
+      "description": "Sampler algorithm, by SamplerType raw value. 0=DPM++ 2M Karras, 1=Euler A, 2=DDIM, 3=PLMS, 4=DPM++ SDE Karras, 5=UniPC, 6=LCM, 7=Euler A Substep, 8=DPM++ SDE Substep, 9=TCD, 10=Euler A Trailing, 11=DPM++ SDE Trailing, 12=DPM++ 2M AYS, 13=Euler A AYS, 14=DPM++ SDE AYS, 15=DPM++ 2M Trailing, 16=DDIM Trailing, 17=UniPC Trailing, 18=UniPC AYS, 19=TCD Trailing.",
+      "enum": [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+      ],
+      "default": 0
+    },
+    "seedMode": {
+      "type": "integer",
+      "description": "Seed derivation mode, by SeedMode raw value. 0=Legacy, 1=Torch CPU-compatible, 2=Scale Alike, 3=NVIDIA GPU-compatible. Affects reproducibility of a given seed across backends/scales, not the generated content's quality.",
+      "enum": [0, 1, 2, 3],
+      "default": 0
+    },
+    "controlInputType": {
+      "type": "string",
+      "description": "ControlNet input/preprocessor type for a control entry. Case-insensitive.",
+      "enum": [
+        "",
+        "custom",
+        "depth",
+        "canny",
+        "scribble",
+        "pose",
+        "normal bae",
+        "color",
+        "lineart",
+        "softedge",
+        "segmentation",
+        "inpaint",
+        "instruct pix2pix",
+        "shuffle",
+        "mlsd",
+        "tile",
+        "blur",
+        "low quality",
+        "gray"
+      ],
+      "default": ""
+    },
+    "control": {
+      "type": "object",
+      "description": "One ControlNet/adapter entry.",
+      "properties": {
+        "file": {
+          "type": ["string", "null"],
+          "description": "ControlNet model checkpoint filename in the models directory."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Control strength multiplier.",
+          "default": 1.0
+        },
+        "guidanceStart": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of steps (0-1) at which control influence begins.",
+          "default": 0.0
+        },
+        "guidanceEnd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Fraction of steps (0-1) at which control influence ends.",
+          "default": 1.0
+        },
+        "noPrompt": {
+          "type": "boolean",
+          "description": "If true, suppress the text prompt while this control is active.",
+          "default": false
+        },
+        "globalAveragePooling": {
+          "type": "boolean",
+          "default": false,
+          "description": "Apply global average pooling to the control signal (used by some IP-Adapter-style controls)."
+        },
+        "downSamplingRate": {
+          "type": "number",
+          "default": 1.0,
+          "description": "Downsampling rate applied to the control input image."
+        },
+        "controlImportance": {
+          "type": "string",
+          "enum": ["balanced", "prompt", "control"],
+          "default": "balanced",
+          "description": "How this control is weighted against the text prompt. Unrecognized values fall back to 'balanced'."
+        },
+        "targetBlocks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Optional list of specific UNet/DiT block names this control should be injected into (advanced; leave empty for all blocks)."
+        },
+        "inputOverride": {
+          "$ref": "#/$defs/controlInputType"
+        }
+      }
+    },
+    "lora": {
+      "type": "object",
+      "description": "One LoRA to apply during generation.",
+      "properties": {
+        "file": {
+          "type": ["string", "null"],
+          "description": "LoRA checkpoint filename in the models directory. For custom local LoRAs not registered in custom_lora.json, also set 'version' (e.g. \"flux1\") so the CLI can construct per-invocation metadata."
+        },
+        "weight": {
+          "type": "number",
+          "default": 1.0,
+          "description": "LoRA blend strength. Typically 0-1, though higher values are accepted."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["all", "base", "refiner"],
+          "default": "all",
+          "description": "Which part of a base+refiner pipeline the LoRA applies to. Unrecognized values fall back to 'all'."
+        }
+      }
+    }
+  },
+  "properties": {
+    "width": {
+      "type": "integer",
+      "description": "Final output width in pixels. Must be a multiple of 64. When hiresFix is enabled this is the post-upscale target size; otherwise it's the single-pass generation size.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 512
+    },
+    "height": {
+      "type": "integer",
+      "description": "Final output height in pixels. Must be a multiple of 64.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 512
+    },
+    "seed": {
+      "type": "integer",
+      "description": "Random seed. Any negative value (the CLI convention is -1) requests a random UInt32 seed instead of a fixed one; otherwise use 0 to 4294967295.",
+      "default": 0
+    },
+    "steps": {
+      "type": "integer",
+      "description": "Sampling step count.",
+      "minimum": 0,
+      "default": 0
+    },
+    "guidanceScale": {
+      "type": "number",
+      "description": "Classifier-free guidance (CFG) scale. Higher follows the prompt more literally; lower is more creative. Typical range ~1-15, model-dependent.",
+      "minimum": 0,
+      "default": 0.0
+    },
+    "strength": {
+      "type": "number",
+      "description": "img2img denoising strength for --image inputs (0 = keep the input image unchanged, 1 = ignore it completely). Same value as the top-level --strength CLI flag; NOT the hi-res-fix strength.",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.0
+    },
+    "model": {
+      "type": "string",
+      "description": "Model checkpoint filename. Always overwritten by the CLI's resolved --model, so setting it here is a no-op."
+    },
+    "sampler": {
+      "type": "integer",
+      "description": "Sampler algorithm, by SamplerType raw value. 0=DPM++ 2M Karras, 1=Euler A, 2=DDIM, 3=PLMS, 4=DPM++ SDE Karras, 5=UniPC, 6=LCM, 7=Euler A Substep, 8=DPM++ SDE Substep, 9=TCD, 10=Euler A Trailing, 11=DPM++ SDE Trailing, 12=DPM++ 2M AYS, 13=Euler A AYS, 14=DPM++ SDE AYS, 15=DPM++ 2M Trailing, 16=DDIM Trailing, 17=UniPC Trailing, 18=UniPC AYS, 19=TCD Trailing.",
+      "enum": [
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19
+      ],
+      "default": 0
+    },
+    "seedMode": {
+      "type": "integer",
+      "description": "Seed derivation mode, by SeedMode raw value. 0=Legacy, 1=Torch CPU-compatible, 2=Scale Alike, 3=NVIDIA GPU-compatible. Affects reproducibility of a given seed across backends/scales, not the generated content's quality.",
+      "enum": [0, 1, 2, 3],
+      "default": 0
+    },
+    "clipSkip": {
+      "type": "integer",
+      "description": "Number of trailing CLIP text-encoder layers to skip. 1 = use the full encoder (no skip).",
+      "minimum": 1,
+      "default": 1
+    },
+    "imageGuidanceScale": {
+      "type": "number",
+      "description": "Secondary guidance scale for image-conditioned models (e.g. instruct-pix2pix-style editing).",
+      "minimum": 0,
+      "default": 1.5
+    },
+    "hiresFix": {
+      "type": "boolean",
+      "description": "Enable two-pass hi-res fix: generate a smaller first pass, then upscale + lightly re-denoise up to width/height.",
+      "default": false
+    },
+    "hiresFixWidth": {
+      "type": "integer",
+      "description": "First-pass (low-res) width in pixels, multiple of 64. Must be strictly LESS than 'width' or the engine silently disables hi-res fix and does a normal single-pass generation instead.",
+      "multipleOf": 64,
+      "minimum": 0,
+      "default": 0
+    },
+    "hiresFixHeight": {
+      "type": "integer",
+      "description": "First-pass (low-res) height in pixels, multiple of 64. Must be strictly LESS than 'height', same caveat as hiresFixWidth.",
+      "multipleOf": 64,
+      "minimum": 0,
+      "default": 0
+    },
+    "hiresFixStrength": {
+      "type": "number",
+      "description": "img2img-style denoising strength applied during the hi-res fix upscale pass (0 = barely touch it, 1 = fully redraw). Distinct from the top-level 'strength' field.",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.7
+    },
+    "upscaler": {
+      "type": "string",
+      "description": "Upscaler model checkpoint FILENAME (not display name), e.g. 'realesrgan_x4plus_f16.ckpt'. Built-in options: realesrgan_x2plus_f16.ckpt, realesrgan_x4plus_f16.ckpt, realesrgan_x4plus_anime_6b_f16.ckpt, esrgan_4x_universal_upscaler_v2_sharp_f16.ckpt, remacri_4x_f16.ckpt, 4x_ultrasharp_f16.ckpt. Only used when hiresFix is true."
+    },
+    "upscalerScaleFactor": {
+      "type": "integer",
+      "description": "Integer upscale factor for 'upscaler'. 0 lets the engine use the chosen upscaler's native factor; otherwise use 2 (for the X2+ model) or 4 (for the X4 models).",
+      "minimum": 0,
+      "maximum": 255,
+      "enum": [0, 2, 4],
+      "default": 0
+    },
+    "tiledDecoding": {
+      "type": "boolean",
+      "description": "Decode the VAE in overlapping tiles instead of all at once. Reduces peak memory for large images at some speed cost.",
+      "default": false
+    },
+    "decodingTileWidth": {
+      "type": "integer",
+      "description": "VAE decode tile width in pixels, multiple of 64. Only used when tiledDecoding is true.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 640
+    },
+    "decodingTileHeight": {
+      "type": "integer",
+      "description": "VAE decode tile height in pixels, multiple of 64.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 640
+    },
+    "decodingTileOverlap": {
+      "type": "integer",
+      "description": "Overlap between adjacent VAE decode tiles, in pixels, multiple of 64 (reduces seam artifacts).",
+      "multipleOf": 64,
+      "minimum": 0,
+      "default": 128
+    },
+    "tiledDiffusion": {
+      "type": "boolean",
+      "description": "Run the diffusion/denoising step itself in overlapping tiles (MultiDiffusion-style). Enables generation at resolutions larger than the model was trained for.",
+      "default": false
+    },
+    "diffusionTileWidth": {
+      "type": "integer",
+      "description": "Diffusion tile width in pixels, multiple of 64. Only used when tiledDiffusion is true.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 1024
+    },
+    "diffusionTileHeight": {
+      "type": "integer",
+      "description": "Diffusion tile height in pixels, multiple of 64.",
+      "multipleOf": 64,
+      "minimum": 64,
+      "default": 1024
+    },
+    "diffusionTileOverlap": {
+      "type": "integer",
+      "description": "Overlap between adjacent diffusion tiles, in pixels, multiple of 64.",
+      "multipleOf": 64,
+      "minimum": 0,
+      "default": 128
+    },
+    "refinerModel": {
+      "type": "string",
+      "description": "Optional refiner model checkpoint filename (SDXL base+refiner style pipelines)."
+    },
+    "refinerStart": {
+      "type": "number",
+      "description": "Fraction of the schedule (0-1) at which generation hands off from the base model to the refiner model.",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.7
+    },
+    "originalImageWidth": {
+      "type": "integer",
+      "description": "SDXL conditioning: the 'original size' the model is told the image came from. 0 uses width.",
+      "minimum": 0,
+      "default": 0
+    },
+    "originalImageHeight": {
+      "type": "integer",
+      "description": "SDXL conditioning: the 'original size' height. 0 uses height.",
+      "minimum": 0,
+      "default": 0
+    },
+    "cropTop": {
+      "type": "integer",
+      "description": "SDXL conditioning: simulated crop offset from the top, in pixels.",
+      "default": 0
+    },
+    "cropLeft": {
+      "type": "integer",
+      "description": "SDXL conditioning: simulated crop offset from the left, in pixels.",
+      "default": 0
+    },
+    "targetImageWidth": {
+      "type": "integer",
+      "description": "SDXL conditioning: the 'target size' width fed to the model. 0 uses width.",
+      "minimum": 0,
+      "default": 0
+    },
+    "targetImageHeight": {
+      "type": "integer",
+      "description": "SDXL conditioning: the 'target size' height fed to the model. 0 uses height.",
+      "minimum": 0,
+      "default": 0
+    },
+    "negativeOriginalImageWidth": {
+      "type": "integer",
+      "description": "SDXL conditioning: 'original size' used on the negative-prompt branch. 0 uses width.",
+      "minimum": 0,
+      "default": 0
+    },
+    "negativeOriginalImageHeight": {
+      "type": "integer",
+      "description": "SDXL conditioning: 'original size' height used on the negative-prompt branch. 0 uses height.",
+      "minimum": 0,
+      "default": 0
+    },
+    "aestheticScore": {
+      "type": "number",
+      "description": "SDXL refiner conditioning: target aesthetic score for the positive branch.",
+      "default": 6.0
+    },
+    "negativeAestheticScore": {
+      "type": "number",
+      "description": "SDXL refiner conditioning: target aesthetic score for the negative branch.",
+      "default": 2.5
+    },
+    "zeroNegativePrompt": {
+      "type": "boolean",
+      "description": "If true, zero out the negative-prompt embedding instead of encoding actual negative-prompt text.",
+      "default": false
+    },
+    "maskBlur": {
+      "type": "number",
+      "description": "Gaussian blur radius (px) applied to the inpaint mask edges for smoother blending.",
+      "minimum": 0,
+      "default": 0.0
+    },
+    "maskBlurOutset": {
+      "type": "integer",
+      "description": "Pixels to grow (positive) or shrink (negative) the inpaint mask before blurring.",
+      "default": 0
+    },
+    "preserveOriginalAfterInpaint": {
+      "type": "boolean",
+      "description": "If true, paste the unmasked original pixels back after inpainting so only the masked region changes.",
+      "default": true
+    },
+    "stochasticSamplingGamma": {
+      "type": "number",
+      "description": "Stochastic-sampling noise-injection amount used by some inpaint/img2img samplers.",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 0.3
+    },
+    "faceRestoration": {
+      "type": "string",
+      "description": "Face-restoration model checkpoint filename. Built-in option: 'restoreformer_v1.0_f16.ckpt' (also auto-downloads its 'parsenet_v1.0_f16.ckpt' dependency)."
+    },
+    "sharpness": {
+      "type": "number",
+      "description": "Post-process sharpening amount.",
+      "minimum": 0,
+      "default": 0.0
+    },
+    "compressionArtifacts": {
+      "type": "string",
+      "description": "Simulated compression-artifact style applied to the output.",
+      "enum": ["disabled", "h264", "h265", "jpeg"],
+      "default": "disabled"
+    },
+    "compressionArtifactsQuality": {
+      "type": "number",
+      "description": "Quality (0-100) for the compressionArtifacts simulation; lower is more degraded.",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 43.1
+    },
+    "colorCalibration": {
+      "type": "string",
+      "description": "Color-matching method applied to correct drift (e.g. across hi-res fix or tiled passes).",
+      "enum": ["none", "lab"],
+      "default": "none"
+    },
+    "negativePromptForImagePrior": {
+      "type": "boolean",
+      "description": "Whether the negative prompt is also applied to the image-prior stage (two-stage cascade models).",
+      "default": true
+    },
+    "imagePriorSteps": {
+      "type": "integer",
+      "description": "Step count for the image-prior stage.",
+      "minimum": 1,
+      "default": 5
+    },
+    "stage2Steps": {
+      "type": "integer",
+      "description": "Step count for the stage-2 (super-resolution) pass in cascade models.",
+      "minimum": 0,
+      "default": 10
+    },
+    "stage2Guidance": {
+      "type": "number",
+      "description": "CFG scale for the stage-2 pass.",
+      "minimum": 0,
+      "default": 1.0
+    },
+    "stage2Shift": {
+      "type": "number",
+      "description": "Flow-matching schedule shift for the stage-2 pass.",
+      "default": 1.0
+    },
+    "batchCount": {
+      "type": "integer",
+      "description": "Number of separate generation batches to run (each producing batchSize images with a different seed).",
+      "minimum": 1,
+      "default": 1
+    },
+    "batchSize": {
+      "type": "integer",
+      "description": "Images generated per batch. Clamped by the CLI to 1-4.",
+      "minimum": 1,
+      "maximum": 4,
+      "default": 1
+    },
+    "numFrames": {
+      "type": "integer",
+      "description": "Frame count for video-capable models. Same value as the top-level --frames flag.",
+      "minimum": 1,
+      "default": 14
+    },
+    "fps": {
+      "type": "integer",
+      "description": "Frames-per-second conditioning id for SVD-style video models.",
+      "minimum": 1,
+      "default": 5
+    },
+    "motionScale": {
+      "type": "integer",
+      "description": "Motion-bucket-id conditioning for SVD-style video models; higher values encourage more motion.",
+      "minimum": 0,
+      "default": 127
+    },
+    "guidingFrameNoise": {
+      "type": "number",
+      "description": "Conditioning-augmentation noise added to the guiding frame for video models.",
+      "minimum": 0,
+      "default": 0.02
+    },
+    "startFrameGuidance": {
+      "type": "number",
+      "description": "CFG scale applied specifically to the start frame for some video models.",
+      "minimum": 0,
+      "default": 1.0
+    },
+    "clipWeight": {
+      "type": "number",
+      "description": "Weight applied to CLIP image-embedding conditioning (reference/IP-Adapter-style inputs).",
+      "default": 1.0
+    },
+    "shift": {
+      "type": "number",
+      "description": "Flow-matching noise-schedule shift. Higher values push more steps toward high-noise timesteps; useful for higher resolutions on flow models (Flux, LTX, etc).",
+      "minimum": 0,
+      "default": 1.0
+    },
+    "shiftForAudio": {
+      "type": "number",
+      "description": "Separate schedule shift used for audio-conditioned generation on models that support it.",
+      "default": 3.0
+    },
+    "resolutionDependentShift": {
+      "type": "boolean",
+      "description": "If true, automatically scale 'shift' based on output resolution instead of using a fixed value.",
+      "default": true
+    },
+    "guidanceEmbed": {
+      "type": "number",
+      "description": "Distilled-guidance embedding value for guidance-distilled models (e.g. Flux dev-style 'guidance embed' instead of true CFG).",
+      "default": 3.5
+    },
+    "speedUpWithGuidanceEmbed": {
+      "type": "boolean",
+      "description": "If true, use the faster guidance-embed path instead of running both conditional and unconditional passes.",
+      "default": true
+    },
+    "t5TextEncoder": {
+      "type": "boolean",
+      "description": "Whether to run the T5 text encoder (models that use one, e.g. Flux/SD3-style).",
+      "default": true
+    },
+    "separateClipL": {
+      "type": "boolean",
+      "description": "Encode a separate prompt string through CLIP-L instead of reusing the main prompt.",
+      "default": false
+    },
+    "clipLText": {
+      "type": "string",
+      "description": "Prompt text used for the CLIP-L encoder when separateClipL is true."
+    },
+    "separateOpenClipG": {
+      "type": "boolean",
+      "description": "Encode a separate prompt string through OpenCLIP-G instead of reusing the main prompt.",
+      "default": false
+    },
+    "openClipGText": {
+      "type": "string",
+      "description": "Prompt text used for the OpenCLIP-G encoder when separateOpenClipG is true."
+    },
+    "separateT5": {
+      "type": "boolean",
+      "description": "Encode a separate prompt string through T5 instead of reusing the main prompt.",
+      "default": false
+    },
+    "t5Text": {
+      "type": "string",
+      "description": "Prompt text used for the T5 encoder when separateT5 is true."
+    },
+    "expandPromptToJson": {
+      "type": "boolean",
+      "description": "If true, expand/parse the prompt's attention-weighting syntax into structured JSON internally before encoding.",
+      "default": false
+    },
+    "teaCache": {
+      "type": "boolean",
+      "description": "Enable TeaCache step-skipping acceleration.",
+      "default": false
+    },
+    "teaCacheStart": {
+      "type": "integer",
+      "description": "First step index (0-based) at which TeaCache is allowed to start skipping.",
+      "default": 5
+    },
+    "teaCacheEnd": {
+      "type": "integer",
+      "description": "Last step index at which TeaCache may skip; -1 means through the final step.",
+      "default": -1
+    },
+    "teaCacheThreshold": {
+      "type": "number",
+      "description": "Similarity threshold controlling how aggressively TeaCache skips steps. Higher = more skipping, more speed, more quality risk.",
+      "minimum": 0,
+      "default": 0.06
+    },
+    "teaCacheMaxSkipSteps": {
+      "type": "integer",
+      "description": "Maximum consecutive steps TeaCache may skip in a row.",
+      "minimum": 0,
+      "default": 3
+    },
+    "causalInference": {
+      "type": "integer",
+      "description": "Chunk size (in frames) for causal/streaming inference on supported video models. 0 disables causal inference (causalInferenceEnabled is derived as causalInference > 0).",
+      "minimum": 0,
+      "default": 3
+    },
+    "causalInferencePad": {
+      "type": "integer",
+      "description": "Padding frames used at causal-inference chunk boundaries.",
+      "minimum": 0,
+      "default": 0
+    },
+    "cfgZeroStar": {
+      "type": "boolean",
+      "description": "Enable CFG-Zero* (rescaled/zeroed early-step guidance) for improved low-step quality.",
+      "default": false
+    },
+    "cfgZeroInitSteps": {
+      "type": "integer",
+      "description": "Number of initial steps over which CFG-Zero* guidance is phased in.",
+      "minimum": 0,
+      "default": 0
+    },
+    "usesSolAttention": {
+      "type": "boolean",
+      "description": "Enable SOL (sparse/optimized) attention where supported.",
+      "default": false
+    },
+    "solAttentionStart": {
+      "type": "integer",
+      "description": "Step index at which SOL attention begins.",
+      "default": 2
+    },
+    "solAttentionTau": {
+      "type": "number",
+      "description": "SOL attention sparsity/temperature parameter.",
+      "default": 0.5
+    },
+    "controls": {
+      "type": "array",
+      "description": "ControlNet / structural-guidance entries applied to this generation.",
+      "items": {
+        "$ref": "#/$defs/control"
+      },
+      "default": []
+    },
+    "loras": {
+      "type": "array",
+      "description": "LoRA adapters applied to this generation.",
+      "items": {
+        "$ref": "#/$defs/lora"
+      },
+      "default": []
+    }
+  },
+  "examples": [
+    {
+      "hiresFix": true,
+      "hiresFixWidth": 1024,
+      "hiresFixHeight": 1024,
+      "hiresFixStrength": 0.6,
+      "upscaler": "4x_ultrasharp_f16.ckpt",
+      "upscalerScaleFactor": 4
+    },
+    {
+      "loras": [
+        {
+          "file": "my_style_lora_f16.ckpt",
+          "weight": 0.8,
+          "mode": "all"
+        }
+      ],
+      "controls": [
+        {
+          "file": "controlnet_canny_f16.ckpt",
+          "weight": 1.0,
+          "guidanceStart": 0.0,
+          "guidanceEnd": 0.8,
+          "controlImportance": "balanced",
+          "inputOverride": "canny"
+        }
+      ]
+    }
+  ]
+}
