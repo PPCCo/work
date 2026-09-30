@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "additionalDirectories": ["../nextjs-frontend", "../nestjs-api", "../temporal-worker"],
+    "allow": [
+      "Bash(pnpm install --frozen-lockfile:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm exec prettier:*)",
+      "Bash(pnpm audit:*)",
+      "Bash(pnpm contracts:*)",
+      "Bash(pnpm turbo:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git switch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git -C:*)",
+      "Bash(./.claude/scripts/:*)",
+      "Bash(.claude/scripts/:*)"
+    ],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Bash(git push --force:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          { "type": "command", "command": "$CLAUDE_PROJECT_DIR/.claude/scripts/hooks/guard.sh" }
+        ]
+      }
+    ]
+  }
+}

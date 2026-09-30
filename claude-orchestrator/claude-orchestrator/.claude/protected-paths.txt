@@ -1,0 +1,8 @@
+# One shell glob per line; `*` matches across directories. Used by scripts/hooks/guard.sh.
+# Agents cannot Edit/Write matching paths; change them via the owning tool instead.
+# Built in already: pnpm-lock.yaml, .env and .env.* (except .env.example), *.pem, *.key
+#
+# Add your generated-contract outputs, for example:
+# */src/generated/*
+# */src/contracts/generated/*
+# *.generated.ts

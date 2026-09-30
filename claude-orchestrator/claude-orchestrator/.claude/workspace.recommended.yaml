@@ -1,0 +1,66 @@
+# Schema read by .claude/scripts/*.sh. Merge these keys into your existing workspace.yaml
+# (root or .claude/). Adjust commands to match each repo's package.json scripts.
+version: 1
+
+repos:
+  nextjs-frontend:
+    path: ../nextjs-frontend          # real location, relative to the orchestrator root
+    link: nextjs-frontend             # symlink created inside the orchestrator
+    role: frontend
+    base_branch: main
+    gates:
+      install: pnpm install --frozen-lockfile
+      format: pnpm exec prettier --check .
+      lint: pnpm lint
+      typecheck: pnpm typecheck
+      test: pnpm test
+      build: pnpm build
+      contracts: pnpm contracts:check
+  nestjs-api:
+    path: ../nestjs-api
+    link: nestjs-api
+    role: api
+    base_branch: main
+    gates:
+      install: pnpm install --frozen-lockfile
+      format: pnpm exec prettier --check .
+      lint: pnpm lint
+      typecheck: pnpm typecheck
+      test: pnpm test
+      integration: pnpm test:integration
+      build: pnpm build
+      contracts: pnpm contracts:check
+  temporal-worker:
+    path: ../temporal-worker
+    link: temporal-worker
+    role: workflows
+    base_branch: main
+    gates:
+      install: pnpm install --frozen-lockfile
+      format: pnpm exec prettier --check .
+      lint: pnpm lint
+      typecheck: pnpm typecheck
+      test: pnpm test
+      replay: pnpm test:replay
+      integration: pnpm test:integration
+      build: pnpm build
+      contracts: pnpm contracts:check
+
+# Default gate order for `verify.sh <repo>` (gates a repo does not define are skipped)
+gate_order: [format, lint, typecheck, test, replay, integration, build, contracts]
+
+# Where the source-of-truth schemas live (fill in: confirm which repo/dir owns them)
+contracts:
+  source_repo: nestjs-api
+  schema_dir: schemas                 # relative to source_repo
+  generated_in: [nextjs-frontend, nestjs-api, temporal-worker]
+  published_to: s3                    # immutable, versioned; published by CI only
+
+database:
+  migration_tool: ""                  # e.g. prisma | typeorm | knex | node-pg-migrate | flyway
+  migrations_dir: ""                  # relative to the owning repo
+  owner_repo: nestjs-api
+
+kafka:
+  consumers_in: temporal-worker       # confirm where consumers run
+  producers_in: [nestjs-api, temporal-worker]
