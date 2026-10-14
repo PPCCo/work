@@ -29,4 +29,3 @@ mv "$LORA_DIR/epic oil painting.safetensors" "$LORA_DIR/epic-oil-painting-slider
 
 # Pencil / sketch
 hf download Linaqruf/sketch-style-xl-lora sketch-style-xl.safetensors --local-dir "$LORA_DIR"
-hf download Osipova/OSI_style_LoRA --include "*.safetensors" --local-dir "$LORA_DIR/osipova-pencil"

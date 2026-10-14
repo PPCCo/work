@@ -40,23 +40,6 @@ mv "$LORA_DIR/epic oil painting.safetensors" "$LORA_DIR/epic-oil-painting-slider
 hf download Linaqruf/sketch-style-xl-lora sketch-style-xl.safetensors --local-dir "$LORA_DIR"
 ```
 
-## Trigger words and weights
-
-- **Coloring book:** The tags are ColoringBookAF and Coloring Book.
-- **Storybook:** The trigger is KidsRedmAF, Kids Book.
-- **LineAni:** The trigger is LineAniAF, lineart.
-- **Analog:** The trigger is AnalogRedmAF, Analog. I haven't read this one's model card, so I'm inferring the film-grain look from the name and trigger.
-- **3D (goofyai):** The triggers are 3d style, 3d, and 3d render.
-- **Pixar and oil painting sliders:** The triggers are `pixar-style`, `oil painting` and `epic oil painting`. The Pixar slider's own example loads it at strength 2.0.
-- **Pencil:** The Osipova LoRA is triggered by "sketch pencil drawing OSI style".
-
-## Corrections to above table
-
-- **Slider weights:** The ntc-ai LoRAs (Pixar, both oil paintings) are sliders that work on a wider scale than normal LoRAs. Their example applies the oil painting slider at 2.0. Use roughly 1.5–3 for them, not the 0.7–0.9 I listed.
-- **Detail Tweaker XL:** Its description says it works from -3 to 3, with a suggested starting weight of 1.5. My 0.3–0.6 was a conservative guess, so tune it by eye. The Hugging Face copy is an unofficial re-upload. The original lives on Civitai (model 122359).
-- **Mandala:** I found no dedicated SDXL mandala LoRA on Hugging Face, so I won't invent a repo. The coloring-book LoRA plus a prompt like "radially symmetric mandala, black and white line art" is the safest HF-only setup. Dedicated mandala LoRAs exist on Civitai if you want one.
-- **Pencil and sketch:** Linaqruf's LoRA was built for Animagine XL 2.0 and targets monochrome sketch looks, so test it with Animagine 3.1 rather than Juggernaut.
-
 Sources:
 
 - [ColoringBookRedmond-V2](https://huggingface.co/artificialguybr/ColoringBookRedmond-V2)
