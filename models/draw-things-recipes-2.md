@@ -25,37 +25,37 @@ Scope: SDXL checkpoints (Juggernaut XL v9, Juggernaut XL X, ColorfulXL v6, Anima
 
 ### Sampler integers (UNVERIFIED, see section 0)
 
-| Int | Name | Use for |
-|---|---|---|
-| 0 | DPM++ 2M Karras | Line art, illustration, painting, sketches. Clean, stable edges |
-| 1 | Euler A | Animagine, anime, tag prompts |
-| 4 | DPM++ SDE Karras | Photo and photorealism. More micro-detail, slower per step |
-| 7 | Euler A Trailing | Flux Klein |
+| Int | Name             | Use for                                                         |
+| --- | ---------------- | --------------------------------------------------------------- |
+| 0   | DPM++ 2M Karras  | Line art, illustration, painting, sketches. Clean, stable edges |
+| 1   | Euler A          | Animagine, anime, tag prompts                                   |
+| 4   | DPM++ SDE Karras | Photo and photorealism. More micro-detail, slower per step      |
+| 7   | Euler A Trailing | Flux Klein                                                      |
 
 ### Parameter bands by model family
 
-| Family | Steps | cfg | Notes |
-|---|---|---|---|
-| Juggernaut XL v9 / X (photo) | 30-38 | 4-5 | cfg above 6 looks fried. SDE sampler wants fewer steps than 2M |
-| Juggernaut XL v9 / X (illustration, line art) | 28-34 | 6-7 | Higher cfg for strict prompt adherence on line art |
-| ColorfulXL v6 | 26-32 | 6-7 | Saturated, flat-friendly. Best default for kids and flat styles |
-| Animagine XL v3.1 | 26-30 | 5-7 | Danbooru tag syntax, `Euler A` |
-| Flux Klein distilled | 4 | 1.0 | Natural-language prompts, no negative prompt, no weight syntax |
+| Family                                        | Steps | cfg | Notes                                                           |
+| --------------------------------------------- | ----- | --- | --------------------------------------------------------------- |
+| Juggernaut XL v9 / X (photo)                  | 30-38 | 4-5 | cfg above 6 looks fried. SDE sampler wants fewer steps than 2M  |
+| Juggernaut XL v9 / X (illustration, line art) | 28-34 | 6-7 | Higher cfg for strict prompt adherence on line art              |
+| ColorfulXL v6                                 | 26-32 | 6-7 | Saturated, flat-friendly. Best default for kids and flat styles |
+| Animagine XL v3.1                             | 26-30 | 5-7 | Danbooru tag syntax, `Euler A`                                  |
+| Flux Klein distilled                          | 4     | 1.0 | Natural-language prompts, no negative prompt, no weight syntax  |
 
 ### LoRA weights
 
-| LoRA file | Trigger words | Weight | Works with |
-|---|---|---|---|
-| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors` | `KidsRedmAF, Kids Book` | 0.6-0.9 | ColorfulXL, Juggernaut |
-| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors` | `ColoringBookAF, Coloring Book` | 0.5-1.0 | ColorfulXL, Juggernaut |
-| `LineAniRedmondV2-Lineart-LineAniAF.safetensors` | `LineAniAF, lineart` | 0.6-0.9 | Animagine |
-| `add-detail-xl.safetensors` (Detail Tweaker XL mirror) | none | 0.5-1.5 (range -3 to 3). Use 0.5-0.8 on line art | Any SDXL |
-| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors` | `AnalogRedmAF, Analog` | 0.4-0.8 | Juggernaut |
-| `3d_render_style_xl.safetensors` | `3d style, 3d, 3d render` | 0.5-0.8 | Animagine, ColorfulXL |
-| `pixar-style.safetensors` (slider) | `pixar-style` | 1.5-2.5 | ColorfulXL |
-| `oil-painting-slider.safetensors` (renamed from "oil painting") | `oil painting` | 1.5-2.5 | ColorfulXL, Juggernaut v9 |
-| `epic-oil-painting-slider.safetensors` (renamed) | `epic oil painting` | 1.5-2.5 | Juggernaut v9, ColorfulXL |
-| `sketch-style-xl.safetensors` | `sketch, monochrome, greyscale, traditional media` | 0.6-0.9 | Animagine (trained for Animagine 2.0) |
+| LoRA file                                                       | Trigger words                                      | Weight                                           | Works with                            |
+| --------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------ | ------------------------------------- |
+| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors`            | `KidsRedmAF, Kids Book`                            | 0.6-0.9                                          | ColorfulXL, Juggernaut                |
+| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors`   | `ColoringBookAF, Coloring Book`                    | 0.5-1.0                                          | ColorfulXL, Juggernaut                |
+| `LineAniRedmondV2-Lineart-LineAniAF.safetensors`                | `LineAniAF, lineart`                               | 0.6-0.9                                          | Animagine                             |
+| `add-detail-xl.safetensors` (Detail Tweaker XL mirror)          | none                                               | 0.5-1.5 (range -3 to 3). Use 0.5-0.8 on line art | Any SDXL                              |
+| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors`               | `AnalogRedmAF, Analog`                             | 0.4-0.8                                          | Juggernaut                            |
+| `3d_render_style_xl.safetensors`                                | `3d style, 3d, 3d render`                          | 0.5-0.8                                          | Animagine, ColorfulXL                 |
+| `pixar-style.safetensors` (slider)                              | `pixar-style`                                      | 1.5-2.5                                          | ColorfulXL                            |
+| `oil-painting-slider.safetensors` (renamed from "oil painting") | `oil painting`                                     | 1.5-2.5                                          | ColorfulXL, Juggernaut v9             |
+| `epic-oil-painting-slider.safetensors` (renamed)                | `epic oil painting`                                | 1.5-2.5                                          | Juggernaut v9, ColorfulXL             |
+| `sketch-style-xl.safetensors`                                   | `sketch, monochrome, greyscale, traditional media` | 0.6-0.9                                          | Animagine (trained for Animagine 2.0) |
 
 Stacking: at most 2 style LoRAs. Keep the sum of weights at or below about 1.5, except for sliders, which use their own scale. A detail LoRA added to a line-art LoRA must stay at 0.8 or lower, or it adds shading.
 
@@ -63,13 +63,13 @@ Stacking: at most 2 style LoRAs. Keep the sum of weights at or below about 1.5, 
 
 Extract these fields from the user request. Apply the default when a field is missing.
 
-| Field | Values | Default |
-|---|---|---|
-| genre | reading_book, coloring, line_art, mandala, sketch, anime_2d, anime_3d, digital, photo, oil, photoreal | ask only if no genre can be inferred |
-| audience | toddler (2-4), early (5-7), middle (8-12), adult (18+), senior_accessible | adult for mandala, photo, oil, photoreal. early for reading_book |
-| color | color, b/w | per genre |
-| detail | low, medium, high | derived from audience |
-| aspect | square, portrait, landscape | portrait for pages, landscape for scenes |
+| Field    | Values                                                                                                | Default                                                          |
+| -------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| genre    | reading_book, coloring, line_art, mandala, sketch, anime_2d, anime_3d, digital, photo, oil, photoreal | ask only if no genre can be inferred                             |
+| audience | toddler (2-4), early (5-7), middle (8-12), adult (18+), senior_accessible                             | adult for mandala, photo, oil, photoreal. early for reading_book |
+| color    | color, b/w                                                                                            | per genre                                                        |
+| detail   | low, medium, high                                                                                     | derived from audience                                            |
+| aspect   | square, portrait, landscape                                                                           | portrait for pages, landscape for scenes                         |
 
 Model selection rules:
 
@@ -110,32 +110,32 @@ Commands inline these in full. Use the names when composing new ones.
 
 Score each output 0-2 per row. Accept at 8 or higher. Regenerate with a new seed first. After two failures change the model or LoRA weight, not only the seed.
 
-| Check | Applies to | Pass condition (heuristic) |
-|---|---|---|
-| Prompt match | all | Subject, count and action match the request |
-| Clean line art | coloring, mandala, line_art | Under about 2% non-white, non-black pixels. No gray fills. Mostly closed regions |
-| Line weight fits age | coloring | Toddler: thick, few regions. Adult: fine, dense, uniform |
-| No text or watermark | all | None visible |
-| Symmetry | mandala | Left-right mirror difference is low. Center is near the canvas center |
-| Anatomy | people, animals | Correct fingers, limbs, eyes |
-| Style fidelity | all | Reads as the requested medium (impasto, graphite, flat vector) |
-| Child safety | audience under 13 | No frightening, suggestive or violent content |
-| Print readiness | print books | Native resolution is enough for the target size (see tips) |
+| Check                | Applies to                  | Pass condition (heuristic)                                                       |
+| -------------------- | --------------------------- | -------------------------------------------------------------------------------- |
+| Prompt match         | all                         | Subject, count and action match the request                                      |
+| Clean line art       | coloring, mandala, line_art | Under about 2% non-white, non-black pixels. No gray fills. Mostly closed regions |
+| Line weight fits age | coloring                    | Toddler: thick, few regions. Adult: fine, dense, uniform                         |
+| No text or watermark | all                         | None visible                                                                     |
+| Symmetry             | mandala                     | Left-right mirror difference is low. Center is near the canvas center            |
+| Anatomy              | people, animals             | Correct fingers, limbs, eyes                                                     |
+| Style fidelity       | all                         | Reads as the requested medium (impasto, graphite, flat vector)                   |
+| Child safety         | audience under 13           | No frightening, suggestive or violent content                                    |
+| Print readiness      | print books                 | Native resolution is enough for the target size (see tips)                       |
 
 ## 7. Tuning cheat sheet
 
-| Symptom | Change |
-|---|---|
-| Gray shading or fills in line art | Add `shading, gray` to negative. Lower detail LoRA. Raise cfg by 0.5 |
-| Lines too thin | Prompt `extra thick bold outlines`. Raise ColoringBook weight by 0.1 |
-| Too busy for age | Add `simple shapes, minimal detail, large open areas`. Remove detail LoRA |
-| Burnt or oversharpened photo | Lower cfg by 0.5-1. Drop detail LoRA weight |
-| Plastic skin | Add `visible pores, natural skin texture`. Use `NEG_PHOTO` plastic-skin terms |
-| LoRA overpowers subject | Lower weight by 0.2. Move trigger words to the end of the prompt |
-| Style too weak | Raise weight by 0.1-0.2. Repeat the trigger word once |
-| Mandala asymmetric | Say `perfect radial symmetry, centered`. Raise steps by 4. Or mirror a half in post |
-| Anime hands bad | Add `bad hands` to negative. Prefer poses with hands hidden |
-| Flat, dull color | Raise cfg by 0.5. Switch to ColorfulXL |
+| Symptom                           | Change                                                                              |
+| --------------------------------- | ----------------------------------------------------------------------------------- |
+| Gray shading or fills in line art | Add `shading, gray` to negative. Lower detail LoRA. Raise cfg by 0.5                |
+| Lines too thin                    | Prompt `extra thick bold outlines`. Raise ColoringBook weight by 0.1                |
+| Too busy for age                  | Add `simple shapes, minimal detail, large open areas`. Remove detail LoRA           |
+| Burnt or oversharpened photo      | Lower cfg by 0.5-1. Drop detail LoRA weight                                         |
+| Plastic skin                      | Add `visible pores, natural skin texture`. Use `NEG_PHOTO` plastic-skin terms       |
+| LoRA overpowers subject           | Lower weight by 0.2. Move trigger words to the end of the prompt                    |
+| Style too weak                    | Raise weight by 0.1-0.2. Repeat the trigger word once                               |
+| Mandala asymmetric                | Say `perfect radial symmetry, centered`. Raise steps by 4. Or mirror a half in post |
+| Anime hands bad                   | Add `bad hands` to negative. Prefer poses with hands hidden                         |
+| Flat, dull color                  | Raise cfg by 0.5. Switch to ColorfulXL                                              |
 
 Draft vs final: for drafts use `768x768` and steps minus 30%. Regenerate the chosen composition at full settings.
 
@@ -148,51 +148,52 @@ Draft vs final: for drafts use `768x768` and steps minus 30%. Regenerate the cho
 
 ## 9. Recipe index
 
-| ID | Genre | Audience | Model | LoRAs | Steps | cfg | Sampler |
-|---|---|---|---|---|---|---|---|
-| A1 | reading_book | toddler | ColorfulXL | Storybook 0.8 | 28 | 6 | 0 |
-| A2 | reading_book | early | ColorfulXL | Storybook 0.8 | 30 | 6 | 0 |
-| A3 | reading_book | middle | Juggernaut X | Storybook 0.6 | 30 | 5.5 | 4 |
-| A4 | reading_book | early (anime-leaning) | Animagine | none | 28 | 6 | 1 |
-| A5 | reading_book | early | Klein | none | 4 | 1 | 7 |
-| B1 | coloring | toddler | ColorfulXL | ColoringBook 0.9 | 26 | 7 | 0 |
-| B2 | coloring | early | ColorfulXL | ColoringBook 0.9 | 28 | 7 | 0 |
-| B3 | coloring | middle | Juggernaut v9 | ColoringBook 0.8 | 30 | 6.5 | 0 |
-| B4 | coloring | adult | Juggernaut X | ColoringBook 0.6 + Detail 0.6 | 32 | 6.5 | 0 |
-| B5 | coloring | adult (botanical) | ColorfulXL | ColoringBook 0.8 | 30 | 7 | 0 |
-| B6 | coloring | senior_accessible | ColorfulXL | ColoringBook 1.0 | 26 | 7 | 0 |
-| B7 | line_art | adult (manga ink) | Animagine | LineAni 0.8 | 28 | 6 | 1 |
-| B8 | coloring | adult | Klein | none | 4 | 1 | 7 |
-| C1 | mandala | adult | Juggernaut X | ColoringBook 0.5 + Detail 0.6 | 34 | 7 | 0 |
-| C2 | mandala | toddler to early | ColorfulXL | ColoringBook 0.9 | 26 | 7 | 0 |
-| C3 | mandala | adult | Klein | none | 4 | 1 | 7 |
-| D1 | sketch | general (graphite) | Juggernaut v9 | none | 30 | 5.5 | 0 |
-| D2 | sketch | general (anime) | Animagine | Sketch Style 0.8 | 28 | 6 | 1 |
-| D3 | sketch | general (charcoal/ink) | ColorfulXL | none | 28 | 6 | 0 |
-| D4 | sketch | general | Klein | none | 4 | 1 | 7 |
-| E1 | anime_2d | teen/adult (character) | Animagine | none | 28 | 6 | 1 |
-| E2 | anime_2d | all (scenery) | Animagine | none | 28 | 6 | 1 |
-| E3 | anime_2d | all | Klein | none | 4 | 1 | 7 |
-| F1 | anime_3d | adult (character) | Animagine | 3D Render 0.7 | 28 | 6 | 1 |
-| F2 | anime_3d | early (Pixar-like animal) | ColorfulXL | Pixar 1.8 | 30 | 6 | 0 |
-| F3 | anime_3d | all | Klein | none | 4 | 1 | 7 |
-| G1 | digital | general (concept art) | ColorfulXL | Detail 0.8 | 30 | 6 | 0 |
-| G2 | digital | general (flat vector) | ColorfulXL | none | 28 | 6.5 | 0 |
-| G3 | digital | general | Klein | none | 4 | 1 | 7 |
-| H1 | photo | adult (portrait) | Juggernaut X | none | 32 | 4.5 | 4 |
-| H2 | photo | general (landscape) | Juggernaut X | none | 30 | 5 | 4 |
-| H3 | photo | general (analog film) | Juggernaut v9 | Analog 0.6 | 30 | 5 | 4 |
-| H4 | photo | general | Klein | none | 4 | 1 | 7 |
-| I1 | oil | general (classical landscape) | ColorfulXL | Oil Painting 1.5 | 32 | 6 | 0 |
-| I2 | oil | general (expressive portrait) | Juggernaut v9 | Epic Oil Painting 1.5 | 32 | 5.5 | 0 |
-| I3 | oil | general | Klein | none | 4 | 1 | 7 |
-| J1 | photoreal | adult (portrait) | Juggernaut X | Detail 1.0 | 38 | 4.5 | 4 |
-| J2 | photoreal | general (macro) | Juggernaut X | Detail 0.8 | 36 | 5 | 4 |
-| J3 | photoreal | general | Klein | none | 4 | 1 | 7 |
+| ID  | Genre        | Audience                      | Model         | LoRAs                         | Steps | cfg | Sampler |
+| --- | ------------ | ----------------------------- | ------------- | ----------------------------- | ----- | --- | ------- |
+| A1  | reading_book | toddler                       | ColorfulXL    | Storybook 0.8                 | 28    | 6   | 0       |
+| A2  | reading_book | early                         | ColorfulXL    | Storybook 0.8                 | 30    | 6   | 0       |
+| A3  | reading_book | middle                        | Juggernaut X  | Storybook 0.6                 | 30    | 5.5 | 4       |
+| A4  | reading_book | early (anime-leaning)         | Animagine     | none                          | 28    | 6   | 1       |
+| A5  | reading_book | early                         | Klein         | none                          | 4     | 1   | 7       |
+| B1  | coloring     | toddler                       | ColorfulXL    | ColoringBook 0.9              | 26    | 7   | 0       |
+| B2  | coloring     | early                         | ColorfulXL    | ColoringBook 0.9              | 28    | 7   | 0       |
+| B3  | coloring     | middle                        | Juggernaut v9 | ColoringBook 0.8              | 30    | 6.5 | 0       |
+| B4  | coloring     | adult                         | Juggernaut X  | ColoringBook 0.6 + Detail 0.6 | 32    | 6.5 | 0       |
+| B5  | coloring     | adult (botanical)             | ColorfulXL    | ColoringBook 0.8              | 30    | 7   | 0       |
+| B6  | coloring     | senior_accessible             | ColorfulXL    | ColoringBook 1.0              | 26    | 7   | 0       |
+| B7  | line_art     | adult (manga ink)             | Animagine     | LineAni 0.8                   | 28    | 6   | 1       |
+| B8  | coloring     | adult                         | Klein         | none                          | 4     | 1   | 7       |
+| C1  | mandala      | adult                         | Juggernaut X  | ColoringBook 0.5 + Detail 0.6 | 34    | 7   | 0       |
+| C2  | mandala      | toddler to early              | ColorfulXL    | ColoringBook 0.9              | 26    | 7   | 0       |
+| C3  | mandala      | adult                         | Klein         | none                          | 4     | 1   | 7       |
+| D1  | sketch       | general (graphite)            | Juggernaut v9 | none                          | 30    | 5.5 | 0       |
+| D2  | sketch       | general (anime)               | Animagine     | Sketch Style 0.8              | 28    | 6   | 1       |
+| D3  | sketch       | general (charcoal/ink)        | ColorfulXL    | none                          | 28    | 6   | 0       |
+| D4  | sketch       | general                       | Klein         | none                          | 4     | 1   | 7       |
+| E1  | anime_2d     | teen/adult (character)        | Animagine     | none                          | 28    | 6   | 1       |
+| E2  | anime_2d     | all (scenery)                 | Animagine     | none                          | 28    | 6   | 1       |
+| E3  | anime_2d     | all                           | Klein         | none                          | 4     | 1   | 7       |
+| F1  | anime_3d     | adult (character)             | Animagine     | 3D Render 0.7                 | 28    | 6   | 1       |
+| F2  | anime_3d     | early (Pixar-like animal)     | ColorfulXL    | Pixar 1.8                     | 30    | 6   | 0       |
+| F3  | anime_3d     | all                           | Klein         | none                          | 4     | 1   | 7       |
+| G1  | digital      | general (concept art)         | ColorfulXL    | Detail 0.8                    | 30    | 6   | 0       |
+| G2  | digital      | general (flat vector)         | ColorfulXL    | none                          | 28    | 6.5 | 0       |
+| G3  | digital      | general                       | Klein         | none                          | 4     | 1   | 7       |
+| H1  | photo        | adult (portrait)              | Juggernaut X  | none                          | 32    | 4.5 | 4       |
+| H2  | photo        | general (landscape)           | Juggernaut X  | none                          | 30    | 5   | 4       |
+| H3  | photo        | general (analog film)         | Juggernaut v9 | Analog 0.6                    | 30    | 5   | 4       |
+| H4  | photo        | general                       | Klein         | none                          | 4     | 1   | 7       |
+| I1  | oil          | general (classical landscape) | ColorfulXL    | Oil Painting 1.5              | 32    | 6   | 0       |
+| I2  | oil          | general (expressive portrait) | Juggernaut v9 | Epic Oil Painting 1.5         | 32    | 5.5 | 0       |
+| I3  | oil          | general                       | Klein         | none                          | 4     | 1   | 7       |
+| J1  | photoreal    | adult (portrait)              | Juggernaut X  | Detail 1.0                    | 38    | 4.5 | 4       |
+| J2  | photoreal    | general (macro)               | Juggernaut X  | Detail 0.8                    | 36    | 5   | 4       |
+| J3  | photoreal    | general                       | Klein         | none                          | 4     | 1   | 7       |
 
 ## 10. Recipes: kids reading book illustrations
 
 ### A1: Toddler board-book page (ages 2-4)
+
 Use when: very simple, bold, friendly picture, one character, plain background.
 
 ```bash
@@ -214,6 +215,7 @@ Why: ColorfulXL gives flat saturated color. cfg 6 keeps shapes simple. Square su
 Eval: one subject, no text, no background objects. Fix: if busy, add `isolated subject` and lower LoRA to 0.7.
 
 ### A2: Early-reader scene (ages 5-7)
+
 Use when: a character in a setting, warm and readable, with some background.
 
 ```bash
@@ -235,6 +237,7 @@ Why: landscape fits two-page spreads. Weight 0.8 keeps the storybook look withou
 Eval: character is readable at thumbnail size, with clear space for page text. Fix: add `empty sky area for text` to reserve space.
 
 ### A3: Middle-grade painterly adventure (ages 8-12)
+
 Use when: richer detail, more atmosphere, adventure or fantasy.
 
 ```bash
@@ -256,6 +259,7 @@ Why: Juggernaut X adds depth and lighting. A lower LoRA weight (0.6) keeps detai
 Eval: faces and hands acceptable at this detail level. Fix: if too realistic, raise LoRA to 0.8 and add `flat painterly shapes`.
 
 ### A4: Early-reader, cartoon/anime-leaning (animal characters)
+
 Use when: user wants a manga or anime flavor for a kids book. Uses animals to avoid childlike human anime tags.
 
 ```bash
@@ -275,6 +279,7 @@ Why: Animagine plus `Euler A` is its native setup. `no humans` and the `safe` ra
 Eval: no humanoid child figure, clean eyes. Fix: add `simple background` if cluttered.
 
 ### A5: Early-reader, Flux Klein (fast, reference-friendly)
+
 Use when: speed or multi-reference character consistency matters. Negative prompt not supported.
 
 ```bash
@@ -295,6 +300,7 @@ Eval: style stays soft and watercolor-like. Fix: repeat the style phrase once fo
 ## 11. Recipes: coloring books and line art
 
 ### B1: Toddler coloring page (ages 2-4)
+
 Use when: very big shapes, one subject, thick lines.
 
 ```bash
@@ -316,6 +322,7 @@ Why: weight 0.9 strengthens the coloring-page look. cfg 7 enforces "thick" and "
 Eval: few regions, thick uniform lines, no gray. Fix: lines thin: add `jumbo outlines`. Add `one single subject` if multiple appear.
 
 ### B2: Early-reader coloring page (ages 5-7)
+
 Use when: medium detail, a simple scene, clear closed shapes.
 
 ```bash
@@ -337,6 +344,7 @@ Why: portrait ratio matches book pages. "medium detail" and "simple leaves" cap 
 Eval: all shapes closed, background not overfilled. Fix: if cluttered, add `simple background, few objects`.
 
 ### B3: Middle-grade coloring page (ages 8-12)
+
 Use when: more detail and pattern, still clear linework.
 
 ```bash
@@ -358,6 +366,7 @@ Why: Juggernaut handles denser patterns than ColorfulXL. Weight 0.8 keeps lines 
 Eval: pattern density moderate, no gray fill. Fix: lines too fine: raise weight to 0.9 and add `medium line weight`.
 
 ### B4: Adult intricate coloring page
+
 Use when: dense, fine, mandala-like or zentangle detail.
 
 ```bash
@@ -380,6 +389,7 @@ Why: coloring LoRA at 0.6 leaves room for Juggernaut's detail. Detail Tweaker ad
 Eval: uniform fine lines, many small regions, no gray. Fix: if gray appears, drop Detail to 0.3 and add `pure black lines only` to the prompt.
 
 ### B5: Adult botanical coloring page
+
 Use when: elegant, realistic-leaning flora or nature, calm style.
 
 ```bash
@@ -401,6 +411,7 @@ Why: ColorfulXL keeps clean contours. `fine elegant` and `thick lines` in the ne
 Eval: petals distinguishable, lines thin but continuous. Fix: lines break: raise steps to 34.
 
 ### B6: Senior-accessible / low-vision coloring page
+
 Use when: calming, large regions, high contrast, easy to see.
 
 ```bash
@@ -422,6 +433,7 @@ Why: weight 1.0 gives maximum coloring-page behavior. Mature subject matter with
 Eval: regions large, lines thick and high contrast. Fix: if regions are small, add `very large shapes`.
 
 ### B7: Manga-style ink line art (adult)
+
 Use when: user wants clean ink line art of a character, not a coloring page. Characters are adult.
 
 ```bash

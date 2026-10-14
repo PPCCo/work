@@ -1,7 +1,17 @@
 # DT Links
 
 ```text
+https://lmstudio.ai/ceveyne/draw-things-chat
+https://lmstudio.ai/kaed85/draw-things-chat/files/src/interfaces/config.fbs
+
+https://github.com/wysie/drawthings-grpc-hermes-plugin
+
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/3cac0759afad9d266004606263030916006be16e/.agents/skills/use-drawthings-cli/SKILL.md
+
+https://github.com/search?q=repo%3Adrawthingsai%2Fdraw-things-community+realesrgan_x4plus_f16&type=code
+
+https://github.com/JingyunLiang/SwinIR
+https://huggingface.co/easygoing0114/AI_upscalers/tree/main
 
 https://github.com/drawthingsai/draw-things-community/blob/70d4afa29324adfc3e80e4e8d976dc9d3d846a58/Scripts/ServerManagement/CPUScript/model-list#L1125
 https://github.com/drawthingsai/draw-things-community/blob/70d4afa29324adfc3e80e4e8d976dc9d3d846a58/Scripts/ServerManagement/GPUScript/LaunchGPU/model_list_04_16#L165
