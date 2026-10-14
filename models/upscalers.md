@@ -2,12 +2,12 @@ I'll check Draw Things' current upscaler list and the licenses on each model bef
 
 `https://huggingface.co/easygoing0114/AI_upscalers/tree/main`
 
-4x_foolhardy_Remacri_ExtraSmoother.safetensors
-4x_NMKD-Superscale-SP_178000_G.safetensors
-4x-UltraSharpV2.safetensors
-RealESRGAN_x4plus_anime_6B.safetensors
-RealESRGAN_x4plus.safetensors
-SwinIR-L_x4_PSNR.safetensors
+4x_foolhardy_remacri_extrasmoother_f16.ckpt
+4x_nmkd_superscale_sp_178000_g_f16.ckpt
+4x_ultrasharp_f16.ckpt
+realesrgan_x4plus_anime_6b_f16.ckpt
+realesrgan_x4plus_f16.ckpt
+rrdb_psnr_x4_f16.ckpt
 
 Draw Things can't use Hugging Face upscaler files directly, so I can't give you exact HF downloads for it. `--upscaler` expects Draw Things' own converted `.ckpt` files, which come from its own CDN (static.libnnc.org). I tried those URLs from my sandbox and got 403s, so I couldn't confirm the direct links or hashes. The CLI shares the app's models folder, so the safest route is to select each upscaler once in the Draw Things app so it downloads itself. You can then confirm it's installed with `draw-things-cli models list --downloaded-only`.
 

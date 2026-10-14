@@ -7,15 +7,15 @@ Audience: an AI agent / recommendation engine. Terse by design.
 
 ## 0. Read first: verified vs assumed
 
-| Item | Status |
-|---|---|
-| `sampler` numeric values (section 1) | Verified against a Draw Things `config.fbs` `SamplerType` enum snapshot. Newer builds may append values; never use a number above 18 without checking the app. |
-| `loras` array shape `{file, weight, mode}` | Verified (config.fbs `LoRA` table; mode = All/Base/Refiner). Use `"mode": "all"`. |
-| `upscaler` key inside `--config-json` | Documented as supported by community tooling. Value = upscaler filename. |
-| `upscaler_scale_factor` | NOT verified. Omitted from all commands. 4x models default to 4x; if output is too large, downscale after. |
-| `schedule_sampler` key | NOT verified as a native key. Kept because the user's template requires it. Treated as the **fallback sampler** (the schedule-variant sibling: Karras / AYS / Trailing). Operational rule: if the primary sampler gives noise, mush or banding, rerun with `sampler` = the `schedule_sampler` value. If the CLI rejects the key, delete it; `sampler` alone is authoritative. |
-| Klein file is the distilled build | ASSUMED (filename has no "base"). If 4 steps looks under-cooked and CFG > 1 works, it is base: use 20-28 steps, CFG ~4. |
-| LoRA trigger words | From memory of LoRA cards. Verify on each LoRA's card; they are cheap to add and harmless if redundant. |
+| Item                                       | Status                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sampler` numeric values (section 1)       | Verified against a Draw Things `config.fbs` `SamplerType` enum snapshot. Newer builds may append values; never use a number above 18 without checking the app.                                                                                                                                                                                                                |
+| `loras` array shape `{file, weight, mode}` | Verified (config.fbs `LoRA` table; mode = All/Base/Refiner). Use `"mode": "all"`.                                                                                                                                                                                                                                                                                             |
+| `upscaler` key inside `--config-json`      | Documented as supported by community tooling. Value = upscaler filename.                                                                                                                                                                                                                                                                                                      |
+| `upscaler_scale_factor`                    | NOT verified. Omitted from all commands. 4x models default to 4x; if output is too large, downscale after.                                                                                                                                                                                                                                                                    |
+| `schedule_sampler` key                     | NOT verified as a native key. Kept because the user's template requires it. Treated as the **fallback sampler** (the schedule-variant sibling: Karras / AYS / Trailing). Operational rule: if the primary sampler gives noise, mush or banding, rerun with `sampler` = the `schedule_sampler` value. If the CLI rejects the key, delete it; `sampler` alone is authoritative. |
+| Klein file is the distilled build          | ASSUMED (filename has no "base"). If 4 steps looks under-cooked and CFG > 1 works, it is base: use 20-28 steps, CFG ~4.                                                                                                                                                                                                                                                       |
+| LoRA trigger words                         | From memory of LoRA cards. Verify on each LoRA's card; they are cheap to add and harmless if redundant.                                                                                                                                                                                                                                                                       |
 
 Smoke test before any batch (agent runs once): `draw-things-cli generate --help`, then one 512x512, 4-step render per recipe family to confirm keys are accepted.
 
@@ -27,18 +27,18 @@ Path note: commands use `"$HOME/Dev/tmp/..."` not `'~/Dev/tmp/...'` because `~` 
 
 ### Sampler enum (`"sampler": n`)
 
-| n | Name | n | Name |
-|---|---|---|---|
-| 0 | DPM++ 2M Karras | 10 | Euler A Trailing |
-| 1 | Euler A | 11 | DPM++ SDE Trailing |
-| 2 | DDIM | 12 | DPM++ 2M AYS |
-| 3 | PLMS | 13 | Euler A AYS |
-| 4 | DPM++ SDE Karras | 14 | DPM++ SDE AYS |
-| 5 | UniPC | 15 | DPM++ 2M Trailing |
-| 6 | LCM | 16 | DDIM Trailing |
-| 7 | Euler A Substep | 17 | UniPC Trailing |
-| 8 | DPM++ SDE Substep | 18 | UniPC AYS |
-| 9 | TCD | | |
+| n   | Name              | n   | Name               |
+| --- | ----------------- | --- | ------------------ |
+| 0   | DPM++ 2M Karras   | 10  | Euler A Trailing   |
+| 1   | Euler A           | 11  | DPM++ SDE Trailing |
+| 2   | DDIM              | 12  | DPM++ 2M AYS       |
+| 3   | PLMS              | 13  | Euler A AYS        |
+| 4   | DPM++ SDE Karras  | 14  | DPM++ SDE AYS      |
+| 5   | UniPC             | 15  | DPM++ 2M Trailing  |
+| 6   | LCM               | 16  | DDIM Trailing      |
+| 7   | Euler A Substep   | 17  | UniPC Trailing     |
+| 8   | DPM++ SDE Substep | 18  | UniPC AYS          |
+| 9   | TCD               |     |                    |
 
 Use guide: 0 = clean, stable default for SDXL. 4 = richer texture/detail, ~2x slower per step. 12/14 (AYS) = same look in fewer steps (can drop ~8 steps). 1 = Euler A: soft, loose, Animagine's native sampler. 10/15 = Trailing: for few-step/flow models (Klein). Avoid 6/9 (LCM/TCD) unless a matching LCM/TCD LoRA is loaded (none allowed here).
 
@@ -47,16 +47,19 @@ Use guide: 0 = clean, stable default for SDXL. 4 = richer texture/detail, ~2x sl
 `0 -> 12` · `4 -> 14` · `1 -> 10` · Klein `10 -> 15`
 
 ### Sizes
+
 - SDXL: multiples of 64, ~1 MP. Square 1024x1024 · portrait/print 832x1216 · tall 896x1152 · landscape/spread 1216x832.
 - Klein: multiples of 16, <= ~2 MP. 1024x1024 · 1360x1024 · printable page 1216x1600.
 - Do not request 2K+ natively on SDXL (duplicate subjects). Upscale instead.
 
 ### Prompt styles
+
 - SDXL models: comma-separated phrases; `--negative-prompt` is real and effective. Do NOT use `masterpiece/8k` spam except Animagine's own quality tags.
 - Animagine: Danbooru tags, subject first, quality tags last.
 - Klein: natural sentences, 45-90 words, important things first, **NO negative prompt, NO negations ("no", "without")**, no `(word:1.3)` weights, no quality tags, hex colors attached to named objects (`the scarf is color #5B8E7D`), max one short quoted text string.
 
 ### Seeds / reproducibility
+
 Add `"seed": 12345` inside `--config-json` to lock. Generate 4 candidates per idea; judge composition, then re-render the winner with higher steps. A seed is only valid for its exact prompt.
 
 ---
@@ -65,78 +68,78 @@ Add `"seed": 12345` inside `--config-json` to lock. Generate 4 candidates per id
 
 ### Models
 
-| File | Type | Best for | Avoid for | Typical |
-|---|---|---|---|---|
-| `flux_2_klein_4b_f16.ckpt` | Klein 4B flow model (assumed distilled) | Fast drafts, flat vector, text-in-image, photoreal (non-child), simple kids art | Dense line art, painterly texture, 4+ subjects, hands, any SDXL LoRA | 4-8 steps, CFG 1.0, sampler 10 |
-| `juggernaut_xl_v9_f16.ckpt` | SDXL, photoreal-leaning all-rounder | Photo, sketch, line art base, 3D, oil | Anime | 30-35 steps, CFG 4-6, sampler 0/4 |
-| `juggernaut_xl_x_f16.ckpt` | SDXL, newer Juggernaut, better adherence/detail | Complex scenes, intricate line art, detailed photo/painting | Anime | 30-36 steps, CFG 3.5-6, sampler 0/4 |
-| `colorfulxl_v6.0_f16.ckpt` | SDXL, vivid saturated illustration | Kids books, digital painting, fantasy, bright 3D | Muted photoreal, B/W line art (color leaks) | 28-32 steps, CFG 5-7, sampler 0 |
-| `animagine_xl_v3.1_f16.ckpt` | SDXL anime (Danbooru tags) | 2D anime, chibi, manga line art | Photo, western realism | 28 steps, CFG 5-7, sampler 1 |
+| File                         | Type                                            | Best for                                                                        | Avoid for                                                            | Typical                             |
+| ---------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------- |
+| `flux_2_klein_4b_f16.ckpt`   | Klein 4B flow model (assumed distilled)         | Fast drafts, flat vector, text-in-image, photoreal (non-child), simple kids art | Dense line art, painterly texture, 4+ subjects, hands, any SDXL LoRA | 4-8 steps, CFG 1.0, sampler 10      |
+| `juggernaut_xl_v9_f16.ckpt`  | SDXL, photoreal-leaning all-rounder             | Photo, sketch, line art base, 3D, oil                                           | Anime                                                                | 30-35 steps, CFG 4-6, sampler 0/4   |
+| `juggernaut_xl_x_f16.ckpt`   | SDXL, newer Juggernaut, better adherence/detail | Complex scenes, intricate line art, detailed photo/painting                     | Anime                                                                | 30-36 steps, CFG 3.5-6, sampler 0/4 |
+| `colorfulxl_v6.0_f16.ckpt`   | SDXL, vivid saturated illustration              | Kids books, digital painting, fantasy, bright 3D                                | Muted photoreal, B/W line art (color leaks)                          | 28-32 steps, CFG 5-7, sampler 0     |
+| `animagine_xl_v3.1_f16.ckpt` | SDXL anime (Danbooru tags)                      | 2D anime, chibi, manga line art                                                 | Photo, western realism                                               | 28 steps, CFG 5-7, sampler 1        |
 
 ### LoRAs (all SDXL-family; **never load with Klein**)
 
-| File | Effect | Trigger (verify) | Weight range | Notes |
-|---|---|---|---|---|
-| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors` | Children's picture-book look | `KidsRedmAF, kids book illustration` | 0.5-0.95 | Strongest on colorfulxl. Lower to blend with oil/3D. |
-| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors` | Black-on-white coloring pages | `ColoringBookAF, Coloring Book` | 0.8-1.0 | Pair with strong color/shading negatives. |
-| `LineAniRedmondV2-Lineart-LineAniAF.safetensors` | Clean line art / ink | `LineAniAF, lineart` | 0.3-0.8 | Secondary LoRA for coloring/sketch/anime lineart. |
-| `sketch-style-xl.safetensors` | Pencil / ink sketch | `sketch style` | 0.7-0.9 | Add `monochrome` + paper words. |
-| `add-detail-xl.safetensors` | Detail slider | none | -1.0 to +1.0 | **Negative = simpler** (toddler art). Positive = intricate. |
-| `pixar-style.safetensors` | Rounded animated-film 3D characters | per LoRA card | 0.6-0.8 | Describe qualities in the prompt, do not name studios/franchises. |
-| `3d_render_style_xl.safetensors` | Soft 3D render material look | per LoRA card | 0.4-0.8 | Stack under pixar-style at 0.3-0.5. |
-| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors` | Analog film photo look | `AnalogRedmAF, analog style photo` | 0.5-0.8 | Photo only. |
-| `oil-painting-slider.safetensors` | Oil paint slider | none | 0.7-1.2 | Realistic-leaning oil. Negative reverses. |
-| `epic-oil-painting-slider.safetensors` | Dramatic impasto | per LoRA card | 0.8-1.0 | Do not stack with oil-painting-slider above 1.0 combined. |
+| File                                      | Effect                              | Trigger (verify)                     | Weight range | Notes                                                             |
+| ----------------------------------------- | ----------------------------------- | ------------------------------------ | ------------ | ----------------------------------------------------------------- |
+| `redmondv2_kids_storybook_lora_f16.ckpt`  | Children's picture-book look        | `KidsRedmAF, kids book illustration` | 0.5-0.95     | Strongest on colorfulxl. Lower to blend with oil/3D.              |
+| `redmond_coloringbook_lora_f16.ckpt`      | Black-on-white coloring pages       | `ColoringBookAF, Coloring Book`      | 0.8-1.0      | Pair with strong color/shading negatives.                         |
+| `redmondv2_lineart_lineani_lora_f16.ckpt` | Clean line art / ink                | `LineAniAF, lineart`                 | 0.3-0.8      | Secondary LoRA for coloring/sketch/anime lineart.                 |
+| `sketch_style_lora_f16.ckpt`              | Pencil / ink sketch                 | `sketch style`                       | 0.7-0.9      | Add `monochrome` + paper words.                                   |
+| `add_detail_xl_lora_f16.ckpt`             | Detail slider                       | none                                 | -1.0 to +1.0 | **Negative = simpler** (toddler art). Positive = intricate.       |
+| `pixar_style_lora_f16.ckpt`               | Rounded animated-film 3D characters | per LoRA card                        | 0.6-0.8      | Describe qualities in the prompt, do not name studios/franchises. |
+| `3d_render_style_xl_lora_f16.ckpt`        | Soft 3D render material look        | per LoRA card                        | 0.4-0.8      | Stack under pixar-style at 0.3-0.5.                               |
+| `redmondv2_analog_lora_f16.ckpt`          | Analog film photo look              | `AnalogRedmAF, analog style photo`   | 0.5-0.8      | Photo only.                                                       |
+| `oil_painting_slider_lora_f16.ckpt`       | Oil paint slider                    | none                                 | 0.7-1.2      | Realistic-leaning oil. Negative reverses.                         |
+| `oil_painting_slider_epic_lora_f16.ckpt`  | Dramatic impasto                    | per LoRA card                        | 0.8-1.0      | Do not stack with oil-painting-slider above 1.0 combined.         |
 
 Stacking rule: sum of style-LoRA weights (excluding add-detail) <= ~1.5. More than 3 LoRAs raises artifact risk.
 
 ### Upscalers (set via `"upscaler"` in config-json)
 
-| File | Short | Character | Use for |
-|---|---|---|---|
-| `4x_foolhardy_Remacri_ExtraSmoother.safetensors` | Remacri | Smooth, painterly, forgiving | Painted illustration, oil, 3D, portraits |
-| `4x_NMKD-Superscale-SP_178000_G.safetensors` | NMKD | Clean edges, low halo | Line art, coloring pages, mixed content |
-| `4x-UltraSharpV2.safetensors` | UltraSharpV2 | Crisp, high micro-contrast (can halo) | Detailed photo, mandalas, hatching, product |
-| `RealESRGAN_x4plus_anime_6B.safetensors` | ESRGAN-anime | Flat color, solid black lines | Anime, flat vector, kids coloring, cartoon |
-| `RealESRGAN_x4plus.safetensors` | ESRGAN | General photo, keeps grain | Photo, analog film |
-| `SwinIR-L_x4_PSNR.safetensors` | SwinIR-L | Faithful, no hallucination, slightly soft | Pencil/ink sketch, when fidelity > sharpness |
+| File                                          | Short        | Character                                 | Use for                                      |
+| --------------------------------------------- | ------------ | ----------------------------------------- | -------------------------------------------- |
+| `4x_foolhardy_remacri_extrasmoother_f16.ckpt` | Remacri      | Smooth, painterly, forgiving              | Painted illustration, oil, 3D, portraits     |
+| `4x_nmkd_superscale_sp_178000_g_f16.ckpt`     | NMKD         | Clean edges, low halo                     | Line art, coloring pages, mixed content      |
+| `4x_ultrasharp_f16.ckpt`                      | UltraSharpV2 | Crisp, high micro-contrast (can halo)     | Detailed photo, mandalas, hatching, product  |
+| `realesrgan_x4plus_anime_6b_f16.ckpt`         | ESRGAN-anime | Flat color, solid black lines             | Anime, flat vector, kids coloring, cartoon   |
+| `realesrgan_x4plus_f16.ckpt`                  | ESRGAN       | General photo, keeps grain                | Photo, analog film                           |
+| `rrdb_psnr_x4.ckpt`.                          | RRDB-PSNR    | Faithful, no hallucination, slightly soft | Pencil/ink sketch, when fidelity > sharpness |
 
 ---
 
 ## 3. Recipe index
 
-| ID | Genre | Age | Model | LoRAs (weight) | Size | Steps | CFG | Sampler [n] | schedule_sampler [n] | Upscaler |
-|---|---|---|---|---|---|---|---|---|---|---|
-| ILL-A | Kids book illustration | 2-4 | colorfulxl_v6.0 | Storybook 0.9, add-detail -0.6 | 1024x1024 | 28 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
-| ILL-B | Kids book illustration | 5-7 | colorfulxl_v6.0 | Storybook 0.85 | 1216x832 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
-| ILL-C | Kids book illustration | 8-10 | juggernaut_xl_x | Storybook 0.7, add-detail 0.4 | 1216x832 | 32 | 5.5 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | Remacri |
-| ILL-K | Kids illustration (fast flat) | 2-7 | flux_2_klein_4b | none | 1024x1024 | 4 | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
-| COL-A | Kids coloring/line art | 2-4 | juggernaut_xl_v9 | ColoringBook 1.0, add-detail -1.0 | 832x1216 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | ESRGAN-anime |
-| COL-B | Kids coloring/line art | 5-7 | juggernaut_xl_v9 | ColoringBook 0.95 | 832x1216 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | ESRGAN-anime |
-| COL-C | Kids coloring/line art | 8-10 | juggernaut_xl_x | ColoringBook 0.9, add-detail 0.6 | 832x1216 | 32 | 6.0 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | NMKD |
-| COL-K | Kids coloring (fast draft) | 2-4 | flux_2_klein_4b | none | 1216x1600 | 8 | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
-| ADC-A | Adult coloring/line art | teen, adult | juggernaut_xl_x | ColoringBook 0.8, LineAni 0.4, add-detail 0.9 | 832x1216 | 34 | 6.0 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | NMKD |
-| ADC-B | Adult mandala | teen, adult | juggernaut_xl_v9 | ColoringBook 0.85, add-detail 1.0 | 1024x1024 | 32 | 7.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | UltraSharpV2 |
-| ADC-C | Adult mandala (subject) | teen, adult | juggernaut_xl_x | ColoringBook 0.8, LineAni 0.35, add-detail 0.9 | 1024x1024 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | NMKD |
-| SKT-A | Pencil/graphite sketch | teen, adult | juggernaut_xl_v9 | sketch-style 0.85, add-detail 0.3 | 896x1152 | 30 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | UltraSharpV2 |
-| SKT-B | Ink/travel sketch | teen, adult | juggernaut_xl_x | sketch-style 0.7, LineAni 0.5 | 1216x832 | 30 | 5.5 | Euler A [1] | Euler A Trailing [10] | SwinIR-L |
-| SKT-C | Simple pencil drawing | 8-10 | juggernaut_xl_v9 | sketch-style 0.7, add-detail -0.3 | 1024x1024 | 28 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | SwinIR-L |
-| ANI-A | 2D anime chibi/mascot | 5-10 | animagine_xl_v3.1 | none | 1024x1024 | 28 | 6.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
-| ANI-B | 2D anime illustration (SFW) | teen, adult | animagine_xl_v3.1 | add-detail 0.5 | 832x1216 | 28 | 7.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
-| ANI-C | Anime line art (coloring) | teen, adult | animagine_xl_v3.1 | LineAni 0.8, ColoringBook 0.4 | 832x1216 | 28 | 6.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
-| 3D-A | 3D cute character | 2-7 | colorfulxl_v6.0 | pixar-style 0.8, 3d_render 0.4 | 1024x1024 | 30 | 5.5 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
-| 3D-B | 3D character in scene | 8-10, teen | juggernaut_xl_x | pixar-style 0.7, 3d_render 0.5, add-detail 0.5 | 1216x832 | 32 | 5.0 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | UltraSharpV2 |
-| 3D-C | 3D isometric/object render | teen, adult | juggernaut_xl_v9 | 3d_render 0.8 | 1024x1024 | 30 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | UltraSharpV2 |
-| DIG-A | Digital flat vector/sticker | all ages | flux_2_klein_4b | none | 1024x1024 | 4 | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
-| DIG-B | Digital painting/concept art | teen, adult | colorfulxl_v6.0 | add-detail 0.6 | 1216x832 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
-| PHO-A | Photography: landscape | all ages | juggernaut_xl_x | add-detail 0.5 | 1216x832 | 34 | 4.5 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | ESRGAN |
-| PHO-B | Photorealism: adult portrait | adult | juggernaut_xl_v9 | add-detail 0.4 | 896x1152 | 35 | 4.5 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | Remacri |
-| PHO-C | Photography: analog film | teen, adult | juggernaut_xl_x | Analog 0.7, add-detail 0.2 | 1216x832 | 32 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | ESRGAN |
-| PHO-D | Photography: product/macro | all ages | juggernaut_xl_v9 | add-detail 0.8 | 1024x1024 | 32 | 5.0 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | UltraSharpV2 |
-| PHO-K | Photography (fast) | teen, adult | flux_2_klein_4b | none | 1360x1024 | 4 | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN |
-| OIL-A | Oil painting: classical landscape | all ages | juggernaut_xl_x | oil-painting-slider 1.0, add-detail 0.3 | 1216x832 | 32 | 5.5 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
-| OIL-B | Oil painting: impasto/dramatic | teen, adult | juggernaut_xl_v9 | epic-oil-painting-slider 1.0 | 896x1152 | 32 | 6.0 | DPM++ SDE Karras [4] | DPM++ SDE AYS [14] | Remacri |
-| OIL-C | Oil-painted storybook | 8-10 | colorfulxl_v6.0 | Storybook 0.5, oil-painting-slider 0.7 | 1216x832 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | Remacri |
+| ID    | Genre                             | Age         | Model             | LoRAs (weight)                                 | Size      | Steps | CFG | Sampler [n]           | schedule_sampler [n]   | Upscaler     |
+| ----- | --------------------------------- | ----------- | ----------------- | ---------------------------------------------- | --------- | ----- | --- | --------------------- | ---------------------- | ------------ |
+| ILL-A | Kids book illustration            | 2-4         | colorfulxl_v6.0   | Storybook 0.9, add-detail -0.6                 | 1024x1024 | 28    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
+| ILL-B | Kids book illustration            | 5-7         | colorfulxl_v6.0   | Storybook 0.85                                 | 1216x832  | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
+| ILL-C | Kids book illustration            | 8-10        | juggernaut_xl_x   | Storybook 0.7, add-detail 0.4                  | 1216x832  | 32    | 5.5 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | Remacri      |
+| ILL-K | Kids illustration (fast flat)     | 2-7         | flux_2_klein_4b   | none                                           | 1024x1024 | 4     | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
+| COL-A | Kids coloring/line art            | 2-4         | juggernaut_xl_v9  | ColoringBook 1.0, add-detail -1.0              | 832x1216  | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | ESRGAN-anime |
+| COL-B | Kids coloring/line art            | 5-7         | juggernaut_xl_v9  | ColoringBook 0.95                              | 832x1216  | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | ESRGAN-anime |
+| COL-C | Kids coloring/line art            | 8-10        | juggernaut_xl_x   | ColoringBook 0.9, add-detail 0.6               | 832x1216  | 32    | 6.0 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | NMKD         |
+| COL-K | Kids coloring (fast draft)        | 2-4         | flux_2_klein_4b   | none                                           | 1216x1600 | 8     | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
+| ADC-A | Adult coloring/line art           | teen, adult | juggernaut_xl_x   | ColoringBook 0.8, LineAni 0.4, add-detail 0.9  | 832x1216  | 34    | 6.0 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | NMKD         |
+| ADC-B | Adult mandala                     | teen, adult | juggernaut_xl_v9  | ColoringBook 0.85, add-detail 1.0              | 1024x1024 | 32    | 7.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | UltraSharpV2 |
+| ADC-C | Adult mandala (subject)           | teen, adult | juggernaut_xl_x   | ColoringBook 0.8, LineAni 0.35, add-detail 0.9 | 1024x1024 | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | NMKD         |
+| SKT-A | Pencil/graphite sketch            | teen, adult | juggernaut_xl_v9  | sketch-style 0.85, add-detail 0.3              | 896x1152  | 30    | 5.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | UltraSharpV2 |
+| SKT-B | Ink/travel sketch                 | teen, adult | juggernaut_xl_x   | sketch-style 0.7, LineAni 0.5                  | 1216x832  | 30    | 5.5 | Euler A [1]           | Euler A Trailing [10]  | RRDB-PSNR    |
+| SKT-C | Simple pencil drawing             | 8-10        | juggernaut_xl_v9  | sketch-style 0.7, add-detail -0.3              | 1024x1024 | 28    | 5.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | RRDB-PSNR    |
+| ANI-A | 2D anime chibi/mascot             | 5-10        | animagine_xl_v3.1 | none                                           | 1024x1024 | 28    | 6.0 | Euler A [1]           | Euler A Trailing [10]  | ESRGAN-anime |
+| ANI-B | 2D anime illustration (SFW)       | teen, adult | animagine_xl_v3.1 | add-detail 0.5                                 | 832x1216  | 28    | 7.0 | Euler A [1]           | Euler A Trailing [10]  | ESRGAN-anime |
+| ANI-C | Anime line art (coloring)         | teen, adult | animagine_xl_v3.1 | LineAni 0.8, ColoringBook 0.4                  | 832x1216  | 28    | 6.0 | Euler A [1]           | Euler A Trailing [10]  | ESRGAN-anime |
+| 3D-A  | 3D cute character                 | 2-7         | colorfulxl_v6.0   | pixar-style 0.8, 3d_render 0.4                 | 1024x1024 | 30    | 5.5 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
+| 3D-B  | 3D character in scene             | 8-10, teen  | juggernaut_xl_x   | pixar-style 0.7, 3d_render 0.5, add-detail 0.5 | 1216x832  | 32    | 5.0 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | UltraSharpV2 |
+| 3D-C  | 3D isometric/object render        | teen, adult | juggernaut_xl_v9  | 3d_render 0.8                                  | 1024x1024 | 30    | 5.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | UltraSharpV2 |
+| DIG-A | Digital flat vector/sticker       | all ages    | flux_2_klein_4b   | none                                           | 1024x1024 | 4     | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN-anime |
+| DIG-B | Digital painting/concept art      | teen, adult | colorfulxl_v6.0   | add-detail 0.6                                 | 1216x832  | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
+| PHO-A | Photography: landscape            | all ages    | juggernaut_xl_x   | add-detail 0.5                                 | 1216x832  | 34    | 4.5 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | ESRGAN       |
+| PHO-B | Photorealism: adult portrait      | adult       | juggernaut_xl_v9  | add-detail 0.4                                 | 896x1152  | 35    | 4.5 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | Remacri      |
+| PHO-C | Photography: analog film          | teen, adult | juggernaut_xl_x   | Analog 0.7, add-detail 0.2                     | 1216x832  | 32    | 5.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | ESRGAN       |
+| PHO-D | Photography: product/macro        | all ages    | juggernaut_xl_v9  | add-detail 0.8                                 | 1024x1024 | 32    | 5.0 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | UltraSharpV2 |
+| PHO-K | Photography (fast)                | teen, adult | flux_2_klein_4b   | none                                           | 1360x1024 | 4     | 1.0 | Euler A Trailing [10] | DPM++ 2M Trailing [15] | ESRGAN       |
+| OIL-A | Oil painting: classical landscape | all ages    | juggernaut_xl_x   | oil-painting-slider 1.0, add-detail 0.3        | 1216x832  | 32    | 5.5 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
+| OIL-B | Oil painting: impasto/dramatic    | teen, adult | juggernaut_xl_v9  | epic-oil-painting-slider 1.0                   | 896x1152  | 32    | 6.0 | DPM++ SDE Karras [4]  | DPM++ SDE AYS [14]     | Remacri      |
+| OIL-C | Oil-painted storybook             | 8-10        | colorfulxl_v6.0   | Storybook 0.5, oil-painting-slider 0.7         | 1216x832  | 30    | 6.0 | DPM++ 2M Karras [0]   | DPM++ 2M AYS [12]      | Remacri      |
 
 ---
 
@@ -145,7 +148,9 @@ Stacking rule: sum of style-LoRA weights (excluding add-detail) <= ~1.5. More th
 Each block: match keywords, command, why.
 
 ### ILL-A · Kids book illustration · age 2-4
+
 Match: toddler, board book, nursery, very simple, huge eyes, one character.
+
 ```bash
 draw-things-cli generate \
 --model colorfulxl_v6.0_f16.ckpt \
@@ -156,17 +161,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.9, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -0.6, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -0.6, "mode": "all"}
   ]
 }'
 ```
+
 Why: negative add-detail strips clutter; one subject; empty space; colorfulxl gives flat saturated toddler palette.
 
 ### ILL-B · Kids book illustration · age 5-7
+
 Match: picture book spread, two characters, gentle story, space for text.
+
 ```bash
 draw-things-cli generate \
 --model colorfulxl_v6.0_f16.ckpt \
@@ -177,16 +185,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.85, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.85, "mode": "all"}
   ]
 }'
 ```
+
 Why: landscape size = spread; two subjects max; "empty space for text" reserves layout room.
 
 ### ILL-C · Kids book illustration · age 8-10
+
 Match: adventure, richer detail, atmosphere, 2-3 subjects, middle grade.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -197,17 +208,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
+
 Why: juggernaut_x adds depth; lower Storybook weight keeps detail; SDE sampler for texture; "friendly" in prompt pins mood.
 
 ### ILL-K · Kids illustration, fast flat · age 2-7 (Klein)
+
 Match: quick draft, flat vector, bold outlines, flashcards, app art. No negative prompt, no LoRA.
+
 ```bash
 draw-things-cli generate \
 --model flux_2_klein_4b_f16.ckpt \
@@ -217,14 +231,17 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
+
 Why: distilled Klein excels at flat shapes; 11-slot sentence prompt (subject, action, expression, style, scene, light, hex colors, framing); ~1 s per image, so run 4 seeds.
 
 ### COL-A · Kids coloring · age 2-4
+
 Match: toddler coloring page, one big shape, thick lines, huge open areas.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -235,17 +252,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 1.0, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -1.0, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -1.0, "mode": "all"}
   ]
 }'
 ```
+
 Why: add-detail -1.0 deletes tiny areas; long negative blocks color/shading leak; 832x1216 ~ A4 ratio; ESRGAN-anime keeps lines solid black.
 
 ### COL-B · Kids coloring · age 5-7
+
 Match: kids coloring page, simple scene, a few playful details.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -256,16 +276,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.95, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.95, "mode": "all"}
   ]
 }'
 ```
+
 Why: LoRA alone gives default medium detail; two subjects max; "easy to color" steers area size.
 
 ### COL-C · Kids coloring · age 8-10
+
 Match: detailed kids coloring, patterns, many small areas, challenge.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -276,17 +299,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.9, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
   ]
 }'
 ```
+
 Why: positive add-detail + "decorative patterns" = pattern-rich areas older kids enjoy; NMKD keeps thin lines clean.
 
 ### COL-K · Kids coloring, fast draft · age 2-4 (Klein)
+
 Match: instant coloring-page draft. Expect occasional broken outlines; if so use COL-A.
+
 ```bash
 draw-things-cli generate \
 --model flux_2_klein_4b_f16.ckpt \
@@ -296,14 +322,17 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
+
 Why: positive-only wording ("flat pure white background") replaces the unusable negative prompt; 8 steps for edge stability; no color or shadow words anywhere.
 
 ### ADC-A · Adult coloring / line art · teen, adult
+
 Match: intricate coloring page, animals, botanical, scenes, fine line work. Teen: lower add-detail to 0.5.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -314,18 +343,21 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.4, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.9, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.4, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
   ]
 }'
 ```
+
 Why: LineAni sharpens/steadies strokes; add-detail adds fine patterning; 34 steps + SDE for edge fidelity.
 
 ### ADC-B · Adult mandala (classic) · teen, adult
+
 Match: mandala, radial, symmetrical, meditation, geometric.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -336,17 +368,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 1.0, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
   ]
 }'
 ```
+
 Why: higher CFG 7 enforces symmetry words; square canvas suits radial; UltraSharpV2 maximizes hairline crispness (if halos appear, swap to NMKD).
 
 ### ADC-C · Adult mandala with subject · teen, adult
+
 Match: animal mandala, owl, lion, butterfly, moon, zentangle hybrid.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -357,18 +392,21 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.35, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.9, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.35, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
   ]
 }'
 ```
+
 Why: CFG 6 balances a recognizable subject against pattern fill; juggernaut_x follows "built from mandala patterns" better than v9.
 
 ### SKT-A · Pencil / graphite sketch · teen, adult
+
 Match: pencil drawing, graphite, cross-hatching, charcoal-like, sketchbook.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -379,17 +417,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.3, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.3, "mode": "all"}
   ]
 }'
 ```
+
 Why: low CFG keeps natural, uneven pencil tone; "paper grain" + monochrome prevent painted look; UltraSharpV2 preserves hatching.
 
 ### SKT-B · Ink / travel sketch · teen, adult
+
 Match: pen and ink, urban sketch, loose lines, architecture.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -400,17 +441,21 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "SwinIR-L_x4_PSNR.safetensors",
+"upscaler": "rrdb_psnr_x4_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
-Why: Euler A gives looser, hand-drawn strokes; SwinIR-L upscales without inventing texture.
+
+safetensors
+Why: Euler A gives looser, hand-drawn strokes; RRDB-PSNR upscales without inventing texture.
 
 ### SKT-C · Simple pencil drawing · age 8-10
+
 Match: kids drawing practice, simple pencil animal, tutorial reference, kid-safe.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -421,17 +466,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "SwinIR-L_x4_PSNR.safetensors",
+"upscaler": "rrdb_psnr_x4_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -0.3, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -0.3, "mode": "all"}
   ]
 }'
 ```
-Why: slight negative detail = fewer, copyable shapes; one simple subject.
+
+Why: slight negative detail = fewer, copyable shapes; one simple subject. (RRDB-PSNR)
 
 ### ANI-A · 2D anime chibi / mascot · age 5-10
+
 Match: cute mascot, chibi, kawaii, sticker, kid-friendly anime. No humans keeps it age-safe.
+
 ```bash
 draw-things-cli generate \
 --model animagine_xl_v3.1_f16.ckpt \
@@ -442,14 +490,17 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
+
 Why: Animagine's documented tag order (subject, then quality tags) and Euler A; no LoRA needed; "nsfw" always in negative.
 
 ### ANI-B · 2D anime illustration (SFW) · teen, adult
+
 Match: anime character scene, key visual, cinematic anime, wallpaper. Always SFW, adult-appearing characters.
+
 ```bash
 draw-things-cli generate \
 --model animagine_xl_v3.1_f16.ckpt \
@@ -460,16 +511,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
+
 Why: portrait size for a full-body character plus skyline; CFG 7 for tag adherence; mild add-detail enriches background.
 
 ### ANI-C · Anime line art for coloring · teen, adult
+
 Match: manga line art, anime coloring page, inking, B/W character.
+
 ```bash
 draw-things-cli generate \
 --model animagine_xl_v3.1_f16.ckpt \
@@ -480,17 +534,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
+
 Why: LineAni dominant for ink quality, ColoringBook low to force white fills without degrading anime anatomy.
 
 ### 3D-A · 3D cute character · age 2-7
+
 Match: toy-like 3D animal, cute plush render, nursery 3D, bright.
+
 ```bash
 draw-things-cli generate \
 --model colorfulxl_v6.0_f16.ckpt \
@@ -501,17 +558,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "pixar-style.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "pixar_style_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
+
 Why: colorfulxl keeps pastel saturation; "toy-like, clay-like" describes the look without naming a studio; Remacri keeps surfaces smooth.
 
 ### 3D-B · 3D character in scene · age 8-10, teen
+
 Match: animated-film still, character + environment, cinematic 3D.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -522,18 +582,21 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "pixar-style.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.5, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "pixar_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
+
 Why: juggernaut_x handles multi-element scenes; "realistic skin" in negative keeps characters stylized (never photoreal children).
 
 ### 3D-C · 3D isometric / object render · teen, adult
+
 Match: isometric room, product-like 3D, diorama, icon render.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -544,16 +607,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.8, "mode": "all"}
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
   ]
 }'
 ```
+
 Why: no character LoRA (object, not character); single LoRA at 0.8 keeps materials consistent.
 
 ### DIG-A · Digital flat vector / sticker · all ages (Klein)
+
 Match: sticker, icon, logo-like illustration, flat vector, app art, set of assets.
+
 ```bash
 draw-things-cli generate \
 --model flux_2_klein_4b_f16.ckpt \
@@ -563,14 +629,17 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
+
 Why: Klein's strength is clean shapes and exact hex colors; fixed palette hexes make a coherent multi-image set.
 
 ### DIG-B · Digital painting / concept art · teen, adult
+
 Match: fantasy landscape, concept art, painterly digital, wallpaper.
+
 ```bash
 draw-things-cli generate \
 --model colorfulxl_v6.0_f16.ckpt \
@@ -581,16 +650,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
   ]
 }'
 ```
+
 Why: colorfulxl's saturation suits fantasy; add-detail enriches small architecture; Remacri keeps brushwork smooth.
 
 ### PHO-A · Photography: landscape · all ages
+
 Match: landscape photo, nature, golden hour, scenery.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -601,16 +673,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
+
 Why: low CFG = natural color; "hdr/oversaturated" in negative; camera terms are valid for photoreal only.
 
 ### PHO-B · Photorealism: adult portrait · adult
+
 Match: portrait photo, headshot, character study. Invented adults only; never a real person's likeness, never a child.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -621,16 +696,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
+
 Why: juggernaut_v9 is the strongest skin model here; add-detail kept low to avoid waxy over-texture; Remacri is kind to faces.
 
 ### PHO-C · Photography: analog film · teen, adult
+
 Match: vintage, film grain, 35mm, street, nostalgic.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -641,17 +719,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
-    {"file": "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.2, "mode": "all"}
+    {"file": "redmondv2_analog_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.2, "mode": "all"}
   ]
 }'
 ```
+
 Why: ESRGAN (non-anime) preserves grain; "clean/oversharpened" negatives fight the digital look.
 
 ### PHO-D · Photography: product / macro · all ages
+
 Match: product shot, still life, macro, catalog.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -662,16 +743,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.8, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
   ]
 }'
 ```
+
 Why: high add-detail + UltraSharpV2 = surface micro-texture; "logo" in negative avoids garbled brand text.
 
 ### PHO-K · Photography, fast (Klein) · teen, adult
+
 Match: quick photoreal draft, candid scene, adult subjects, text-in-scene. No negative prompt.
+
 ```bash
 draw-things-cli generate \
 --model flux_2_klein_4b_f16.ckpt \
@@ -681,14 +765,17 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": []
 }'
 ```
+
 Why: Klein responds to camera/lens language and long scene sentences; ~1 s per draft; promote keepers to PHO-B/A for texture.
 
 ### OIL-A · Oil painting: classical landscape · all ages
+
 Match: oil painting, landscape, impressionist, canvas, traditional art.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_x_f16.ckpt \
@@ -699,17 +786,20 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "oil-painting-slider.safetensors", "weight": 1.0, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.3, "mode": "all"}
+    {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.3, "mode": "all"}
   ]
 }'
 ```
+
 Why: slider at 1.0 gives a realistic-oil blend; "smooth, airbrushed" negatives remove digital sheen.
 
 ### OIL-B · Oil painting: impasto / dramatic · teen, adult
+
 Match: expressive, palette knife, dramatic, moody, gallery.
+
 ```bash
 draw-things-cli generate \
 --model juggernaut_xl_v9_f16.ckpt \
@@ -720,16 +810,19 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "epic-oil-painting-slider.safetensors", "weight": 1.0, "mode": "all"}
+    {"file": "oil_painting_slider_epic_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
   ]
 }'
 ```
+
 Why: epic slider alone for strong impasto; SDE sampler adds chunky texture; do not stack both oil sliders above 1.0 combined.
 
 ### OIL-C · Oil-painted storybook · age 8-10
+
 Match: painterly children's scene, dreamy, gift art, keepsake.
+
 ```bash
 draw-things-cli generate \
 --model colorfulxl_v6.0_f16.ckpt \
@@ -740,13 +833,14 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.5, "mode": "all"},
-    {"file": "oil-painting-slider.safetensors", "weight": 0.7, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.5, "mode": "all"},
+    {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 0.7, "mode": "all"}
   ]
 }'
 ```
+
 Why: two style LoRAs each under 0.75 (sum ~1.2) blend instead of fighting; colorfulxl keeps it warm.
 
 ---
@@ -755,61 +849,62 @@ Why: two style LoRAs each under 0.75 (sum ~1.2) blend instead of fighting; color
 
 ### 5.1 Routing (first match wins)
 
-| User signal | Recipe family |
-|---|---|
-| "fast", "draft", "quick", "sticker", "flat vector", "text in image", hex colors given | Klein: ILL-K, COL-K, DIG-A, PHO-K |
-| coloring page + age <= 10 | COL-A/B/C (Klein COL-K only if speed > quality) |
-| coloring page + teen/adult, "intricate" | ADC-A |
-| "mandala", "zentangle", "radial", "symmetrical" | ADC-B (pure pattern) or ADC-C (subject + mandala) |
-| children's book, picture book, nursery, bedtime | ILL-A/B/C by age; OIL-C if painterly |
-| pencil, graphite, charcoal, pen and ink, sketchbook | SKT-A/B (SKT-C for kids) |
-| anime, manga, chibi, kawaii, waifu-style character | ANI-A (kids/mascot), ANI-B (illustration), ANI-C (line art) |
-| 3D, render, clay, toy-like, animated film look | 3D-A (young), 3D-B (character scene), 3D-C (object/room) |
-| oil painting, impasto, canvas, brushstrokes | OIL-A/B/C |
-| digital painting, concept art, fantasy wallpaper | DIG-B |
-| photo, photoreal, camera/lens words, product, portrait | PHO-A/B/C/D (PHO-K for speed) |
+| User signal                                                                           | Recipe family                                               |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| "fast", "draft", "quick", "sticker", "flat vector", "text in image", hex colors given | Klein: ILL-K, COL-K, DIG-A, PHO-K                           |
+| coloring page + age <= 10                                                             | COL-A/B/C (Klein COL-K only if speed > quality)             |
+| coloring page + teen/adult, "intricate"                                               | ADC-A                                                       |
+| "mandala", "zentangle", "radial", "symmetrical"                                       | ADC-B (pure pattern) or ADC-C (subject + mandala)           |
+| children's book, picture book, nursery, bedtime                                       | ILL-A/B/C by age; OIL-C if painterly                        |
+| pencil, graphite, charcoal, pen and ink, sketchbook                                   | SKT-A/B (SKT-C for kids)                                    |
+| anime, manga, chibi, kawaii, waifu-style character                                    | ANI-A (kids/mascot), ANI-B (illustration), ANI-C (line art) |
+| 3D, render, clay, toy-like, animated film look                                        | 3D-A (young), 3D-B (character scene), 3D-C (object/room)    |
+| oil painting, impasto, canvas, brushstrokes                                           | OIL-A/B/C                                                   |
+| digital painting, concept art, fantasy wallpaper                                      | DIG-B                                                       |
+| photo, photoreal, camera/lens words, product, portrait                                | PHO-A/B/C/D (PHO-K for speed)                               |
 
 ### 5.2 Age band mapping
 
-| Age | Subjects | Detail | Line weight | Palette |
-|---|---|---|---|---|
-| 2-4 | 1 | minimal (add-detail negative) | very thick | bright, flat |
-| 5-7 | up to 2 | simple + few playful details | thick | warm, bright |
-| 8-10 | up to 3 | richer, patterns | medium | richer, atmospheric |
-| teen | any | high | fine | any |
-| adult | any | high to extreme | fine | any |
+| Age   | Subjects | Detail                        | Line weight | Palette             |
+| ----- | -------- | ----------------------------- | ----------- | ------------------- |
+| 2-4   | 1        | minimal (add-detail negative) | very thick  | bright, flat        |
+| 5-7   | up to 2  | simple + few playful details  | thick       | warm, bright        |
+| 8-10  | up to 3  | richer, patterns              | medium      | richer, atmospheric |
+| teen  | any      | high                          | fine        | any                 |
+| adult | any      | high to extreme               | fine        | any                 |
 
 ### 5.3 Knobs for under-specified requests
 
-| Requirement | Change |
-|---|---|
-| "more detail / intricate" | add-detail +0.2 to +0.4 (max 1.0), steps +4, sampler 4 |
-| "simpler / cleaner / younger" | add-detail -0.3 to -1.0, cut subjects and props, thicker-line words |
-| "faster / cheaper" | sampler -> schedule_sampler value (AYS) and steps -8; or switch to Klein recipe |
-| "print quality" | keep native size, use the recipe's upscaler; coloring pages 832x1216 (SDXL) or 1216x1600 (Klein) |
-| "more vivid / saturated" | swap model to colorfulxl; CFG +0.5 |
-| "more realistic / natural" | juggernaut_xl_x, CFG -0.5 to -1, drop style LoRAs |
-| "consistent across a set" | fixed seed + identical prompt skeleton + identical LoRA weights; Klein: reuse hex palette verbatim |
-| "text in the image" | Klein only, one quoted string, <= 3 words; else leave space and typeset afterwards |
-| "landscape / spread" | 1216x832 (SDXL) or 1360x1024 (Klein) |
-| "portrait / poster / page" | 832x1216 or 896x1152 (SDXL); 1216x1600 (Klein) |
+| Requirement                   | Change                                                                                             |
+| ----------------------------- | -------------------------------------------------------------------------------------------------- |
+| "more detail / intricate"     | add-detail +0.2 to +0.4 (max 1.0), steps +4, sampler 4                                             |
+| "simpler / cleaner / younger" | add-detail -0.3 to -1.0, cut subjects and props, thicker-line words                                |
+| "faster / cheaper"            | sampler -> schedule_sampler value (AYS) and steps -8; or switch to Klein recipe                    |
+| "print quality"               | keep native size, use the recipe's upscaler; coloring pages 832x1216 (SDXL) or 1216x1600 (Klein)   |
+| "more vivid / saturated"      | swap model to colorfulxl; CFG +0.5                                                                 |
+| "more realistic / natural"    | juggernaut_xl_x, CFG -0.5 to -1, drop style LoRAs                                                  |
+| "consistent across a set"     | fixed seed + identical prompt skeleton + identical LoRA weights; Klein: reuse hex palette verbatim |
+| "text in the image"           | Klein only, one quoted string, <= 3 words; else leave space and typeset afterwards                 |
+| "landscape / spread"          | 1216x832 (SDXL) or 1360x1024 (Klein)                                                               |
+| "portrait / poster / page"    | 832x1216 or 896x1152 (SDXL); 1216x1600 (Klein)                                                     |
 
 ### 5.4 Troubleshooting
 
-| Symptom | Fix |
-|---|---|
-| Color or gray fills in coloring page | Strengthen negative (color, shading, gradient); raise ColoringBook to 1.0; use juggernaut not colorfulxl |
-| Broken / doubled outlines | More steps (+6), sampler 4, LineAni +0.3; Klein: move to SDXL recipe |
-| Over-smooth plastic skin | add-detail <= 0.4, lower CFG, Remacri -> ESRGAN |
-| Burnt / oversaturated | CFG -1, drop Analog or slider LoRAs to 0.5 |
-| Muddy or noisy | Use `schedule_sampler` value as `sampler`, steps -4 |
-| Fused subjects, extra limbs | Fewer subjects (see age table); size back to native; negative "extra limbs, deformed" |
-| LoRA has no effect | Missing trigger word; or SDXL LoRA loaded on Klein (remove) |
-| Klein ignores a "no X" | Rewrite as positive statement; negatives do nothing on Klein |
-| Klein looks soft/plastic on painterly styles | Switch to SDXL recipe (OIL, ILL, 3D) |
-| Output too large after upscale | Downscale 50% with an image tool; do not retry |
+| Symptom                                      | Fix                                                                                                      |
+| -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Color or gray fills in coloring page         | Strengthen negative (color, shading, gradient); raise ColoringBook to 1.0; use juggernaut not colorfulxl |
+| Broken / doubled outlines                    | More steps (+6), sampler 4, LineAni +0.3; Klein: move to SDXL recipe                                     |
+| Over-smooth plastic skin                     | add-detail <= 0.4, lower CFG, Remacri -> ESRGAN                                                          |
+| Burnt / oversaturated                        | CFG -1, drop Analog or slider LoRAs to 0.5                                                               |
+| Muddy or noisy                               | Use `schedule_sampler` value as `sampler`, steps -4                                                      |
+| Fused subjects, extra limbs                  | Fewer subjects (see age table); size back to native; negative "extra limbs, deformed"                    |
+| LoRA has no effect                           | Missing trigger word; or SDXL LoRA loaded on Klein (remove)                                              |
+| Klein ignores a "no X"                       | Rewrite as positive statement; negatives do nothing on Klein                                             |
+| Klein looks soft/plastic on painterly styles | Switch to SDXL recipe (OIL, ILL, 3D)                                                                     |
+| Output too large after upscale               | Downscale 50% with an image tool; do not retry                                                           |
 
 ### 5.5 Safety guardrails (apply before recommending)
+
 - Never produce a likeness of a real child or real person, and never photoreal children. Use invented characters; kids content stays illustrated.
 - Kids age bands: nothing frightening, sexualized, or showing distress. Add "scary, dark" to negatives.
 - Anime: always SFW, adult-appearing characters outside ANI-A; always include `nsfw` in the negative prompt.
@@ -817,6 +912,7 @@ Why: two style LoRAs each under 0.75 (sum ~1.2) blend instead of fighting; color
 - Klein: never pass `--negative-prompt` or SDXL LoRAs.
 
 ### 5.6 Recipe-selection checklist
+
 1. Identify genre, age band, speed vs quality.
 2. Pick the recipe via 5.1; if two match, prefer the one whose Match keywords overlap most.
 3. Copy command; change only `--prompt` subject, `--output`, size (if orientation differs), and optional `seed`.

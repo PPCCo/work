@@ -44,18 +44,18 @@ Scope: SDXL checkpoints (Juggernaut XL v9, Juggernaut XL X, ColorfulXL v6, Anima
 
 ### LoRA weights
 
-| LoRA file                                                       | Trigger words                                      | Weight                                           | Works with                            |
-| --------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------ | ------------------------------------- |
-| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors`            | `KidsRedmAF, Kids Book`                            | 0.6-0.9                                          | ColorfulXL, Juggernaut                |
-| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors`   | `ColoringBookAF, Coloring Book`                    | 0.5-1.0                                          | ColorfulXL, Juggernaut                |
-| `LineAniRedmondV2-Lineart-LineAniAF.safetensors`                | `LineAniAF, lineart`                               | 0.6-0.9                                          | Animagine                             |
-| `add-detail-xl.safetensors` (Detail Tweaker XL mirror)          | none                                               | 0.5-1.5 (range -3 to 3). Use 0.5-0.8 on line art | Any SDXL                              |
-| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors`               | `AnalogRedmAF, Analog`                             | 0.4-0.8                                          | Juggernaut                            |
-| `3d_render_style_xl.safetensors`                                | `3d style, 3d, 3d render`                          | 0.5-0.8                                          | Animagine, ColorfulXL                 |
-| `pixar-style.safetensors` (slider)                              | `pixar-style`                                      | 1.5-2.5                                          | ColorfulXL                            |
-| `oil-painting-slider.safetensors` (renamed from "oil painting") | `oil painting`                                     | 1.5-2.5                                          | ColorfulXL, Juggernaut v9             |
-| `epic-oil-painting-slider.safetensors` (renamed)                | `epic oil painting`                                | 1.5-2.5                                          | Juggernaut v9, ColorfulXL             |
-| `sketch-style-xl.safetensors`                                   | `sketch, monochrome, greyscale, traditional media` | 0.6-0.9                                          | Animagine (trained for Animagine 2.0) |
+| LoRA file                                                         | Trigger words                                      | Weight                                           | Works with                            |
+| ----------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------ | ------------------------------------- |
+| `redmondv2_kids_storybook_lora_f16.ckpt`                          | `KidsRedmAF, Kids Book`                            | 0.6-0.9                                          | ColorfulXL, Juggernaut                |
+| `redmond_coloringbook_lora_f16.ckpt`                              | `ColoringBookAF, Coloring Book`                    | 0.5-1.0                                          | ColorfulXL, Juggernaut                |
+| `redmondv2_lineart_lineani_lora_f16.ckpt`                         | `LineAniAF, lineart`                               | 0.6-0.9                                          | Animagine                             |
+| `add_detail_xl_lora_f16.ckpt` (Detail Tweaker XL mirror)          | none                                               | 0.5-1.5 (range -3 to 3). Use 0.5-0.8 on line art | Any SDXL                              |
+| `redmondv2_analog_lora_f16.ckpt`                                  | `AnalogRedmAF, Analog`                             | 0.4-0.8                                          | Juggernaut                            |
+| `3d_render_style_xl_lora_f16.ckpt`                                | `3d style, 3d, 3d render`                          | 0.5-0.8                                          | Animagine, ColorfulXL                 |
+| `pixar_style_lora_f16.ckpt` (slider)                              | `pixar-style`                                      | 1.5-2.5                                          | ColorfulXL                            |
+| `oil_painting_slider_lora_f16.ckpt` (renamed from "oil painting") | `oil painting`                                     | 1.5-2.5                                          | ColorfulXL, Juggernaut v9             |
+| `oil_painting_slider_epic_lora_f16.ckpt` (renamed)                | `epic oil painting`                                | 1.5-2.5                                          | Juggernaut v9, ColorfulXL             |
+| `sketch_style_lora_f16.ckpt`                                      | `sketch, monochrome, greyscale, traditional media` | 0.6-0.9                                          | Animagine (trained for Animagine 2.0) |
 
 Stacking: at most 2 style LoRAs. Keep the sum of weights at or below about 1.5, except for sliders, which use their own scale. A detail LoRA added to a line-art LoRA must stay at 0.8 or lower, or it adds shading.
 
@@ -206,7 +206,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -228,7 +228,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -250,7 +250,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "loras": [
-  {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.6, "mode": "all"}
+  {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
 ]
 }'
 ```
@@ -313,7 +313,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.9, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
 ]
 }'
 ```
@@ -335,7 +335,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.9, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
 ]
 }'
 ```
@@ -357,7 +357,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -379,8 +379,8 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.6, "mode": "all"},
-  {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.6, "mode": "all"},
+  {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
 ]
 }'
 ```
@@ -402,7 +402,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -424,7 +424,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 1.0, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
 ]
 }'
 ```
@@ -446,7 +446,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "loras": [
-  {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -485,8 +485,8 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.5, "mode": "all"},
-  {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.5, "mode": "all"},
+  {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
 ]
 }'
 ```
@@ -506,7 +506,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.9, "mode": "all"}
+  {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
 ]
 }'
 ```
@@ -563,7 +563,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "loras": [
-  {"file": "sketch-style-xl.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "sketch_style_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -675,7 +675,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "loras": [
-  {"file": "3d_render_style_xl.safetensors", "weight": 0.7, "mode": "all"}
+  {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.7, "mode": "all"}
 ]
 }'
 ```
@@ -695,7 +695,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "pixar-style.safetensors", "weight": 1.8, "mode": "all"}
+  {"file": "pixar_style_lora_f16.ckpt", "weight": 1.8, "mode": "all"}
 ]
 }'
 ```
@@ -734,7 +734,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "add-detail-xl.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```
@@ -827,7 +827,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "loras": [
-  {"file": "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors", "weight": 0.6, "mode": "all"}
+  {"file": "redmondv2_analog_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
 ]
 }'
 ```
@@ -866,7 +866,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "oil-painting-slider.safetensors", "weight": 1.5, "mode": "all"}
+  {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 1.5, "mode": "all"}
 ]
 }'
 ```
@@ -886,7 +886,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "loras": [
-  {"file": "epic-oil-painting-slider.safetensors", "weight": 1.5, "mode": "all"}
+  {"file": "oil_painting_slider_epic_lora_f16.ckpt", "weight": 1.5, "mode": "all"}
 ]
 }'
 ```
@@ -925,7 +925,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "loras": [
-  {"file": "add-detail-xl.safetensors", "weight": 1.0, "mode": "all"}
+  {"file": "add_detail_xl_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
 ]
 }'
 ```
@@ -945,7 +945,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "loras": [
-  {"file": "add-detail-xl.safetensors", "weight": 0.8, "mode": "all"}
+  {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
 ]
 }'
 ```

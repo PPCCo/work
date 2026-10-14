@@ -19,8 +19,8 @@ draw-things-cli generate \
 "sampler": 0,
 "schedule_sampler": 1,
 "loras": [
-    {"file": "LORA_1.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "LORA_2.safetensors", "weight": 0.50, "mode": "all"}
+    {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
   ]
 }'
 ```
@@ -43,25 +43,37 @@ I can only use these Models, LoRAs, and Upscalers:
 
 ## LoRAs
 
-- 3d_render_style_xl.safetensors
-- add-detail-xl.safetensors
-- AnalogRedmondV2-Analog-AnalogRedmAF.safetensors
-- ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors
-- epic-oil-painting-slider.safetensors
-- LineAniRedmondV2-Lineart-LineAniAF.safetensors
-- oil-painting-slider.safetensors
-- pixar-style.safetensors
-- sketch-style-xl.safetensors
-- StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors
+- 3d_render_style_xl_lora_f16.ckpt
+- add_detail_xl_lora_f16.ckpt
+- redmondv2_analog_lora_f16.ckpt
+- redmond_coloringbook_lora_f16.ckpt
+- oil_painting_slider_epic_lora_f16.ckpt
+- redmondv2_lineart_lineani_lora_f16.ckpt
+- oil_painting_slider_lora_f16.ckpt
+- pixar_style_lora_f16.ckpt
+- sketch_style_lora_f16.ckpt
+- redmondv2_kids_storybook_lora_f16.ckpt
 
 ## Upscalers
 
-- 4x_foolhardy_Remacri_ExtraSmoother.safetensors
-- 4x_NMKD-Superscale-SP_178000_G.safetensors
-- 4x-UltraSharpV2.safetensors
-- RealESRGAN_x4plus_anime_6B.safetensors
-- RealESRGAN_x4plus.safetensors
-- SwinIR-L_x4_PSNR.safetensors
+- 4x_foolhardy_remacri_extrasmoother_f16.ckpt
+- 4x_nmkd_superscale_sp_178000_g_f16.ckpt
+- realesrgan_x4plus_f16.ckpt
+- realesrgan_x4plus_anime_6b_f16.ckpt
+
+SwinIR Alternative:
+
+- rrdb_psnr_x4_f16.ckpt
+
+## Upscalers (DT App)
+
+- esrgan_4x_universal_upscaler_v2_sharp_f16. ckpt
+- realesrgan_x2plus_f16.ckpt
+
+## Non-Commercial
+
+- 4x_ultrasharp_f16.ckpt
+- remacri_4x_f16.ckpt
 
 ## TASK
 
@@ -82,8 +94,8 @@ draw-things-cli generate \
 "sampler": 0,
 "schedule_sampler": 1,
 "loras": [
-    {"file": "LORA_1.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "LORA_2.safetensors", "weight": 0.50, "mode": "all"}
+    {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
   ]
 }'
 ```

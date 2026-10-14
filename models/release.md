@@ -4,25 +4,25 @@
 
 ### Upscalers
 
-- 4x_foolhardy_Remacri_ExtraSmoother.safetensors
-- 4x_NMKD-Superscale-SP_178000_G.safetensors
-- 4x-UltraSharpV2.safetensors
-- RealESRGAN_x4plus_anime_6B.safetensors
-- RealESRGAN_x4plus.safetensors
-- SwinIR-L_x4_PSNR.safetensors
+- 4x_foolhardy_remacri_extrasmoother_f16.ckpt
+- 4x_nmkd_superscale_sp_178000_g_f16.ckpt
+- 4x_ultrasharp_f16.ckpt
+- realesrgan_x4plus_anime_6b_f16.ckpt
+- realesrgan_x4plus_f16.ckpt
+- rrdb_psnr_x4_f16.ckpt
 
 ### LoRAs
 
-- 3d_render_style_xl.safetensors
-- add-detail-xl.safetensors
-- AnalogRedmondV2-Analog-AnalogRedmAF.safetensors
-- ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors
-- epic-oil-painting-slider.safetensors
-- LineAniRedmondV2-Lineart-LineAniAF.safetensors
-- oil-painting-slider.safetensors
-- pixar-style.safetensors
-- sketch-style-xl.safetensors
-- StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors
+- 3d_render_style_xl_lora_f16.ckpt
+- add_detail_xl_lora_f16.ckpt
+- redmondv2_analog_lora_f16.ckpt
+- redmond_coloringbook_lora_f16.ckpt
+- oil_painting_slider_epic_lora_f16.ckpt
+- redmondv2_lineart_lineani_lora_f16.ckpt
+- oil_painting_slider_lora_f16.ckpt
+- pixar_style_lora_f16.ckpt
+- sketch_style_lora_f16.ckpt
+- redmondv2_kids_storybook_lora_f16.ckpt
 
 ## 1. Create the mirror repo
 
@@ -47,6 +47,7 @@ gh release create v1 README.md \
 
 # batch 2 - the big fp8 diffusion checkpoint
 caffeinate -i gh release upload v1 *.safetensors --repo PPCCo/loras-upscalers-mirror --clobber
+caffeinate -i gh release upload v1 rrdb_psnr_x4.pth --repo PPCCo/loras-upscalers-mirror --clobber
 ```
 
 ## 3. Then, download on the other machine
