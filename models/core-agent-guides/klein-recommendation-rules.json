@@ -1,0 +1,1100 @@
+{
+  "schema_version": "1.0.0",
+  "title": "Draw Things CLI FLUX.2 Klein 4B Recommendation Rules",
+  "purpose": "Machine-readable starting rules for selecting generation profiles, prompt constraints, candidate LoRAs, samplers, steps, CFG, dimensions, upscaling, and validation for book illustrations and related artwork.",
+  "runtime": {
+    "cli": "draw-things-cli",
+    "model_default": "flux_2_klein_4b_f16.ckpt",
+    "negative_prompt_supported": false,
+    "config_json_policy": {
+      "only_emit_fields_verified_by_installed_cli": true,
+      "omit_schedule_sampler_unless_installed_cli_confirms_support": true,
+      "upscaler_name_must_match_installed_registry_exactly": true,
+      "lora_file_must_be_imported_or_resolvable_by_cli": true,
+      "never_rename_file_extension_as_conversion": true
+    },
+    "compatibility_policy": {
+      "require_model_family_match": true,
+      "accept_lora_only_after_load_test": true,
+      "external_upscaler_is_not_assumed_to_be_native": true,
+      "unknown_capability_action": "fall_back_to_base_model_and_no_native_upscaler"
+    }
+  },
+  "defaults": {
+    "model": "flux_2_klein_4b_f16.ckpt",
+    "steps": 4,
+    "cfg": 1.0,
+    "sampler": 17,
+    "upscaler": null,
+    "upscaler_scale_factor": 1,
+    "loras": [],
+    "confidence": "low_to_medium_starting_heuristic",
+    "notes": [
+      "Treat sampler IDs as Draw Things version-dependent numeric enum values; verify against the installed CLI before production use.",
+      "Four steps and CFG 1.0 are conservative starting points for a distilled Klein model, not universal optima.",
+      "Do not assume more steps or higher CFG improves results.",
+      "Record seed, exact prompt, model checksum/version, LoRA hashes, dimensions and CLI version for reproducibility."
+    ]
+  },
+  "samplers": {
+    "selection_policy": "Use sampler 17 as an initial comparison candidate only if the installed CLI confirms that ID maps to UniPC Trailing. Benchmark alternatives with all other variables fixed.",
+    "candidates": [
+      {
+        "id": 17,
+        "name": "UniPC Trailing",
+        "role": "initial_candidate",
+        "confidence": "requires_local_verification"
+      },
+      {
+        "id": 1,
+        "name": "Euler A",
+        "role": "comparison_candidate",
+        "confidence": "requires_local_verification"
+      },
+      {
+        "id": 0,
+        "name": "DPM++ 2M Karras",
+        "role": "comparison_candidate",
+        "confidence": "requires_local_verification"
+      },
+      {
+        "id": 5,
+        "name": "UniPC",
+        "role": "comparison_candidate",
+        "confidence": "requires_local_verification"
+      },
+      {
+        "id": 12,
+        "name": "DPM++ 2M AYS",
+        "role": "comparison_candidate",
+        "confidence": "requires_local_verification"
+      }
+    ],
+    "rule": "Never treat numeric IDs as portable across CLI versions without checking the installed sampler enum."
+  },
+  "lora_catalog": [
+    {
+      "id": "klein_anime_koni",
+      "purpose": [
+        "2d_anime",
+        "manga_inspired_storybook",
+        "stylized_character_art"
+      ],
+      "repository": "Sawata97/flux2_4b_koni_animestyle",
+      "filename": "Flux_klein_4b_anime_Koni.safetensors",
+      "trigger": "anime_style",
+      "candidate_weight": 0.65,
+      "weight_range": [
+        0.45,
+        0.85
+      ],
+      "compatibility": "candidate_for_flux2_klein_4b; verify adapter import/load on installed Draw Things CLI",
+      "confidence": "medium_for_documented_target_family; runtime_load_unverified",
+      "fallback": "remove_lora_and_use_prompt_style"
+    },
+    {
+      "id": "klein_pixel_art",
+      "purpose": [
+        "pixel_art",
+        "retro_game_art",
+        "pixel_art_storybook"
+      ],
+      "repository": "adirik/pixel-art-lora-flux.2-klein-4B",
+      "filename": "pixelart_lora.safetensors",
+      "trigger": "PXART4",
+      "candidate_weight": 0.8,
+      "weight_range": [
+        0.6,
+        0.9
+      ],
+      "recommended_test_resolution": [
+        512,
+        512
+      ],
+      "compatibility": "candidate_for_flux2_klein_4b; verify adapter import/load on installed Draw Things CLI",
+      "confidence": "medium_for_documented_target_family; runtime_load_unverified",
+      "fallback": "remove_lora_and_use_prompt_style"
+    },
+    {
+      "id": "klein_minote_whimsical",
+      "purpose": [
+        "whimsical_illustration",
+        "children_storybook",
+        "hand_drawn_style",
+        "watercolor_inspired_art"
+      ],
+      "repository": "noema-art/minoteflux-klein",
+      "filename": null,
+      "trigger": "minote",
+      "candidate_weight": 0.7,
+      "weight_range": [
+        0.55,
+        0.8
+      ],
+      "compatibility": "candidate; inspect repository files and verify exact adapter format, target architecture, and CLI loading",
+      "confidence": "low_to_medium_until_file_and_runtime_are_verified",
+      "fallback": "use_no_lora_and_prompt_for_medium"
+    }
+  ],
+  "upscaling": {
+    "default": {
+      "upscaler": null,
+      "scale_factor": 1,
+      "reason": "Generate and inspect the base image first; do not assume an upscaler is needed."
+    },
+    "native_selection_policy": [
+      "Use only an exact model name reported by the installed Draw Things upscaler registry.",
+      "Do not put an arbitrary Hugging Face repository or filename into the native upscaler field.",
+      "If no registry is available, return no native upscaler and optionally recommend a separate post-processing pipeline.",
+      "For coloring pages, reject upscaled results with gray fills, broken contours, filled gaps, or excessive line thickening."
+    ],
+    "external_candidates": [
+      {
+        "family": "Real-ESRGAN / ESRGAN",
+        "use": "optional_external_post_processing",
+        "native_cli_compatibility": "not_assumed",
+        "validation": [
+          "compare edges at print size",
+          "check for halos",
+          "check texture hallucination",
+          "verify output dimensions"
+        ]
+      }
+    ],
+    "scale_policy": {
+      "default_scale_factor": 1,
+      "allow_2x_when_needed": true,
+      "avoid_upscaling_if": [
+        "base image has composition errors",
+        "line art contains open contours",
+        "text or labels are malformed",
+        "anatomy is visibly incorrect"
+      ]
+    }
+  },
+  "prompt_engine": {
+    "negative_prompt_mode": "unsupported",
+    "strategy": [
+      "Specify desired visual properties directly rather than listing only undesired properties.",
+      "Use exact subject counts when important.",
+      "Describe subject/action, age/use, medium/style, composition, lighting/palette, background, and technical requirements in that order.",
+      "Express exclusions as positive target states, e.g. 'pure white background', 'no lettering', 'large enclosed regions', 'generous margins'. These are probabilistic instructions, not guaranteed filters.",
+      "For informative nonfiction, generate the illustration separately from labels and add typography in layout software.",
+      "For series consistency, reuse a canonical character description, palette, wardrobe, style profile, and seed policy.",
+      "Use LoRA trigger tokens exactly as documented and avoid incompatible style stacking.",
+      "When output fails, change one variable at a time."
+    ],
+    "prompt_template": [
+      "{style_trigger_if_any}",
+      "{subject_and_action}",
+      "{audience_and_intended_use}",
+      "{medium_and_style}",
+      "{composition_and_camera_or_viewpoint}",
+      "{lighting_and_palette}",
+      "{background_and_whitespace}",
+      "{quality_and_structure_requirements}",
+      "{positive_exclusions}"
+    ],
+    "positive_constraint_examples": {
+      "line_art": [
+        "pure white background",
+        "black outlines only",
+        "continuous contours",
+        "closed coloring regions",
+        "uniform line weight",
+        "generous white margin"
+      ],
+      "anatomy": [
+        "natural relaxed pose",
+        "clearly separated fingers",
+        "anatomically plausible proportions"
+      ],
+      "text_free": [
+        "visual storytelling only",
+        "no lettering or labels",
+        "empty callout spaces for later labels"
+      ],
+      "clean_background": [
+        "uncluttered background",
+        "only three supporting objects",
+        "clear separation between subject and background"
+      ],
+      "photorealism": [
+        "natural material texture",
+        "physically consistent shadows",
+        "credible lens perspective",
+        "realistic depth of field"
+      ]
+    }
+  },
+  "selection_rules": [
+    {
+      "id": "R01",
+      "priority": 100,
+      "if": {
+        "intent_any": [
+          "printable_coloring",
+          "line_art",
+          "mandala_coloring"
+        ]
+      },
+      "then": {
+        "profile_from_intent": true,
+        "prefer_no_lora_initially": true,
+        "require_white_background": true,
+        "require_contour_validation": true,
+        "upscale_only_after_validation": true
+      }
+    },
+    {
+      "id": "R02",
+      "priority": 95,
+      "if": {
+        "style_any": [
+          "anime",
+          "manga",
+          "2d_anime"
+        ]
+      },
+      "then": {
+        "lora_id": "klein_anime_koni",
+        "weight": 0.65,
+        "require_lora_load_test": true
+      }
+    },
+    {
+      "id": "R03",
+      "priority": 95,
+      "if": {
+        "style_any": [
+          "pixel_art",
+          "retro_pixel_art"
+        ]
+      },
+      "then": {
+        "lora_id": "klein_pixel_art",
+        "weight": 0.8,
+        "test_resolution": [
+          512,
+          512
+        ],
+        "require_lora_load_test": true
+      }
+    },
+    {
+      "id": "R04",
+      "priority": 80,
+      "if": {
+        "intent_any": [
+          "preschool_picture_book",
+          "early_reader"
+        ]
+      },
+      "then": {
+        "prefer_simple_shapes": true,
+        "limit_background_complexity": true,
+        "prefer_clear_silhouettes": true
+      }
+    },
+    {
+      "id": "R05",
+      "priority": 85,
+      "if": {
+        "intent_any": [
+          "educational_nonfiction",
+          "informative_book",
+          "science_diagram"
+        ]
+      },
+      "then": {
+        "prefer_no_lora_initially": true,
+        "reserve_label_spaces": true,
+        "add_text_after_generation": true,
+        "require_fact_check": true
+      }
+    },
+    {
+      "id": "R06",
+      "priority": 70,
+      "if": {
+        "intent_any": [
+          "watercolor",
+          "oil_painting",
+          "pencil_sketch",
+          "photorealism",
+          "3d_render"
+        ]
+      },
+      "then": {
+        "prefer_prompt_driven_base_model_first": true,
+        "use_medium_specific_prompt": true,
+        "prefer_no_lora_initially": true
+      }
+    },
+    {
+      "id": "R07",
+      "priority": 100,
+      "if": {
+        "lora_load_test_failed": true
+      },
+      "then": {
+        "remove_lora": true,
+        "use_prompt_fallback": true,
+        "record_compatibility_failure": true
+      }
+    },
+    {
+      "id": "R08",
+      "priority": 100,
+      "if": {
+        "upscaler_registry_unknown": true
+      },
+      "then": {
+        "upscaler": null,
+        "scale_factor": 1,
+        "recommend_external_upscaling_only_if_needed": true
+      }
+    },
+    {
+      "id": "R09",
+      "priority": 100,
+      "if": {
+        "prompt_contains_conflicting_media": true
+      },
+      "then": {
+        "split_into_alternative_profiles": true,
+        "examples": [
+          [
+            "watercolor"
+          ],
+          [
+            "oil painting"
+          ],
+          [
+            "photorealism"
+          ],
+          [
+            "anime"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R10",
+      "priority": 90,
+      "if": {
+        "series_consistency_required": true
+      },
+      "then": {
+        "freeze_character_bible": true,
+        "freeze_palette": true,
+        "record_seed": true,
+        "record_lora_weights": true,
+        "record_model_version": true
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "id": "preschool_picture_book",
+      "goal": "Friendly, immediately readable picture-book art for ages 2-5.",
+      "match": {
+        "intent": [
+          "picture_book",
+          "preschool",
+          "toddler_story"
+        ],
+        "age_range": [
+          2,
+          5
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 768,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "one clear focal action",
+        "rounded recognizable shapes",
+        "soft restrained palette",
+        "minimal background objects",
+        "clear silhouettes",
+        "ample whitespace",
+        "no lettering"
+      ],
+      "selection_notes": [
+        "Favor simple compositions over fine detail.",
+        "Keep a no-LoRA baseline."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "subject_count",
+        "expression_and_pose",
+        "silhouette_clarity",
+        "age_appropriateness",
+        "background_clutter"
+      ]
+    },
+    {
+      "id": "early_reader_storybook",
+      "goal": "Expressive scenes with clear narrative action for ages 5-8.",
+      "match": {
+        "intent": [
+          "early_reader",
+          "children_storybook"
+        ],
+        "age_range": [
+          5,
+          8
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 768,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [
+          {
+            "lora_id": "klein_minote_whimsical",
+            "weight": 0.7,
+            "optional": true
+          }
+        ],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "one readable story action",
+        "expressive faces",
+        "2-4 supporting props",
+        "clear foreground-background separation",
+        "consistent character details",
+        "no text"
+      ],
+      "selection_notes": [
+        "If adapter unavailable, use prompt-only watercolor or hand-drawn cues.",
+        "Test character consistency across pages."
+      ],
+      "confidence": "low_to_medium_due_to_optional_lora_verification",
+      "validation": [
+        "story_action_readability",
+        "character_consistency",
+        "anatomy",
+        "visual_clutter",
+        "age_appropriateness"
+      ]
+    },
+    {
+      "id": "middle_grade_teen_fantasy",
+      "goal": "Atmospheric fantasy illustrations with detailed environments for ages 9-17.",
+      "match": {
+        "intent": [
+          "teen_storybook",
+          "fantasy_illustration",
+          "middle_grade_fiction"
+        ],
+        "age_range": [
+          9,
+          17
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 832,
+        "height": 1216,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "strong silhouette",
+        "layered environment",
+        "controlled palette",
+        "clear action",
+        "coherent hands and faces",
+        "no lettering"
+      ],
+      "selection_notes": [
+        "Use anime profile only when requested.",
+        "Use painterly medium terms for non-anime fantasy."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "composition",
+        "anatomy",
+        "lighting",
+        "style_fidelity",
+        "age_appropriateness"
+      ]
+    },
+    {
+      "id": "anime_2d",
+      "goal": "2D anime character and scene illustration.",
+      "match": {
+        "style": [
+          "anime",
+          "manga",
+          "cel_shaded"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 832,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [
+          {
+            "lora_id": "klein_anime_koni",
+            "weight": 0.65,
+            "optional": true
+          }
+        ],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "clean confident linework",
+        "controlled cel shading",
+        "readable silhouette",
+        "consistent face proportions",
+        "clear palette",
+        "no lettering unless requested"
+      ],
+      "selection_notes": [
+        "Compare LoRA against base model.",
+        "Reduce weight if style overwhelms requested content."
+      ],
+      "confidence": "medium_for_style_candidate; runtime_load_unverified",
+      "validation": [
+        "linework",
+        "face_and_hands",
+        "style_adherence",
+        "requested_character_details"
+      ]
+    },
+    {
+      "id": "pixel_art",
+      "goal": "Retro pixel-art characters, objects and scenes.",
+      "match": {
+        "style": [
+          "pixel_art",
+          "retro_game_art"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 512,
+        "height": 512,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [
+          {
+            "lora_id": "klein_pixel_art",
+            "weight": 0.8,
+            "optional": true
+          }
+        ],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "deliberate pixel clusters",
+        "limited palette",
+        "clear silhouette",
+        "readable sprite scale",
+        "avoid smooth gradients"
+      ],
+      "selection_notes": [
+        "Begin at the documented candidate test resolution.",
+        "Use nearest-neighbor scaling externally when preserving hard pixel edges is required."
+      ],
+      "confidence": "medium_for_style_candidate; runtime_load_unverified",
+      "validation": [
+        "pixel_cluster_integrity",
+        "palette_control",
+        "silhouette_readability",
+        "no_unwanted_smoothing"
+      ]
+    },
+    {
+      "id": "kids_coloring",
+      "goal": "Simple printable coloring pages for ages 4-8.",
+      "match": {
+        "intent": [
+          "kids_coloring",
+          "simple_line_art"
+        ],
+        "age_range": [
+          4,
+          8
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 768,
+        "height": 768,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "bold continuous black outlines",
+        "uniform line weight",
+        "large enclosed regions",
+        "pure white background",
+        "black outlines only",
+        "no gray, gradients, shadows or crosshatching",
+        "no solid black areas",
+        "generous margins"
+      ],
+      "selection_notes": [
+        "Avoid style LoRAs until they pass a line-art-specific test.",
+        "Do not upscale until contour quality is acceptable."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "closed_regions",
+        "line_continuity",
+        "line_weight_at_print_size",
+        "white_background",
+        "absence_of_gray_fills",
+        "margin_safety"
+      ]
+    },
+    {
+      "id": "adult_mandala_coloring",
+      "goal": "Intricate monochrome mandala coloring pages for adults.",
+      "match": {
+        "intent": [
+          "adult_coloring",
+          "mandala",
+          "intricate_line_art"
+        ],
+        "age_range": [
+          18,
+          120
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "radial symmetry",
+        "repeating motifs",
+        "fine consistent contours",
+        "many enclosed regions",
+        "pure white background",
+        "full design inside margin",
+        "no grayscale or filled black background"
+      ],
+      "selection_notes": [
+        "Check symmetry and contours before upscaling.",
+        "A raster model may not produce mathematically perfect symmetry."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "radial_balance",
+        "closed_regions",
+        "line_continuity",
+        "print_size_readability",
+        "margin_safety"
+      ]
+    },
+    {
+      "id": "educational_nonfiction",
+      "goal": "Clear educational illustration for children and teens.",
+      "match": {
+        "intent": [
+          "educational_nonfiction",
+          "science_diagram",
+          "informative_book"
+        ],
+        "age_range": [
+          5,
+          17
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 1024,
+        "height": 768,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "clear spatial relationships",
+        "few visual distractions",
+        "reserve callout spaces",
+        "no generated labels or numbers",
+        "accurate reference-informed structure"
+      ],
+      "selection_notes": [
+        "Do not rely on the image model as the sole source of scientific truth.",
+        "Add labels after generation and fact-check the result."
+      ],
+      "confidence": "medium_for_layout_heuristic; factual_accuracy_requires_external_validation",
+      "validation": [
+        "reference_accuracy",
+        "part_relationships",
+        "callout_space",
+        "label_addition_after_generation",
+        "age_readability"
+      ]
+    },
+    {
+      "id": "pencil_sketch",
+      "goal": "Graphite-like artistic sketches with visible mark-making.",
+      "match": {
+        "style": [
+          "pencil_sketch",
+          "graphite",
+          "drawing_study"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 768,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "visible pencil strokes",
+        "varied graphite pressure",
+        "subtle paper grain",
+        "controlled hatching",
+        "natural proportions",
+        "avoid glossy digital finish"
+      ],
+      "selection_notes": [
+        "Revise medium wording before increasing resolution.",
+        "Avoid over-sharpening."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "medium_fidelity",
+        "mark_visibility",
+        "proportions",
+        "tonal_range",
+        "paper_texture"
+      ]
+    },
+    {
+      "id": "watercolor",
+      "goal": "Traditional watercolor-like paintings and illustrations.",
+      "match": {
+        "style": [
+          "watercolor",
+          "watercolour"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 832,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [
+          {
+            "lora_id": "klein_minote_whimsical",
+            "weight": 0.7,
+            "optional": true
+          }
+        ],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "translucent pigment washes",
+        "wet-on-wet transitions",
+        "paper texture",
+        "natural pigment granulation",
+        "soft edges",
+        "avoid glossy digital finish"
+      ],
+      "selection_notes": [
+        "Use base-model baseline first.",
+        "Optional LoRA is not a substitute for medium-specific prompting."
+      ],
+      "confidence": "low_to_medium_until_lora_verified",
+      "validation": [
+        "watercolor_medium_fidelity",
+        "paper_texture",
+        "edge_quality",
+        "palette",
+        "composition"
+      ]
+    },
+    {
+      "id": "oil_painting",
+      "goal": "Traditional oil-painting appearance.",
+      "match": {
+        "style": [
+          "oil_painting",
+          "impasto",
+          "traditional_oil"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 832,
+        "height": 1024,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "visible brushstrokes",
+        "layered opaque pigments",
+        "canvas texture",
+        "deliberate painterly edges",
+        "rich pigment mixing"
+      ],
+      "selection_notes": [
+        "Keep oil and watercolor as separate profiles.",
+        "Avoid combining conflicting media descriptions."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "oil_medium_fidelity",
+        "brushwork",
+        "material_texture",
+        "composition"
+      ]
+    },
+    {
+      "id": "photorealism",
+      "goal": "Photographic realism with plausible lighting and materials.",
+      "match": {
+        "style": [
+          "photorealism",
+          "photography",
+          "wildlife_photo",
+          "editorial_photo"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 1024,
+        "height": 768,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "natural material texture",
+        "physically consistent shadows",
+        "credible lens perspective",
+        "realistic depth of field",
+        "anatomically plausible subjects",
+        "avoid painterly texture unless requested"
+      ],
+      "selection_notes": [
+        "Compare base model before adding a style LoRA.",
+        "Do not interpret photorealistic appearance as evidence of factual authenticity."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "anatomy",
+        "lighting_consistency",
+        "material_texture",
+        "perspective",
+        "artifact_rate"
+      ]
+    },
+    {
+      "id": "stylized_3d_render",
+      "goal": "A 3D-rendered look for characters, props and scenes.",
+      "match": {
+        "style": [
+          "3d_render",
+          "stylized_3d",
+          "cgi_look"
+        ]
+      },
+      "candidate_settings": {
+        "model": "flux_2_klein_4b_f16.ckpt",
+        "width": 1024,
+        "height": 768,
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 17,
+        "loras": [],
+        "upscaler": null,
+        "upscaler_scale_factor": 1
+      },
+      "prompt_constraints": [
+        "physically based materials",
+        "coherent perspective",
+        "global illumination",
+        "contact shadows",
+        "controlled reflections",
+        "clear foreground-background separation"
+      ],
+      "selection_notes": [
+        "This profile creates a 3D-rendered visual style, not actual 3D geometry."
+      ],
+      "confidence": "medium_as_starting_heuristic",
+      "validation": [
+        "perspective",
+        "material_response",
+        "shadow_consistency",
+        "geometry_coherence"
+      ]
+    }
+  ],
+  "evaluation_protocol": {
+    "baseline_first": true,
+    "controlled_comparison": [
+      "Generate baseline with no LoRA.",
+      "Generate with one candidate LoRA at default weight.",
+      "Generate with same LoRA at lower weight.",
+      "Compare sampler 17 with sampler 1, if both are supported.",
+      "Upscale only the best validated base image."
+    ],
+    "hold_constant": [
+      "prompt",
+      "seed",
+      "model_version",
+      "dimensions",
+      "steps",
+      "cfg",
+      "all_non_tested_lora_weights"
+    ],
+    "generic_scores": {
+      "prompt_adherence": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.25
+      },
+      "composition": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.15
+      },
+      "style_fidelity": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.2
+      },
+      "anatomy_or_structure": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.2
+      },
+      "artifact_rate": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.1,
+        "higher_is_better": true
+      },
+      "use_case_suitability": {
+        "scale": [
+          1,
+          5
+        ],
+        "weight": 0.1
+      }
+    },
+    "genre_specific_overrides": {
+      "coloring": [
+        "line_continuity",
+        "closed_regions",
+        "white_background",
+        "print_size_readability"
+      ],
+      "nonfiction": [
+        "reference_accuracy",
+        "part_relationships",
+        "label_space"
+      ],
+      "series": [
+        "character_consistency",
+        "palette_consistency",
+        "wardrobe_consistency"
+      ],
+      "photorealism": [
+        "anatomy",
+        "lighting_consistency",
+        "material_texture"
+      ]
+    }
+  },
+  "command_generation": {
+    "template": "draw-things-cli generate --model {model} --output {output_path} --prompt {quoted_prompt} --width {width} --height {height} --steps {steps} --cfg {cfg} --config-json '{json_config}'",
+    "config_json_fields": [
+      "sampler",
+      "loras"
+    ],
+    "optional_config_json_fields": [
+      "upscaler",
+      "upscalerScaleFactor"
+    ],
+    "omit_optional_fields_when_unset": true,
+    "shell_safety": [
+      "Use an absolute output path or quote paths with spaces.",
+      "Escape shell single quotes in prompt/config JSON safely; a JSON serializer alone does not make arbitrary shell quoting safe.",
+      "Serialize config JSON with a real JSON encoder.",
+      "Do not put explanatory comments inside JSON."
+    ]
+  },
+  "known_limitations": [
+    "Sampler IDs and configuration keys must be checked against the installed Draw Things CLI version.",
+    "The listed LoRAs are candidates, not guaranteed runtime-compatible files; adapter format and loading path require testing.",
+    "The whimsical LoRA filename is intentionally unspecified until the repository's actual file is inspected.",
+    "No native upscaler model name is asserted without the installed registry.",
+    "Prompt constraints are probabilistic and do not replace visual inspection.",
+    "Generated scientific diagrams require reference checking and labels should be typeset separately."
+  ]
+}

@@ -1,0 +1,842 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Decision support for Draw Things CLI SDXL image generation using only the assets enumerated by the user.",
+  "compatibility_notes": [
+    "config-json is a partial override merged with model-recommended configuration; explicit CLI flags override config values.",
+    "Sampler integer IDs are Draw Things SamplerType raw values; validate after updating draw-things-cli.",
+    "Exact model, LoRA and upscaler identifiers must match files/metadata registered by the local Draw Things installation.",
+    "For unregistered local LoRAs, current CLI documentation says loras[].version may be required; add the version label expected by the local catalog/metadata rather than guessing if the CLI errors.",
+    "Hires fix performs a second diffusion pass and can alter geometry or contours; for strict line art consider direct native-size rendering without hires fix.",
+    "No generated text in educational diagrams should be treated as authoritative; typeset labels separately."
+  ],
+  "samplers": [
+    {
+      "id": 0,
+      "name": "DPM++ 2M Karras",
+      "recommended": true,
+      "use": "general SDXL baseline"
+    },
+    {
+      "id": 1,
+      "name": "Euler A",
+      "recommended": false,
+      "use": "more stochastic expressive variation; sketch/painterly trials"
+    },
+    {
+      "id": 2,
+      "name": "DDIM",
+      "recommended": false,
+      "use": "controlled comparisons/simple compositions"
+    },
+    {
+      "id": 3,
+      "name": "PLMS",
+      "recommended": false,
+      "use": "legacy; avoid as default"
+    },
+    {
+      "id": 4,
+      "name": "DPM++ SDE Karras",
+      "recommended": false,
+      "use": "stochastic detail experiment; may be slower"
+    },
+    {
+      "id": 5,
+      "name": "UniPC",
+      "recommended": false,
+      "use": "alternative general-purpose solver"
+    },
+    {
+      "id": 6,
+      "name": "LCM",
+      "recommended": false,
+      "use": "use only with compatible consistency workflow"
+    },
+    {
+      "id": 7,
+      "name": "Euler A Substep",
+      "recommended": false,
+      "use": "organic detail experiment"
+    },
+    {
+      "id": 8,
+      "name": "DPM++ SDE Substep",
+      "recommended": false,
+      "use": "specialized experiment"
+    },
+    {
+      "id": 9,
+      "name": "TCD",
+      "recommended": false,
+      "use": "not a default for provided SDXL checkpoints"
+    },
+    {
+      "id": 10,
+      "name": "Euler A Trailing",
+      "recommended": false,
+      "use": "alternative schedule; validate"
+    },
+    {
+      "id": 11,
+      "name": "DPM++ SDE Trailing",
+      "recommended": false,
+      "use": "stochastic alternative"
+    },
+    {
+      "id": 12,
+      "name": "DPM++ 2M AYS",
+      "recommended": false,
+      "use": "alternative step placement"
+    },
+    {
+      "id": 13,
+      "name": "Euler A AYS",
+      "recommended": false,
+      "use": "alternative step placement"
+    },
+    {
+      "id": 14,
+      "name": "DPM++ SDE AYS",
+      "recommended": false,
+      "use": "specialized alternative"
+    },
+    {
+      "id": 15,
+      "name": "DPM++ 2M Trailing",
+      "recommended": false,
+      "use": "alternative DPM++ schedule"
+    },
+    {
+      "id": 16,
+      "name": "DDIM Trailing",
+      "recommended": false,
+      "use": "controlled alternative schedule"
+    },
+    {
+      "id": 17,
+      "name": "UniPC Trailing",
+      "recommended": false,
+      "use": "available but not first choice for ordinary SDXL"
+    },
+    {
+      "id": 18,
+      "name": "UniPC AYS",
+      "recommended": false,
+      "use": "alternative step placement"
+    }
+  ],
+  "models": {
+    "juggernaut_xl_x_f16.ckpt": {
+      "preferred_for": [
+        "photorealism",
+        "editorial photography",
+        "realistic wildlife",
+        "mature digital illustration"
+      ],
+      "avoid_when": ["pure line art is the strict requirement"],
+      "defaults": {
+        "steps": [28, 36],
+        "cfg": [4.8, 6.5],
+        "sampler": 0
+      }
+    },
+    "juggernaut_xl_v9_f16.ckpt": {
+      "preferred_for": [
+        "storybook illustration",
+        "painterly illustration",
+        "oil painting",
+        "watercolor prompted style",
+        "sketch base"
+      ],
+      "defaults": {
+        "steps": [26, 34],
+        "cfg": [4.5, 6.0],
+        "sampler": 0
+      }
+    },
+    "colorfulxl_v6.0_f16.ckpt": {
+      "preferred_for": [
+        "bright children's illustrations",
+        "friendly cartoons",
+        "vivid digital art",
+        "family-friendly 3D stylization"
+      ],
+      "defaults": {
+        "steps": [24, 30],
+        "cfg": [4.5, 6.0],
+        "sampler": 0
+      }
+    },
+    "animagine_xl_v3.1_f16.ckpt": {
+      "preferred_for": [
+        "2D anime",
+        "manga-inspired character art",
+        "chibi",
+        "anime covers"
+      ],
+      "defaults": {
+        "steps": [25, 32],
+        "cfg": [4.5, 6.5],
+        "sampler": 0
+      }
+    }
+  },
+  "loras": {
+    "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors": {
+      "weight_range": [0.7, 0.9],
+      "trigger": ["KidsRedmAF", "Kids Book"],
+      "use_for": [
+        "children's picture books",
+        "gentle narrative vignettes",
+        "storybook watercolor/gouache style"
+      ],
+      "notes": "Use style tokens such as colorful, minimalist, detailed; reduce for adult or realism tasks."
+    },
+    "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors": {
+      "weight_range": [0.85, 1.0],
+      "trigger": ["ColoringBookAF", "Coloring Book"],
+      "use_for": [
+        "printable black-white coloring pages",
+        "children's coloring books",
+        "adult mandalas",
+        "worksheet line art"
+      ],
+      "notes": "Pair with pure white background, clean black outlines, closed contours and negative prompt against grayscale/shading."
+    },
+    "LineAniRedmondV2-Lineart-LineAniAF.safetensors": {
+      "weight_range": [0.35, 0.65],
+      "trigger": ["LineAniAF", "lineart"],
+      "use_for": ["anime line art", "manga-style illustration"],
+      "notes": "Pair with Animagine; lower weight if outlines become too heavy."
+    },
+    "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors": {
+      "weight_range": [0.4, 0.7],
+      "trigger": ["AnalogRedmAF", "Analog"],
+      "use_for": ["analog film photography", "vintage editorial photography"],
+      "notes": "Specify lens, framing and lighting; omit for clean digital photos."
+    },
+    "3d_render_style_xl.safetensors": {
+      "weight_range": [0.5, 0.75],
+      "trigger": ["3D style", "3D render"],
+      "use_for": ["3D-rendered illustration", "stylized products/characters"],
+      "notes": "Explicitly define materials, camera angle and lighting."
+    },
+    "pixar-style.safetensors": {
+      "weight_range": [0.35, 0.65],
+      "trigger": ["pixar-style"],
+      "use_for": ["family-friendly feature-animation-like 3D characters"],
+      "notes": "Use as alternative to the general 3D style LoRA; do not stack both by default."
+    },
+    "add-detail-xl.safetensors": {
+      "weight_range": [0.15, 0.35],
+      "trigger": [],
+      "use_for": ["subtle texture/detail support"],
+      "notes": "Optional; avoid for strict black-white coloring pages and remove if texture artifacts appear."
+    },
+    "sketch-style-xl.safetensors": {
+      "weight_range": [0.45, 0.75],
+      "trigger": [],
+      "use_for": [
+        "pencil sketch",
+        "graphite drawing",
+        "monochrome artistic sketches"
+      ],
+      "notes": "Prompt paper, pencil grade, stroke visibility and hatching density."
+    },
+    "oil-painting-slider.safetensors": {
+      "weight_range": [0.35, 0.65],
+      "trigger": [],
+      "use_for": ["oil painting"],
+      "notes": "First-choice oil slider; don't stack with epic-oil by default."
+    },
+    "epic-oil-painting-slider.safetensors": {
+      "weight_range": [0.3, 0.6],
+      "trigger": [],
+      "use_for": ["stronger or more dramatic oil-painting stylization"],
+      "notes": "Alternative to oil-painting-slider, not an automatic second LoRA."
+    }
+  },
+  "upscalers": {
+    "4x_foolhardy_Remacri_ExtraSmoother.safetensors": {
+      "scale_factor": 4,
+      "prefer_for": [
+        "children's illustrations",
+        "smooth clean linework",
+        "soft painterly art"
+      ],
+      "risk": "may soften small hatch marks or micro-detail"
+    },
+    "4x_NMKD-Superscale-SP_178000_G.safetensors": {
+      "scale_factor": 4,
+      "prefer_for": [
+        "general illustration",
+        "mixed textures",
+        "painterly scenes"
+      ],
+      "risk": "may amplify or invent texture"
+    },
+    "4x-UltraSharpV2.safetensors": {
+      "scale_factor": 4,
+      "prefer_for": [
+        "crisp digital drawing",
+        "bold outlines",
+        "graphic illustration"
+      ],
+      "risk": "halos/oversharpened line edges"
+    },
+    "RealESRGAN_x4plus_anime_6B.safetensors": {
+      "scale_factor": 4,
+      "prefer_for": ["anime", "manga color art", "cel-shaded cartoons"],
+      "risk": "oversharpened gradients or joins"
+    },
+    "RealESRGAN_x4plus.safetensors": {
+      "scale_factor": 4,
+      "prefer_for": [
+        "photorealism",
+        "natural textures",
+        "realistic animals/objects"
+      ],
+      "risk": "crunchy details and altered soft paint"
+    },
+    "RealESRGAN_x2plus.safetensors": {
+      "scale_factor": 2,
+      "prefer_for": [
+        "conservative 2x enlargement",
+        "sketches",
+        "quality proofing"
+      ],
+      "risk": "less enlargement than 4x"
+    }
+  },
+  "age_profiles": {
+    "preschool_3_5": {
+      "detail_density": "very_low",
+      "main_subject_count": [1, 2],
+      "shape_rule": "large silhouette, 1-3 main forms, large closed shapes when line art",
+      "avoid": [
+        "tiny texture",
+        "thin lines",
+        "crowded background",
+        "subtle contrast"
+      ]
+    },
+    "early_reader_5_7": {
+      "detail_density": "low_medium",
+      "main_subject_count": [1, 3],
+      "shape_rule": "one clear action and few props; visible emotion",
+      "avoid": ["competing focal points", "complex perspective"]
+    },
+    "children_8_12": {
+      "detail_density": "medium",
+      "main_subject_count": [1, 4],
+      "shape_rule": "layered environment with clear focal subject and narrative cues",
+      "avoid": ["texture over focal subject", "confusing overlap"]
+    },
+    "teens_13_18": {
+      "detail_density": "medium_high",
+      "main_subject_count": [1, 5],
+      "shape_rule": "more nuanced mood and realistic informative detail; clear hierarchy",
+      "avoid": ["automatic childish style", "unverified generated labels"]
+    },
+    "adult_coloring": {
+      "detail_density": "high_organized",
+      "main_subject_count": [1, 3],
+      "shape_rule": "radial/repeating geometry, many enclosed regions, deliberate line-weight hierarchy",
+      "avoid": ["gray shading", "open gaps", "accidental solid black fills"]
+    }
+  },
+  "global_defaults": {
+    "sampler": 0,
+    "steps": 28,
+    "cfg": 5.3,
+    "base_resolution": [768, 768],
+    "hires_fix": {
+      "enabled": true,
+      "target_width": 1024,
+      "target_height": 1024,
+      "strength": [0.16, 0.3]
+    },
+    "comparison": {
+      "fixed_seed": 31415,
+      "vary_one_parameter_at_a_time": true
+    }
+  },
+  "prompt_order": [
+    "subject_and_action",
+    "scene_and_composition",
+    "medium_and_style",
+    "lighting_and_palette",
+    "craft_constraints",
+    "lora_triggers"
+  ],
+  "negative_prompt_components": {
+    "general_artifacts": [
+      "blurry",
+      "low detail",
+      "jpeg artifacts",
+      "text",
+      "watermark",
+      "logo",
+      "signature",
+      "cropped subject",
+      "malformed anatomy",
+      "extra fingers",
+      "fused fingers"
+    ],
+    "coloring_book": [
+      "color",
+      "grayscale shading",
+      "gray shadows",
+      "gradients",
+      "halftone",
+      "crosshatching",
+      "filled black areas",
+      "sketchy construction lines",
+      "broken outlines",
+      "open contours",
+      "cluttered background",
+      "text",
+      "watermark"
+    ],
+    "storybook": [
+      "photorealistic",
+      "harsh flash",
+      "uncanny skin",
+      "excessive microtexture",
+      "gritty horror",
+      "cluttered composition",
+      "text",
+      "watermark",
+      "malformed anatomy"
+    ],
+    "photo": [
+      "illustration",
+      "cartoon",
+      "anime",
+      "3d render",
+      "plastic skin",
+      "oversmoothed skin",
+      "overprocessed HDR",
+      "fake bokeh",
+      "text",
+      "watermark",
+      "malformed hands"
+    ],
+    "sketch": [
+      "full color",
+      "glossy 3d",
+      "photorealistic color photo",
+      "plastic surfaces",
+      "clean vector fill"
+    ],
+    "painting": [
+      "photographic sharpness",
+      "vector outlines",
+      "plastic 3d surfaces",
+      "text",
+      "watermark"
+    ]
+  },
+  "decision_rules": [
+    {
+      "when": "coloring_page or strict_black_white_line_art",
+      "use_model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "weight": "0.85-1.0"
+        }
+      ],
+      "sampler": 0,
+      "steps": "24-32",
+      "cfg": "4.5-5.8",
+      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors or 4x-UltraSharpV2.safetensors",
+      "positive_constraints": [
+        "pure black outlines",
+        "pure white background",
+        "closed contours",
+        "no gray shading",
+        "wide margin"
+      ],
+      "negative_profile": "coloring_book"
+    },
+    {
+      "when": "children_picture_book",
+      "use_model": "colorfulxl_v6.0_f16.ckpt or juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "weight": "0.7-0.9"
+        }
+      ],
+      "sampler": 0,
+      "steps": "24-30",
+      "cfg": "4.5-6.0",
+      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "positive_constraints": [
+        "clear silhouette",
+        "small object count",
+        "simple background",
+        "age-appropriate complexity"
+      ]
+    },
+    {
+      "when": "anime_or_manga",
+      "use_model": "animagine_xl_v3.1_f16.ckpt",
+      "loras": [
+        {
+          "file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors",
+          "weight": "0.35-0.65"
+        }
+      ],
+      "sampler": 0,
+      "steps": "25-32",
+      "cfg": "4.5-6.5",
+      "upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+      "positive_constraints": [
+        "use anime tagging conventions",
+        "explicit pose and camera",
+        "clear hands"
+      ]
+    },
+    {
+      "when": "general_3d_render",
+      "use_model": "colorfulxl_v6.0_f16.ckpt",
+      "loras": [
+        {
+          "file": "3d_render_style_xl.safetensors",
+          "weight": "0.5-0.75"
+        }
+      ],
+      "sampler": 0,
+      "steps": "24-30",
+      "cfg": "4.5-6.0",
+      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "positive_constraints": [
+        "material",
+        "camera angle",
+        "key light",
+        "contact shadows"
+      ]
+    },
+    {
+      "when": "pixar_like_family_animation",
+      "use_model": "colorfulxl_v6.0_f16.ckpt",
+      "loras": [
+        {
+          "file": "pixar-style.safetensors",
+          "weight": "0.35-0.65"
+        }
+      ],
+      "sampler": 0,
+      "steps": "24-30",
+      "cfg": "4.5-5.8",
+      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "notes": "Use as an alternative to 3d_render_style_xl."
+    },
+    {
+      "when": "pencil_sketch",
+      "use_model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "sketch-style-xl.safetensors",
+          "weight": "0.45-0.75"
+        }
+      ],
+      "sampler": "0 or 1",
+      "steps": "26-34",
+      "cfg": "4.5-6.0",
+      "upscaler": "RealESRGAN_x2plus.safetensors",
+      "positive_constraints": [
+        "graphite",
+        "paper grain",
+        "stroke density",
+        "hatching location"
+      ]
+    },
+    {
+      "when": "oil_painting",
+      "use_model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "oil-painting-slider.safetensors or epic-oil-painting-slider.safetensors",
+          "weight": "0.3-0.65"
+        }
+      ],
+      "sampler": 0,
+      "steps": "28-36",
+      "cfg": "4.5-6.0",
+      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "notes": "Use only one oil slider for first pass."
+    },
+    {
+      "when": "watercolor",
+      "use_model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "weight": "0.0-0.4 optional"
+        }
+      ],
+      "sampler": "0 or 1",
+      "steps": "28-34",
+      "cfg": "4.5-5.8",
+      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "positive_constraints": [
+        "translucent washes",
+        "wet-on-wet edges",
+        "pigment blooms",
+        "paper texture"
+      ]
+    },
+    {
+      "when": "analog_film_photography",
+      "use_model": "juggernaut_xl_x_f16.ckpt",
+      "loras": [
+        {
+          "file": "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors",
+          "weight": "0.4-0.7"
+        }
+      ],
+      "sampler": 0,
+      "steps": "28-36",
+      "cfg": "4.5-6.5",
+      "upscaler": "RealESRGAN_x4plus.safetensors",
+      "positive_constraints": [
+        "lens",
+        "documentary framing",
+        "light",
+        "subtle grain"
+      ]
+    },
+    {
+      "when": "photorealism",
+      "use_model": "juggernaut_xl_x_f16.ckpt",
+      "loras": [
+        {
+          "file": "add-detail-xl.safetensors",
+          "weight": "0.15-0.30 optional"
+        }
+      ],
+      "sampler": 0,
+      "steps": "30-36",
+      "cfg": "4.8-6.5",
+      "upscaler": "RealESRGAN_x4plus.safetensors or RealESRGAN_x2plus.safetensors",
+      "positive_constraints": [
+        "camera/lens",
+        "lighting",
+        "material texture",
+        "natural color and exposure"
+      ]
+    }
+  ],
+  "recipe_examples": [
+    {
+      "id": "preschool_storybook_fox",
+      "audience": "preschool 3-5",
+      "genre": "picture book",
+      "model": "colorfulxl_v6.0_f16.ckpt",
+      "loras": [
+        {
+          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "weight": 0.82,
+          "mode": "all"
+        }
+      ],
+      "prompt": "KidsRedmAF, Kids Book, colorful, a friendly red fox kit carrying a tiny blue umbrella through a puddle, full-body clear silhouette, one main character, simple garden path and two oversized flowers, cheerful picture-book watercolor and gouache, warm soft daylight, generous whitespace, no text",
+      "negative_profile": "storybook",
+      "steps": 26,
+      "cfg": 5.2,
+      "sampler": 0,
+      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "kid_coloring_dinosaur",
+      "audience": "preschool 3-5",
+      "genre": "coloring page",
+      "model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "weight": 0.96,
+          "mode": "all"
+        }
+      ],
+      "prompt": "ColoringBookAF, Coloring Book, black and white printable coloring page for preschool children, one smiling baby dinosaur standing beside one large fern and a round sun, very bold smooth uniform black outlines, large simple closed shapes, few details, pure white background, no gray tones, no filled black areas, centered composition, wide white margins, no text",
+      "negative_profile": "coloring_book",
+      "steps": 26,
+      "cfg": 5.0,
+      "sampler": 0,
+      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "adult_mandala_owl",
+      "audience": "adult",
+      "genre": "mandala coloring page",
+      "model": "juggernaut_xl_x_f16.ckpt",
+      "loras": [
+        {
+          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "weight": 0.98,
+          "mode": "all"
+        }
+      ],
+      "prompt": "ColoringBookAF, Coloring Book, intricate adult coloring book page, perfectly centered radial mandala formed from a wise owl, crescent moon, feathers, leaves and repeating geometric petals, precise symmetrical rings, intricate closed regions of varied sizes, pure black outlines on pure white background, no grayscale, no shading, no solid black fills, generous outer margin, no text",
+      "negative_profile": "coloring_book",
+      "steps": 32,
+      "cfg": 5.0,
+      "sampler": 0,
+      "upscaler": "4x-UltraSharpV2.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "anime_reading",
+      "audience": "teen",
+      "genre": "2D anime illustration",
+      "model": "animagine_xl_v3.1_f16.ckpt",
+      "loras": [
+        {
+          "file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors",
+          "weight": 0.48,
+          "mode": "all"
+        }
+      ],
+      "prompt": "masterpiece, best quality, very aesthetic, absurdres, LineAniAF, lineart, 1girl, a teen anime student reading an astronomy book by a dormitory window, thoughtful expression, clear hands holding the book, midnight blue hair, warm desk lamp and cool moonlight, clean cel shading, precise expressive outlines, uncluttered anime illustration, no text",
+      "negative_profile": "anime",
+      "steps": 28,
+      "cfg": 5.5,
+      "sampler": 0,
+      "upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "pencil_owl",
+      "audience": "all ages",
+      "genre": "artistic sketch",
+      "model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "sketch-style-xl.safetensors",
+          "weight": 0.62,
+          "mode": "all"
+        }
+      ],
+      "prompt": "graphite pencil sketch of a barn owl perched on a weathered branch, three-quarter profile, anatomical feather structure, varied pencil pressure, fine cross-contours, visible graphite strokes on warm white drawing paper, delicate hatching beneath the wings, lightly suggested background, no color",
+      "negative_profile": "sketch",
+      "steps": 30,
+      "cfg": 5.0,
+      "sampler": 0,
+      "upscaler": "RealESRGAN_x2plus.safetensors",
+      "upscaler_scale_factor": 2,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "oil_harbor",
+      "audience": "adult",
+      "genre": "oil painting",
+      "model": "juggernaut_xl_v9_f16.ckpt",
+      "loras": [
+        {
+          "file": "oil-painting-slider.safetensors",
+          "weight": 0.52,
+          "mode": "all"
+        }
+      ],
+      "prompt": "oil painting of a small fishing harbor at dawn, broad confident brush strokes, visible impasto highlights, canvas tooth, layered pigments, muted cobalt blue and warm ochre palette, painterly edges, balanced fine-art composition, soft overcast light, no lettering",
+      "negative_profile": "painting",
+      "steps": 32,
+      "cfg": 5.2,
+      "sampler": 0,
+      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    },
+    {
+      "id": "photoreal_kingfisher",
+      "audience": "all ages",
+      "genre": "photorealism",
+      "model": "juggernaut_xl_x_f16.ckpt",
+      "loras": [
+        {
+          "file": "add-detail-xl.safetensors",
+          "weight": 0.2,
+          "mode": "all"
+        }
+      ],
+      "prompt": "photorealistic wildlife photograph of a sacred kingfisher perched on a weathered mangrove branch, sharp natural feather structure, bird at eye level, 400mm telephoto lens, soft morning side light, distant natural bokeh, accurate bird proportions, realistic color and exposure, no text",
+      "negative_profile": "photo",
+      "steps": 34,
+      "cfg": 5.0,
+      "sampler": 0,
+      "upscaler": "RealESRGAN_x4plus.safetensors",
+      "upscaler_scale_factor": 4,
+      "base_resolution": [768, 768],
+      "hires_fix_target": [1024, 1024]
+    }
+  ],
+  "evaluation": {
+    "scores": {
+      "subject_match": {
+        "range": [0, 5]
+      },
+      "composition_readability": {
+        "range": [0, 5]
+      },
+      "style_match": {
+        "range": [0, 5]
+      },
+      "technical_cleanliness": {
+        "range": [0, 5]
+      },
+      "print_suitability": {
+        "range": [0, 5]
+      },
+      "content_accuracy": {
+        "range": [0, 5]
+      }
+    },
+    "weighting": {
+      "coloring_page": {
+        "print_suitability": 0.35,
+        "technical_cleanliness": 0.25,
+        "style_match": 0.15,
+        "subject_match": 0.15,
+        "composition_readability": 0.1
+      },
+      "nonfiction": {
+        "content_accuracy": 0.3,
+        "subject_match": 0.25,
+        "composition_readability": 0.2,
+        "technical_cleanliness": 0.15,
+        "style_match": 0.1
+      },
+      "picture_book": {
+        "composition_readability": 0.3,
+        "style_match": 0.25,
+        "subject_match": 0.2,
+        "technical_cleanliness": 0.15,
+        "print_suitability": 0.1
+      },
+      "photorealism": {
+        "technical_cleanliness": 0.3,
+        "subject_match": 0.25,
+        "style_match": 0.2,
+        "composition_readability": 0.15,
+        "content_accuracy": 0.1
+      }
+    },
+    "note": "Scores are heuristic rankings, not calibrated probabilities. Reject outputs that fail hard requirements even if total score is high."
+  }
+}

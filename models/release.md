@@ -40,18 +40,22 @@ git push -u origin main
 ## 2. Create the release, upload everything
 
 ```bash
-gh release create v1 README.md \
+gh release create v2 README.md \
 --repo PPCCo/loras-upscalers-mirror \
---title "Release v1" \
---notes "loras and upscalers"
+--title "Release v2 - Klein loras" \
+--notes "Klein loras and upscalers"
 
 # batch 2 - the big fp8 diffusion checkpoint
 caffeinate -i gh release upload v1 *.safetensors --repo PPCCo/loras-upscalers-mirror --clobber
 caffeinate -i gh release upload v1 rrdb_psnr_x4.pth --repo PPCCo/loras-upscalers-mirror --clobber
+
+caffeinate -i gh release upload v2 *.safetensors --repo PPCCo/loras-upscalers-mirror --clobber
 ```
 
 ## 3. Then, download on the other machine
 
 `mkdir -p ~/Dev/loras-upscalers && cd ~/Dev/loras-upscalers`
-
 `caffeinate -i gh release download v1 --repo PPCCo/loras-upscalers-mirror --pattern '*'`
+
+`mkdir -p ~/Dev/loras-klein && cd ~/Dev/loras-klein`
+`caffeinate -i gh release download v2 --repo PPCCo/loras-upscalers-mirror --pattern '*'`

@@ -1,14 +1,50 @@
 # DT Links
 
+## Search
+
 ```text
-https://lmstudio.ai/ceveyne/draw-things-chat
+https://github.com/search?q=repo%3Adrawthingsai%2Fdraw-things-community+realesrgan_x4plus_f16&type=code
+https://huggingface.co/api/models?filter=base_model:adapter:black-forest-labs/FLUX.2-klein-4B&sort=downloads&direction=-1&limit=100
+```
+
+## klein
+
+```text
+https://huggingface.co/DeverStyle/Flux.2-Klein-Loras
+https://huggingface.co/goumsss/numzoo-flux2-klein-lora
+https://docs.bfl.ai/guides/prompting_guide_flux2_klein
+https://docs.bfl.ai/flux_2/flux2_overview
+
+```
+
+## draw-things
+
+- `https://lmstudio.ai/ceveyne/draw-things-chat`
+- `https://models.drawthings.ai/loras.json`
+
+### Configs
+
+- `https://raw.githubusercontent.com/Wujidadi/dt-cli-wrapper/main/parameters/example.toml`
+
+### Convert `.safetensors` LoRAs to work in draw-things-cli:
+
+- `https://raw.githubusercontent.com/vcspr/drawthings-lora-convert/main/README.md`
+
+### dt-cli-wrapper
+
+`https://raw.githubusercontent.com/Wujidadi/dt-cli-wrapper/main/MANUAL.md`
+
+- `https://raw.githubusercontent.com/Wujidadi/dt-cli-wrapper/main/MODELS.md`
+- `https://raw.githubusercontent.com/Wujidadi/dt-cli-wrapper/main/AGENTS.md`
+
+## draw-things
+
+```text
 https://lmstudio.ai/kaed85/draw-things-chat/files/src/interfaces/config.fbs
 
 https://github.com/wysie/drawthings-grpc-hermes-plugin
 
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/3cac0759afad9d266004606263030916006be16e/.agents/skills/use-drawthings-cli/SKILL.md
-
-https://github.com/search?q=repo%3Adrawthingsai%2Fdraw-things-community+realesrgan_x4plus_f16&type=code
 
 https://github.com/JingyunLiang/SwinIR
 https://huggingface.co/easygoing0114/AI_upscalers/tree/main
@@ -23,6 +59,7 @@ https://api.github.com/repos/drawthingsai/draw-things-community/git/trees/main?r
 https://openmodeldb.info/models/4x-NMKD-Superscale
 
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Libraries/DataModels/Sources/config.fbs
+https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Libraries/ModelZoo/Sources/UpscalerZoo.swift
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Libraries/Invocation/Sources/Parameters.swift
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Apps/DrawThingsCLI/Tests/DrawThingsCLIInvocationTests.swift
 https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Apps/DrawThingsCLI/DrawThingsCLI.swift
