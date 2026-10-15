@@ -44,14 +44,14 @@ I’ve prepared two files: a practical configuration guide and a structured reco
 
 | User intent                  | Starting configuration                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Young children's storybooks  | `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors`, weight `0.70–0.85`; CFG `5.0–5.5`                            |
-| Clean coloring-book line art | `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors`, weight `0.80–0.95`; CFG `5–7`                       |
+| Young children's storybooks  | `redmondv2_kids_storybook_lora_f16.ckpt`, weight `0.70–0.85`; CFG `5.0–5.5`                            |
+| Clean coloring-book line art | `redmond_coloringbook_lora_f16.ckpt`, weight `0.80–0.95`; CFG `5–7`                       |
 | Adult mandalas               | ColoringBook LoRA `0.80–0.95`; 28–34 steps; emphasize enclosed shapes and consistent outlines                      |
-| Anime illustrations          | `animagine_xl_v3.1_f16.ckpt`; optionally `LineAniRedmondV2-Lineart-LineAniAF.safetensors` at `0.45–0.70`           |
-| Oil painting                 | `juggernaut_xl_x_f16.ckpt` or v9; `oil-painting-slider.safetensors` at `0.50–0.75`                                 |
-| Pencil sketches              | `sketch-style-xl.safetensors` at `0.60–0.85`; suppress color and glossy rendering                                  |
-| 3D or family-animation style | `3d_render_style_xl.safetensors` or `pixar-style.safetensors`; use one as the main style control                   |
-| Photorealism                 | Juggernaut v9 or X; optional `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors` at `0.25–0.45` for a film-like feel |
+| Anime illustrations          | `animagine_xl_v3.1_f16.ckpt`; optionally `redmondv2_lineart_lineani_lora_f16.ckpt` at `0.45–0.70`           |
+| Oil painting                 | `juggernaut_xl_x_f16.ckpt` or v9; `oil_painting_slider_lora_f16.ckpt` at `0.50–0.75`                                 |
+| Pencil sketches              | `sketch_style_lora_f16.ckpt` at `0.60–0.85`; suppress color and glossy rendering                                  |
+| 3D or family-animation style | `3d_render_style_xl_lora_f16.ckpt` or `pixar_style_lora_f16.ckpt`; use one as the main style control                   |
+| Photorealism                 | Juggernaut v9 or X; optional `redmondv2_analog_lora_f16.ckpt` at `0.25–0.45` for a film-like feel |
 
 For most initial tests, sampler `0` (DPM++ 2M Karras), CFG around `5.5`, and 25–30 steps are sensible baselines. Upscalers should be chosen by the desired finish: smoother edges for children's illustrations, line-preserving choices for coloring pages, and detail-oriented choices for realistic images.
 

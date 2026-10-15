@@ -182,7 +182,7 @@
     }
   },
   "loras": {
-    "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors": {
+    "redmondv2_kids_storybook_lora_f16.ckpt": {
       "weight_range": [0.7, 0.9],
       "trigger": ["KidsRedmAF", "Kids Book"],
       "use_for": [
@@ -192,7 +192,7 @@
       ],
       "notes": "Use style tokens such as colorful, minimalist, detailed; reduce for adult or realism tasks."
     },
-    "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors": {
+    "redmond_coloringbook_lora_f16.ckpt": {
       "weight_range": [0.85, 1.0],
       "trigger": ["ColoringBookAF", "Coloring Book"],
       "use_for": [
@@ -203,37 +203,37 @@
       ],
       "notes": "Pair with pure white background, clean black outlines, closed contours and negative prompt against grayscale/shading."
     },
-    "LineAniRedmondV2-Lineart-LineAniAF.safetensors": {
+    "redmondv2_lineart_lineani_lora_f16.ckpt": {
       "weight_range": [0.35, 0.65],
       "trigger": ["LineAniAF", "lineart"],
       "use_for": ["anime line art", "manga-style illustration"],
       "notes": "Pair with Animagine; lower weight if outlines become too heavy."
     },
-    "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors": {
+    "redmondv2_analog_lora_f16.ckpt": {
       "weight_range": [0.4, 0.7],
       "trigger": ["AnalogRedmAF", "Analog"],
       "use_for": ["analog film photography", "vintage editorial photography"],
       "notes": "Specify lens, framing and lighting; omit for clean digital photos."
     },
-    "3d_render_style_xl.safetensors": {
+    "3d_render_style_xl_lora_f16.ckpt": {
       "weight_range": [0.5, 0.75],
       "trigger": ["3D style", "3D render"],
       "use_for": ["3D-rendered illustration", "stylized products/characters"],
       "notes": "Explicitly define materials, camera angle and lighting."
     },
-    "pixar-style.safetensors": {
+    "pixar_style_lora_f16.ckpt": {
       "weight_range": [0.35, 0.65],
       "trigger": ["pixar-style"],
       "use_for": ["family-friendly feature-animation-like 3D characters"],
       "notes": "Use as alternative to the general 3D style LoRA; do not stack both by default."
     },
-    "add-detail-xl.safetensors": {
+    "add_detail_xl_lora_f16.ckpt": {
       "weight_range": [0.15, 0.35],
       "trigger": [],
       "use_for": ["subtle texture/detail support"],
       "notes": "Optional; avoid for strict black-white coloring pages and remove if texture artifacts appear."
     },
-    "sketch-style-xl.safetensors": {
+    "sketch_style_lora_f16.ckpt": {
       "weight_range": [0.45, 0.75],
       "trigger": [],
       "use_for": [
@@ -243,13 +243,13 @@
       ],
       "notes": "Prompt paper, pencil grade, stroke visibility and hatching density."
     },
-    "oil-painting-slider.safetensors": {
+    "oil_painting_slider_lora_f16.ckpt": {
       "weight_range": [0.35, 0.65],
       "trigger": [],
       "use_for": ["oil painting"],
       "notes": "First-choice oil slider; don't stack with epic-oil by default."
     },
-    "epic-oil-painting-slider.safetensors": {
+    "oil_painting_slider_epic_lora_f16.ckpt": {
       "weight_range": [0.3, 0.6],
       "trigger": [],
       "use_for": ["stronger or more dramatic oil-painting stylization"],
@@ -257,7 +257,7 @@
     }
   },
   "upscalers": {
-    "4x_foolhardy_Remacri_ExtraSmoother.safetensors": {
+    "4x_foolhardy_remacri_extrasmoother_f16.ckpt": {
       "scale_factor": 4,
       "prefer_for": [
         "children's illustrations",
@@ -266,7 +266,7 @@
       ],
       "risk": "may soften small hatch marks or micro-detail"
     },
-    "4x_NMKD-Superscale-SP_178000_G.safetensors": {
+    "4x_nmkd_superscale_sp_178000_g_f16.ckpt": {
       "scale_factor": 4,
       "prefer_for": [
         "general illustration",
@@ -275,7 +275,7 @@
       ],
       "risk": "may amplify or invent texture"
     },
-    "4x-UltraSharpV2.safetensors": {
+    "4x_ultrasharp_f16.ckpt": {
       "scale_factor": 4,
       "prefer_for": [
         "crisp digital drawing",
@@ -284,12 +284,12 @@
       ],
       "risk": "halos/oversharpened line edges"
     },
-    "RealESRGAN_x4plus_anime_6B.safetensors": {
+    "realesrgan_x4plus_anime_6b_f16.ckpt": {
       "scale_factor": 4,
       "prefer_for": ["anime", "manga color art", "cel-shaded cartoons"],
       "risk": "oversharpened gradients or joins"
     },
-    "RealESRGAN_x4plus.safetensors": {
+    "realesrgan_x4plus_f16.ckpt": {
       "scale_factor": 4,
       "prefer_for": [
         "photorealism",
@@ -298,7 +298,7 @@
       ],
       "risk": "crunchy details and altered soft paint"
     },
-    "RealESRGAN_x2plus.safetensors": {
+    "realesrgan_x2plus_f16.ckpt": {
       "scale_factor": 2,
       "prefer_for": [
         "conservative 2x enlargement",
@@ -443,14 +443,14 @@
       "use_model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "file": "redmond_coloringbook_lora_f16.ckpt",
           "weight": "0.85-1.0"
         }
       ],
       "sampler": 0,
       "steps": "24-32",
       "cfg": "4.5-5.8",
-      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors or 4x-UltraSharpV2.safetensors",
+      "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt or 4x_ultrasharp_f16.ckpt",
       "positive_constraints": [
         "pure black outlines",
         "pure white background",
@@ -465,14 +465,14 @@
       "use_model": "colorfulxl_v6.0_f16.ckpt or juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "file": "redmondv2_kids_storybook_lora_f16.ckpt",
           "weight": "0.7-0.9"
         }
       ],
       "sampler": 0,
       "steps": "24-30",
       "cfg": "4.5-6.0",
-      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
       "positive_constraints": [
         "clear silhouette",
         "small object count",
@@ -485,14 +485,14 @@
       "use_model": "animagine_xl_v3.1_f16.ckpt",
       "loras": [
         {
-          "file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors",
+          "file": "redmondv2_lineart_lineani_lora_f16.ckpt",
           "weight": "0.35-0.65"
         }
       ],
       "sampler": 0,
       "steps": "25-32",
       "cfg": "4.5-6.5",
-      "upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+      "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
       "positive_constraints": [
         "use anime tagging conventions",
         "explicit pose and camera",
@@ -504,14 +504,14 @@
       "use_model": "colorfulxl_v6.0_f16.ckpt",
       "loras": [
         {
-          "file": "3d_render_style_xl.safetensors",
+          "file": "3d_render_style_xl_lora_f16.ckpt",
           "weight": "0.5-0.75"
         }
       ],
       "sampler": 0,
       "steps": "24-30",
       "cfg": "4.5-6.0",
-      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
       "positive_constraints": [
         "material",
         "camera angle",
@@ -524,14 +524,14 @@
       "use_model": "colorfulxl_v6.0_f16.ckpt",
       "loras": [
         {
-          "file": "pixar-style.safetensors",
+          "file": "pixar_style_lora_f16.ckpt",
           "weight": "0.35-0.65"
         }
       ],
       "sampler": 0,
       "steps": "24-30",
       "cfg": "4.5-5.8",
-      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
       "notes": "Use as an alternative to 3d_render_style_xl."
     },
     {
@@ -539,14 +539,14 @@
       "use_model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "sketch-style-xl.safetensors",
+          "file": "sketch_style_lora_f16.ckpt",
           "weight": "0.45-0.75"
         }
       ],
       "sampler": "0 or 1",
       "steps": "26-34",
       "cfg": "4.5-6.0",
-      "upscaler": "RealESRGAN_x2plus.safetensors",
+      "upscaler": "realesrgan_x2plus_f16.ckpt",
       "positive_constraints": [
         "graphite",
         "paper grain",
@@ -559,14 +559,14 @@
       "use_model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "oil-painting-slider.safetensors or epic-oil-painting-slider.safetensors",
+          "file": "oil_painting_slider_lora_f16.ckpt or oil_painting_slider_epic_lora_f16.ckpt",
           "weight": "0.3-0.65"
         }
       ],
       "sampler": 0,
       "steps": "28-36",
       "cfg": "4.5-6.0",
-      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
       "notes": "Use only one oil slider for first pass."
     },
     {
@@ -574,14 +574,14 @@
       "use_model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "file": "redmondv2_kids_storybook_lora_f16.ckpt",
           "weight": "0.0-0.4 optional"
         }
       ],
       "sampler": "0 or 1",
       "steps": "28-34",
       "cfg": "4.5-5.8",
-      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
       "positive_constraints": [
         "translucent washes",
         "wet-on-wet edges",
@@ -594,14 +594,14 @@
       "use_model": "juggernaut_xl_x_f16.ckpt",
       "loras": [
         {
-          "file": "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors",
+          "file": "redmondv2_analog_lora_f16.ckpt",
           "weight": "0.4-0.7"
         }
       ],
       "sampler": 0,
       "steps": "28-36",
       "cfg": "4.5-6.5",
-      "upscaler": "RealESRGAN_x4plus.safetensors",
+      "upscaler": "realesrgan_x4plus_f16.ckpt",
       "positive_constraints": [
         "lens",
         "documentary framing",
@@ -614,14 +614,14 @@
       "use_model": "juggernaut_xl_x_f16.ckpt",
       "loras": [
         {
-          "file": "add-detail-xl.safetensors",
+          "file": "add_detail_xl_lora_f16.ckpt",
           "weight": "0.15-0.30 optional"
         }
       ],
       "sampler": 0,
       "steps": "30-36",
       "cfg": "4.8-6.5",
-      "upscaler": "RealESRGAN_x4plus.safetensors or RealESRGAN_x2plus.safetensors",
+      "upscaler": "realesrgan_x4plus_f16.ckpt or realesrgan_x2plus_f16.ckpt",
       "positive_constraints": [
         "camera/lens",
         "lighting",
@@ -638,7 +638,7 @@
       "model": "colorfulxl_v6.0_f16.ckpt",
       "loras": [
         {
-          "file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors",
+          "file": "redmondv2_kids_storybook_lora_f16.ckpt",
           "weight": 0.82,
           "mode": "all"
         }
@@ -648,7 +648,7 @@
       "steps": 26,
       "cfg": 5.2,
       "sampler": 0,
-      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -660,7 +660,7 @@
       "model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "file": "redmond_coloringbook_lora_f16.ckpt",
           "weight": 0.96,
           "mode": "all"
         }
@@ -670,7 +670,7 @@
       "steps": 26,
       "cfg": 5.0,
       "sampler": 0,
-      "upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+      "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -682,7 +682,7 @@
       "model": "juggernaut_xl_x_f16.ckpt",
       "loras": [
         {
-          "file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors",
+          "file": "redmond_coloringbook_lora_f16.ckpt",
           "weight": 0.98,
           "mode": "all"
         }
@@ -692,7 +692,7 @@
       "steps": 32,
       "cfg": 5.0,
       "sampler": 0,
-      "upscaler": "4x-UltraSharpV2.safetensors",
+      "upscaler": "4x_ultrasharp_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -704,7 +704,7 @@
       "model": "animagine_xl_v3.1_f16.ckpt",
       "loras": [
         {
-          "file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors",
+          "file": "redmondv2_lineart_lineani_lora_f16.ckpt",
           "weight": 0.48,
           "mode": "all"
         }
@@ -714,7 +714,7 @@
       "steps": 28,
       "cfg": 5.5,
       "sampler": 0,
-      "upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+      "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -726,7 +726,7 @@
       "model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "sketch-style-xl.safetensors",
+          "file": "sketch_style_lora_f16.ckpt",
           "weight": 0.62,
           "mode": "all"
         }
@@ -736,7 +736,7 @@
       "steps": 30,
       "cfg": 5.0,
       "sampler": 0,
-      "upscaler": "RealESRGAN_x2plus.safetensors",
+      "upscaler": "realesrgan_x2plus_f16.ckpt",
       "upscaler_scale_factor": 2,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -748,7 +748,7 @@
       "model": "juggernaut_xl_v9_f16.ckpt",
       "loras": [
         {
-          "file": "oil-painting-slider.safetensors",
+          "file": "oil_painting_slider_lora_f16.ckpt",
           "weight": 0.52,
           "mode": "all"
         }
@@ -758,7 +758,7 @@
       "steps": 32,
       "cfg": 5.2,
       "sampler": 0,
-      "upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+      "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]
@@ -770,7 +770,7 @@
       "model": "juggernaut_xl_x_f16.ckpt",
       "loras": [
         {
-          "file": "add-detail-xl.safetensors",
+          "file": "add_detail_xl_lora_f16.ckpt",
           "weight": 0.2,
           "mode": "all"
         }
@@ -780,7 +780,7 @@
       "steps": 34,
       "cfg": 5.0,
       "sampler": 0,
-      "upscaler": "RealESRGAN_x4plus.safetensors",
+      "upscaler": "realesrgan_x4plus_f16.ckpt",
       "upscaler_scale_factor": 4,
       "base_resolution": [768, 768],
       "hires_fix_target": [1024, 1024]

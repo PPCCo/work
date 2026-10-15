@@ -1,7 +1,7 @@
 # FLUX.2 Klein 4B + draw-things-cli — Agent Reference
 
 Consumer: AI agent / recommendation engine. Style: terse, machine-oriented.
-Target: MacBook Pro M4 (12-core, 48 GB), `flux_2_klein_4b_f16.ckpt`, `draw-things-cli generate`.
+Target: MacBook Pro M4 (12-core, 48 GB), `flux_2_klein_4b_q8p.ckpt`, `draw-things-cli generate`.
 Verified against: `drawthingsai/draw-things-community` main (2026-10-15) + Hugging Face model cards. Installed CLI may be older: run `draw-things-cli generate --help`.
 
 Tags: **[V]** verified from source/model card · **[H]** heuristic, A/B test on a fixed seed · **[U]** unverified.
@@ -84,52 +84,7 @@ Upscale output size = `width × upscalerScaleFactor`. 768×1024 ×4 = 3072×4096
 - Weight range: −1.5…2.5 typical; use 0.6–1.0; stack ≤ 2 LoRAs, summed weight ≤ ~1.5 [H].
 - Trigger word: put **first** in the prompt.
 
-### 3.2 Ecosystem reality (Oct 2026)
-Almost no 4B style LoRAs exist for coloring/mandala/kids/anime/watercolor. The popular ones (Redmond ColoringBook, LineartAnime, StorybookRedmond; DeverStyle; Anything-to-Real) are **9B-only → do not use** [V]. So the engine must default to **prompt-only presets** and offer **self-trained LoRA** (§3.5) when a style must be locked.
-
-### 3.3 Catalog (4B-compatible, found on HF)
-| ID | HF repo | Weights file | Trigger | Weight | Base | License | Fit |
-|---|---|---|---|---|---|---|---|
-| `light_fantasy` | `giannisan/light-fantasy-flux2-klein-base-lora` | `*.safetensors` (name not published) | `light_fantasy` (first) | 0.8–1.0 [H] | base 4B | "other" → inherits Klein (Apache-2.0) | Painterly fantasy storybook, castles, dragons. Trained 512²; card: 50 steps, cfg 3.5 |
-| `vintage_book_cover` | `Norod78/flux2-klein-4b-base-lora-vintage-book-cover` | `*.safetensors` (name not published) | `book cover` | 0.8–1.0 [H] | base 4B | "other" (Klein terms) | Retro cover-art look; leave title area blank |
-| `spritesheet` | `fal/flux-2-klein-4b-spritesheet-lora` | `flux-spritesheet-lora.safetensors` (+ a ComfyUI-converted variant) | `2x2 sprite sheet` | **1.1** (author) | distilled 4B | Apache-2.0 | Same character in 4 poses; consistency aid |
-| `pixelart` | `adirik/pixel-art-lora-flux.2-klein-4B` | `pixelart_lora.safetensors` (370 MB) | `PXART4` (first) | 0.8–1.0 [H] | base 4B | Apache-2.0 | Pixel art (outside requested genres) |
-| `wademade` | `noema-art/wademadeflux-klein` | name not published | `wademade` | 0.8–1.0 | base 4B | Apache-2.0 | Niche character style: **not recommended** |
-
-Excluded: `eigenben/FLUX.2-klein-base-4B-penguinoh` (single character, CC BY-NC), `fal/*outpaint*`, `fal/*zoom*`, `nomadoor/*360-erp-outpaint*` (edit-task LoRAs, need an input image).
-Non-LoRA option: `easygoing0114/FLUX.2-klein-4B_clear` is a **fine-tuned checkpoint** (Apache-2.0): more contrast/vibrance for anime/photoreal; card suggests 12 steps (4–15). Import with `draw-things-cli models import <file>.safetensors --dry-run` [U on filenames/compat; skip the INT8 ConvRot variant].
-
-### 3.4 Download + convert
-Needs `hf` CLI (`pip install -U "huggingface_hub[cli]"`). Not runnable from the research sandbox (HF blocked) → commands are **[U] until run on the Mac**.
-```bash
-mkdir -p ~/Dev/loras_src ~/Dev/t2
-hf download giannisan/light-fantasy-flux2-klein-base-lora --include "*.safetensors" --local-dir ~/Dev/loras_src/light_fantasy
-hf download Norod78/flux2-klein-4b-base-lora-vintage-book-cover --include "*.safetensors" --local-dir ~/Dev/loras_src/vintage_book_cover
-hf download fal/flux-2-klein-4b-spritesheet-lora flux-spritesheet-lora.safetensors --local-dir ~/Dev/loras_src/spritesheet
-hf download adirik/pixel-art-lora-flux.2-klein-4B pixelart_lora.safetensors --local-dir ~/Dev/loras_src/pixelart
-```
-If a repo holds several `.safetensors` (checkpoints), keep the final/largest-step one.
-
-Convert (pick one):
-- **A. Draw Things app (no build):** Manage LoRAs → Import → pick file → set base to FLUX.2 [klein] 4B → name it exactly as in the table below. The app writes `<name>_lora_f16.ckpt` into the Models folder and registers it.
-- **B. Script:** `vcspr/drawthings-lora-convert` (third-party, GPL-3.0). Build once (`./build.sh <tag matching your CLI>`, ~25 min), then:
-  ```bash
-  MODELS="$HOME/Library/Containers/com.liuliu.draw-things/Data/Documents/Models"
-  python3 dtlora.py convert ~/Dev/loras_src/light_fantasy/FILE.safetensors --models-dir "$MODELS" --version flux2_4b
-  ```
-  Upstream `LoRAImporter` has `flux2_4b` code paths [V]; the wrapper's README lists other families → Klein through it is [U]. Verify with its `verify` subcommand.
-Output name = lowercase, every non-alnum/non-`.` → `_`, + `_lora_f16.ckpt` [V]. Names assumed by examples below:
-
-| Source | Expected converted file |
-|---|---|
-| light_fantasy | `light_fantasy_lora_f16.ckpt` |
-| vintage_book_cover | `vintage_book_cover_lora_f16.ckpt` |
-| spritesheet | `klein4b_spritesheet_lora_f16.ckpt` |
-| pixelart | `klein4b_pixelart_lora_f16.ckpt` |
-
-Check: `ls "$MODELS" | grep -i lora`. If an example's LoRA file is missing, **drop the `loras` array** (prompt-only fallback still works).
-
-### 3.5 Self-train a LoRA (native CLI) [V flags; values H]
+### 3.2 Self-train a LoRA (native CLI) [V flags; values H]
 Best route for coloring-book line style, mandala style, house storybook style. Dataset = images + same-name `.txt` captions. Captions: trigger word first, **content only** (omit style words) [BFL]. 20–40 images. Train on **Base 4B**; use on distilled. Output auto-registers as `<output>_<step>_lora_f32.ckpt`.
 ```bash
 draw-things-cli train lora --model flux_2_klein_base_4b_q6p.ckpt --dataset ~/Dev/datasets/kids_coloring \
@@ -143,7 +98,7 @@ Drop `--dry-run` to train. BFL's best checkpoint was ~1500 of 3000 steps; later 
 ## 4. Upscalers [V names; usage notes H]
 Set `"upscaler":"<file>"` + `"upscalerScaleFactor":2|4`. Applied after VAE decode. Files are Draw Things-format `.ckpt` served from Draw Things' CDN and **auto-downloaded on first use** (default `--download-missing`). **No Hugging Face repo with this format was found**; raw HF ESRGAN `.pth` files are not loadable by the CLI. Pre-fetch instead of using `hf`:
 ```bash
-draw-things-cli generate --model flux_2_klein_4b_f16.ckpt --prompt "a plain white square" \
+draw-things-cli generate --model flux_2_klein_4b_q8p.ckpt --prompt "a plain white square" \
   --width 512 --height 512 --steps 1 --cfg 1 --output '~/Dev/t2/_warm.png' \
   --config-json '{"upscaler":"realesrgan_x4plus_anime_6b_f16.ckpt","upscalerScaleFactor":4}'
 ```
@@ -153,7 +108,7 @@ draw-things-cli generate --model flux_2_klein_4b_f16.ckpt --prompt "a plain whit
 |---|---|---|---|
 | `realesrgan_x4plus_anime_6b_f16.ckpt` | 4× | **Line art, coloring pages, anime, flat vector** | Threshold lines after (§5.4) |
 | `realesrgan_x2plus_f16.ckpt` | 2× | **Sketch, painting, photo** gentle 2× | – |
-| `realesrgan_x4plus_f16.ckpt` | 4× | General photo/real | Can smooth texture |
+| `realesrgan_x4plus_anime_6b_f16.ckpt` | 4× | General photo/real | Can smooth texture |
 | `remacri_4x_f16.ckpt` | 4× | **Painting, photo, film grain** natural texture | – |
 | `4x_ultrasharp_f16.ckpt` | 4× | Mandala fine detail, architecture, 3D | Ringing/over-sharpen on skin |
 | `esrgan_4x_universal_upscaler_v2_sharp_f16.ckpt` | 4× | Sharp general illustration | Halos on thin lines |
@@ -248,14 +203,14 @@ If a preset lists a self-trained LoRA and none exists: run it prompt-only (examp
 
 ---
 
-## 7. Executable examples (distilled `flux_2_klein_4b_f16.ckpt` unless stated)
+## 7. Executable examples (distilled `flux_2_klein_4b_q8p.ckpt` unless stated)
 
 Prereq: `mkdir -p ~/Dev/t2`. Settings are starting points [H]; sampler 16 is the verified default. Each "Why" is the rationale the engine can reuse.
 
 ### E01 · `coloring_kids_0-5` — toddler coloring page (print)
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_coloring_toddler_elephant.png' \
 --prompt "childrens coloring book page for toddlers, one big friendly elephant waving its trunk, extremely simple rounded shapes, ten large shapes in total, very thick bold black outlines of uniform weight, large open white areas to color, pure white background, black line art only on white paper" \
 --width 768 --height 1024 --steps 4 --cfg 1.0 \
@@ -272,7 +227,7 @@ Why: 4 steps suffice for 1 simple subject. Shape-count + "very thick bold" encod
 ### E02 · `coloring_kids_6-9` — early-reader scene coloring page
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_coloring_kids_picnic.png' \
 --prompt "childrens coloring book page, a smiling fox and a rabbit having a picnic under an oak tree, a basket of apples, a checkered blanket, a few flowers and two clouds, medium-thick clean black outlines, every shape fully enclosed by one continuous line, generous spacing between elements, cheerful storybook proportions, pure white background, black line art on white paper" \
 --width 768 --height 1024 --steps 6 --cfg 1.0 \
@@ -289,7 +244,7 @@ Why: 2 characters + named props gives narrative detail. "Fully enclosed" + "gene
 ### E03 · `coloring_teen_adult` — intricate adult coloring page
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_coloring_adult_owl.png' \
 --prompt "intricate adult coloring book page, mystical owl perched on a crescent moon, feathers composed of detailed mandala patterns, stars and floral ornaments filling the frame, fine thin uniform black linework, dense zentangle detail, every shape fully enclosed, pure white background, black ink line art only, high contrast" \
 --width 1024 --height 1024 --steps 8 --cfg 1.0 \
@@ -306,7 +261,7 @@ Why: 8 steps resolve fine detail; "fine thin uniform" sets line weight; "fills t
 ### E04 · `mandala_adult` — mandala
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_mandala_lotus.png' \
 --prompt "circular mandala coloring page, perfect eight-fold radial symmetry, concentric rings of lotus petals, paisley, geometric lattice and fine dotwork, crisp black lines of even weight, centered on a pure white square background, black and white line art, every shape fully enclosed, pattern fills the frame edge to edge" \
 --width 1024 --height 1024 --steps 8 --cfg 1.0 \
@@ -323,7 +278,7 @@ Why: symmetry is stated numerically (eight-fold). Sampler 15 [alt] for crisper r
 ### E05 · `picture_book_0-5` — watercolor picture book
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_picturebook_bear_puddle.png' \
 --prompt "childrens picture book illustration, a small brown bear in a yellow raincoat splashing in a puddle on a village lane, soft watercolor and gouache texture, warm muted palette of ochre, sage green and dusty blue, gentle morning light, visible paper grain, loose ink outlines, wide shot with empty space at the top for text, wholesome and cozy" \
 --width 1024 --height 768 --steps 6 --cfg 1.0 \
@@ -340,7 +295,7 @@ Why: medium + palette words fix the look; "empty space at the top" reserves text
 ### E06 · `picture_book_6-9` — fantasy storybook with LoRA
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_storybook_dragon_library.png' \
 --prompt "light_fantasy, a young girl and a tiny dragon reading a book together in a castle library, luminous golden light through tall windows, vibrant jewel colors, painterly brushwork, whimsical storybook composition, wide framing" \
 --width 768 --height 1024 --steps 8 --cfg 1.0 \
@@ -360,7 +315,7 @@ Why: trigger first, content-only prompt after (LoRA supplies style). Trained at 
 ### E07 · `picture_book_0-5` — board book, flat hex palette
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_boardbook_duck_ball.png' \
 --prompt "board book illustration for babies and toddlers, one smiling yellow duck next to one red ball, flat vector shapes, thick rounded forms, colors #E63946 red, #FFD166 yellow and #118AB2 blue only, solid pale cream background #FFF8E7, centered composition, matte flat color with smooth uniform surfaces" \
 --width 1024 --height 1024 --steps 4 --cfg 1.0 \
@@ -375,7 +330,7 @@ Why: hex codes (BFL-documented) lock a limited palette; 2 objects only; 4 steps 
 ### E08 · `middle_grade_cover` — vintage adventure cover art with LoRA
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_cover_island_lighthouse.png' \
 --prompt "book cover, vintage adventure novel illustration of two kids and a dog in a rowboat approaching a misty island with a lighthouse, 1950s gouache poster style, limited palette of teal, cream and orange, bold simple shapes, wordless artwork with an empty sky area at the top reserved for the title" \
 --width 768 --height 1024 --steps 8 --cfg 1.0 \
@@ -395,7 +350,7 @@ Why: trigger `book cover` first. "Wordless" + reserved area because the LoRA ten
 ### E09 · `nonfiction_kids_8-12` — science diagram art
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_nonfiction_volcano.png' \
 --prompt "educational illustration for a childrens science book, cross-section of a volcano showing the magma chamber, vertical conduit, crater and rising ash cloud, flat vector style with clean outlines, each rock layer a distinct bright color, simple friendly rendering, pure white background, wordless diagram" \
 --width 1024 --height 768 --steps 6 --cfg 1.0 \
@@ -412,7 +367,7 @@ Why: name each structure to be drawn; distinct layer colors aid learning. Add la
 ### E10 · `nonfiction_teen_13-17` — technical editorial illustration
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_nonfiction_jet_engine.png' \
 --prompt "technical editorial illustration, exploded view of a modern turbofan jet engine, components separated along a central axis, precise vector line work with subtle gradients, muted slate and orange palette, soft shadow beneath, pure white background, wordless" \
 --width 1280 --height 768 --steps 8 --cfg 1.0 \
@@ -429,7 +384,7 @@ Why: restrained palette and "precise vector" read as mature/infographic. UltraSh
 ### E11 · `sketch_pencil_ink` — graphite portrait
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_sketch_pencil_fisherman.png' \
 --prompt "graphite pencil sketch portrait of an elderly fisherman with a weathered face and woolen cap, loose cross-hatching, soft smudged shading, visible paper grain, off-white sketchbook paper, three-quarter view, unfinished edges fading into blank paper" \
 --width 768 --height 1024 --steps 8 --cfg 1.0 \
@@ -446,7 +401,7 @@ Why: technique words (cross-hatching, smudge, grain) carry the look; "fading int
 ### E12 · `sketch_pencil_ink` — charcoal / ink-wash artistic sketch
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_sketch_ink_wash_street.png' \
 --prompt "loose ink and charcoal sketch of an old European street at dusk, expressive pen hatching, diluted gray ink wash for shadows, rough broken contour lines, bare cream paper left untouched for the lit windows, sketchbook page, monochrome" \
 --width 1024 --height 768 --steps 8 --cfg 1.0 \
@@ -463,7 +418,7 @@ Why: "bare paper left untouched" is the positive form of "no fill". Monochrome s
 ### E13 · `oil_painting`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_oil_stormy_cliff.png' \
 --prompt "oil painting of a stormy sea cliff at golden hour, thick impasto brush strokes, palette knife highlights, rich cadmium and ultramarine pigments, visible canvas weave, dramatic chiaroscuro, romantic landscape, landscape format" \
 --width 1024 --height 768 --steps 8 --cfg 1.0 \
@@ -480,7 +435,7 @@ Why: physical-material vocabulary (impasto, knife, canvas weave) beats "painterl
 ### E14 · `watercolor`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_watercolor_venice.png' \
 --prompt "loose watercolor painting of a Venetian canal at dawn, wet-on-wet washes bleeding into each other, granulating pigments, soft blooms, bare white paper left for highlights, muted blue and rose palette, cold-press paper texture" \
 --width 1024 --height 768 --steps 6 --cfg 1.0 \
@@ -497,7 +452,7 @@ Why: wet-on-wet + blooms + bare paper are watercolor-specific cues; fewer steps 
 ### E15 · `anime_2d`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_anime_swordswoman.png' \
 --prompt "2D anime key visual, a silver-haired swordswoman on a rooftop at dusk, wind-blown hair and scarf, crisp cel shading, clean line art, vibrant sunset gradient sky in magenta and orange, dynamic low-angle composition, flat color blocks with sharp-edged shadow shapes" \
 --width 768 --height 1024 --steps 6 --cfg 1.0 \
@@ -514,7 +469,7 @@ Why: "cel shading", "flat color blocks", "sharp-edged shadow shapes" exclude pai
 ### E16 · `render_3d_stylized`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_3d_fox_cub.png' \
 --prompt "stylized 3D animated feature-film render of a curious fox cub in a mossy forest, soft fur with subsurface scattering, large expressive eyes, warm rim lighting, shallow depth of field, rounded appealing proportions, smooth clay-like shading, volumetric light rays" \
 --width 1024 --height 1024 --steps 8 --cfg 1.0 \
@@ -531,7 +486,7 @@ Why: render-engine vocabulary (subsurface scattering, rim light, DOF) drives the
 ### E17 · `digital_concept_art`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_concept_sky_city.png' \
 --prompt "digital concept art of a floating sky-city at sunrise, layered atmospheric perspective, painterly brushwork, strong silhouette, warm and cool color contrast, cinematic wide composition, detailed architecture with glowing windows" \
 --width 1280 --height 768 --steps 8 --cfg 1.0 \
@@ -548,7 +503,7 @@ Why: concept-art cues are composition-level (silhouette, atmospheric perspective
 ### E18 · `photo_portrait`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_photo_portrait_cafe.png' \
 --prompt "photograph of a woman in her thirties laughing by a sunlit cafe window, 85mm lens at f/1.8, shallow depth of field, soft natural window light, Kodak Portra 400 film color, visible skin texture and fine pores, candid expression, warm tones" \
 --width 768 --height 1024 --steps 8 --cfg 1.0 \
@@ -565,7 +520,7 @@ Why: lens + light + film stock + skin texture are the realism levers (camera wor
 ### E19 · `photo_landscape_real`
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_photo_alpine_lake.png' \
 --prompt "photorealistic landscape photograph of an alpine lake at sunrise, 24mm wide angle, polarizing filter, mist hovering above still water, pink light on snowy peaks, sharp foreground pebbles, deep depth of field, natural color grading" \
 --width 1280 --height 768 --steps 8 --cfg 1.0 \
@@ -582,7 +537,7 @@ Why: wide lens + deep focus + "natural color grading" prevents the over-processe
 ### E20 · `character_sheet` — LoRA for pose consistency
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_charsheet_hedgehog.png' \
 --prompt "2x2 sprite sheet, a cheerful cartoon hedgehog in a blue scarf, four poses: standing, walking, jumping, waving, identical character design in every cell, flat colors, clean outlines, plain pale green background" \
 --width 1024 --height 1024 --steps 8 --cfg 1.0 \
@@ -616,7 +571,7 @@ Why: Base needs steps 20–50 and cfg ~4 (Draw Things default 30 / 4.0); 4.5 tig
 ### E22 · Photo → coloring page via reference image [U: behavior untested]
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --image ~/Dev/t2/input_photo.jpg \
 --output '~/Dev/t2/klein_photo_to_coloring.png' \
 --prompt "redraw this photo as a childrens coloring book page, simplified shapes, thick clean black outlines, every shape fully enclosed, pure white background, black line art only, uncolored" \
@@ -642,7 +597,7 @@ cat > ~/Dev/t2/prompt_e23.json <<'EOF'
 }
 EOF
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_json_prompt_cup.png' \
 --prompt-file ~/Dev/t2/prompt_e23.json \
 --width 1024 --height 768 --steps 8 --cfg 1.0 \
@@ -658,7 +613,7 @@ Why: separates concerns so edits touch one field. Use for complex multi-element 
 ```bash
 for s in 101 102 103 104 105 106 107 108; do
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output "~/Dev/t2/sweep_${s}.png" \
 --prompt "childrens picture book illustration, a small brown bear in a yellow raincoat splashing in a puddle, soft watercolor and gouache texture, warm muted palette" \
 --width 512 --height 512 --steps 4 --cfg 1.0 --seed $s \

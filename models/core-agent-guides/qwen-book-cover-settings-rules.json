@@ -1,0 +1,869 @@
+{
+  "schema_version": "1.0.0",
+  "title": "Draw Things CLI Qwen Image 2512 Book Cover Recommendation Rules",
+  "updated": "2026-10-15",
+  "target_runtime": {
+    "cli": "draw-things-cli",
+    "primary_model": "qwen_image_2512_bf16_q8p.ckpt",
+    "hardware": {
+      "device": "MacBook Pro M4",
+      "cpu_cores": 12,
+      "unified_memory_gb": 48
+    },
+    "output_shell_note": "Use --output \"$HOME/Dev/tmp/file.png\" or an unquoted ~/path. Tilde does not expand inside single quotes.",
+    "scope": "Text-to-image book-cover artwork with embedded title, series name, and publisher name.",
+    "hard_constraints": {
+      "models_allowed": [
+        "qwen_image_2512_bf16_q8p.ckpt",
+        "flux_2_klein_4b_q8p.ckpt",
+        "flux_2_klein_base_4b_q8p.ckpt",
+        "juggernaut_xl_v9_f16.ckpt",
+        "juggernaut_xl_x_f16.ckpt",
+        "colorfulxl_v6.0_f16.ckpt",
+        "animagine_xl_v3.1_f16.ckpt"
+      ],
+      "loras_allowed": {
+        "sdxl": [
+          "3d_render_style_xl_lora_f16.ckpt",
+          "add_detail_xl_lora_f16.ckpt",
+          "redmondv2_analog_lora_f16.ckpt",
+          "redmond_coloringbook_lora_f16.ckpt",
+          "oil_painting_slider_epic_lora_f16.ckpt",
+          "oil_painting_slider_lora_f16.ckpt",
+          "redmondv2_lineart_lineani_lora_f16.ckpt",
+          "pixar_style_lora_f16.ckpt",
+          "sketch_style_lora_f16.ckpt",
+          "redmondv2_kids_storybook_lora_f16.ckpts"
+        ],
+        "klein": [
+          "klein_dutchbaroqueflux_lora_f16.ckpt",
+          "klein_light_fantasy_lora_f16.ckpt",
+          "klein_numzoo_lora_f16.ckpt",
+          "klein_ohiseeflux_lora_f16.ckpt",
+          "klein_wikiqwen_illustrator_lora_f16.ckpt",
+          "klein_yarn_art_lora_f16.ckpt",
+          "klein_anime_koni_lora_f16.ckpt",
+          "klein_minoteflux_lora_f16.ckpt",
+          "klein_pixelart_lora_f16.ckpt"
+        ]
+      },
+      "upscalers_allowed": [
+        "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
+        "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
+        "realesrgan_x4plus_f16.ckpt",
+        "realesrgan_x4plus_anime_6b_f16.ckpt",
+        "esrgan_4x_universal_upscaler_v2_sharp_f16. ckpt",
+        "realesrgan_x2plus_f16.ckpt",
+        "4x_ultrasharp_f16.ckpt",
+        "remacri_4x_f16.ckpt"
+      ],
+      "do_not_assume": [
+        "That SDXL LoRAs are compatible with Qwen Image 2512; treat them as SDXL-only unless the installed CLI explicitly confirms compatibility.",
+        "That numeric sampler ID 0 means Euler in every CLI build; confirm the mapping against the installed build or a controlled test.",
+        "That upscaler selection alone improves text legibility or corrects misspelled text.",
+        "That model-generated cover text is production-ready without OCR and human proofing."
+      ]
+    }
+  },
+  "parameter_policy": {
+    "sampler": {
+      "json_key": "sampler",
+      "baseline_numeric_id": 0,
+      "baseline_status": "provisional",
+      "note": "The user's command example uses sampler 0. Keep this as a configurable candidate, not a universally verified Euler mapping. Validate against the installed draw-things-cli version.",
+      "validation": "Run the same seed/prompt/settings with sampler IDs exposed by the installed build; compare visual quality, repeatability, and runtime."
+    },
+    "steps": {
+      "draft_range": [
+        24,
+        32
+      ],
+      "final_range": [
+        35,
+        50
+      ],
+      "note": "Qwen Image 2512 reference workflows commonly use 50 steps and CFG 4; test lower steps for draft throughput."
+    },
+    "cfg": {
+      "default_range": [
+        3.5,
+        4.5
+      ],
+      "note": "Begin around CFG 4. Raise modestly only if prompt adherence is weak; reduce if colours, edges, or composition become harsh."
+    },
+    "resolution": {
+      "draft_long_edge_px": [
+        768,
+        1024
+      ],
+      "final_portrait_candidates": [
+        [
+          1024,
+          1536
+        ],
+        [
+          1152,
+          1728
+        ],
+        [
+          1280,
+          1920
+        ]
+      ],
+      "square_candidates": [
+        [
+          1024,
+          1024
+        ],
+        [
+          1280,
+          1280
+        ]
+      ],
+      "note": "Use dimensions supported by the installed model/runtime. Prefer aspect ratio matching the intended cover; upscale only after composition is approved."
+    },
+    "upscaling": {
+      "policy": "Select by image structure, not genre name alone. Compare at least two allowed upscalers on a representative crop.",
+      "print_note": "A 4x upscale increases pixel dimensions, not the amount of verified detail. Inspect fine lines, faces, and all text after upscaling."
+    },
+    "embedded_text": {
+      "policy": "Prompt each text string exactly, with its placement and hierarchy. Keep title short where possible. Use quotes in the prompt if they help the model distinguish literal text.",
+      "must_validate": [
+        "exact title spelling",
+        "series name spelling",
+        "publisher name spelling",
+        "letter order",
+        "legibility at thumbnail size",
+        "safe margins",
+        "contrast"
+      ],
+      "fallback": "If exact text is not reliably rendered, generate a clean text-safe cover composition and typeset text separately in a layout tool."
+    }
+  },
+  "upscaler_profiles": [
+    {
+      "file": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
+      "best_for": [
+        "soft illustrations",
+        "watercolour-like art",
+        "smooth children’s art",
+        "gentle gradients"
+      ],
+      "watch_out_for": [
+        "may soften thin line art or fine texture"
+      ],
+      "confidence": "medium",
+      "validation_required": true
+    },
+    {
+      "file": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
+      "best_for": [
+        "painterly detail",
+        "ornamental detail",
+        "complex fantasy artwork"
+      ],
+      "watch_out_for": [
+        "inspect for invented texture and oversharpening"
+      ],
+      "confidence": "low-medium",
+      "validation_required": true
+    },
+    {
+      "file": "4x_ultrasharp_f16.ckpt",
+      "best_for": [
+        "crisp digital art",
+        "high-contrast edges",
+        "some photographic images"
+      ],
+      "watch_out_for": [
+        "can create halos or harsh edges; avoid as default for delicate watercolor"
+      ],
+      "confidence": "medium",
+      "validation_required": true
+    },
+    {
+      "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+      "best_for": [
+        "anime",
+        "cel-shaded 2D art",
+        "clean stylised characters"
+      ],
+      "watch_out_for": [
+        "not the default for photorealistic or textured painterly images"
+      ],
+      "confidence": "medium",
+      "validation_required": true
+    },
+    {
+      "file": "realesrgan_x4plus_f16.ckpt",
+      "best_for": [
+        "general illustration",
+        "photographic-looking covers",
+        "mixed realistic artwork"
+      ],
+      "watch_out_for": [
+        "check faces, foliage, and tiny text"
+      ],
+      "confidence": "medium",
+      "validation_required": true
+    },
+    {
+      "file": "realesrgan_x2plus_f16.ckpt",
+      "best_for": [
+        "conservative 2x enlargement",
+        "images that already look detailed",
+        "lower-risk final resizing"
+      ],
+      "watch_out_for": [
+        "may not reach target print dimensions alone"
+      ],
+      "confidence": "medium",
+      "validation_required": true
+    }
+  ],
+  "profiles": [
+    {
+      "id": "kids_reading_3_6",
+      "goal": "Friendly early-reader cover with simple subject, bold silhouette, warm palette, title legibility.",
+      "audience": {
+        "age_min": 3,
+        "age_max": 6
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 36,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x4plus_f16.ckpt"
+      },
+      "prompt": "Portrait picture-book cover for early readers, a curious little red fox holding a yellow umbrella in a friendly rainy woodland, simple readable silhouette, expressive gentle face, rounded shapes, warm storybook watercolor and gouache, clear focal point, uncluttered background, soft palette, title area in the upper 20 percent with strong contrast, exact cover text: title \"FOX AND THE RAINY DAY\", series name \"LITTLE WOODLAND READERS\", publisher name \"ACORN HOUSE\", centered balanced typography, keep all text inside safe margins.",
+      "negative_prompt": "misspelled words, extra letters, duplicate title, extra text, illegible typography, watermark, logo, cropped title, text touching edges, frightening expression, horror, aggressive pose, cluttered background, tiny busy details, muddy colors, low contrast, distorted face, extra limbs, blurry subject.",
+      "why": "Simple silhouette and uncluttered space support young readers and thumbnail recognition.",
+      "constraints": [
+        "friendly expressions",
+        "no frightening imagery",
+        "short title preferred",
+        "large title and high contrast"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "proofread all three text strings",
+        "thumbnail readability",
+        "face/limb inspection",
+        "bleed and safe-area check"
+      ]
+    },
+    {
+      "id": "kids_storybook_7_9",
+      "goal": "Narrative storybook with richer setting but clear character hierarchy.",
+      "audience": {
+        "age_min": 7,
+        "age_max": 9
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 40,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt"
+      },
+      "prompt": "Portrait illustrated chapter-book cover, two brave children and a small owl discovering a glowing treehouse library at twilight, adventurous but reassuring mood, detailed hand-painted storybook illustration, luminous fireflies, layered forest depth, strong central characters, limited focal details, upper title zone left quiet and dark enough for readable lettering, exact title \"THE SECRET TREEHOUSE LIBRARY\", series \"MAPLE LANE ADVENTURES\", publisher \"ACORN HOUSE\", elegant child-friendly lettering, clear text hierarchy, safe margins.",
+      "negative_prompt": "misspelled text, gibberish lettering, extra words, watermark, cropped typography, title over faces, unreadable low contrast, horror, gore, threatening monster, visual clutter, inconsistent lighting, duplicate characters, malformed hands, extra fingers, blurry focal subjects.",
+      "why": "Adds narrative detail while preserving one dominant focal point and a reserved title zone.",
+      "constraints": [
+        "one primary scene",
+        "clear character expressions",
+        "title does not overlap faces"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "text OCR or manual proofreading",
+        "character count and anatomy check",
+        "thumbnail test"
+      ]
+    },
+    {
+      "id": "tween_nonfiction_10_13",
+      "goal": "Informative, educational cover with credible subject cues and orderly hierarchy.",
+      "audience": {
+        "age_min": 10,
+        "age_max": 13
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 42,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x4plus_f16.ckpt"
+      },
+      "prompt": "Portrait nonfiction science book cover for ages 10–13, scientifically plausible close-up of a monarch butterfly on milkweed with a subtle clean field-guide diagram motif, vivid but restrained natural colours, crisp editorial illustration, strong central subject, modern educational design, generous negative space for typography, exact title \"WONDER WINGS\", subtitle \"THE SECRET LIFE OF BUTTERFLIES\", series \"YOUNG NATURALIST LAB\", publisher \"NORTHSTAR BOOKS\", clear hierarchy, no text over the butterfly, all text inside safe margins.",
+      "negative_prompt": "incorrect anatomy, extra wings, false scientific labels, misspelled text, gibberish, random numbers, watermark, clutter, childish baby styling, excessive gradients, illegible tiny text, low contrast, cropped title, inaccurate insect proportions.",
+      "why": "Scientific plausibility and structured visual hierarchy fit educational intent.",
+      "constraints": [
+        "verify factual diagrams separately",
+        "subtitle optional if text quality is unreliable",
+        "avoid fabricated labels"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "subject accuracy review",
+        "all text proofreading",
+        "diagram and label audit"
+      ]
+    },
+    {
+      "id": "teen_fantasy_13_17",
+      "goal": "High-impact YA fantasy with cinematic mood and controlled negative space.",
+      "audience": {
+        "age_min": 13,
+        "age_max": 17
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 48,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt"
+      },
+      "prompt": "Portrait young-adult fantasy book cover, a lone apprentice mage standing before an ancient obsidian arch above a sea of clouds, luminous blue runes, dramatic moonlit atmosphere, cinematic painterly realism, strong silhouette, layered depth, refined restrained palette of midnight blue and antique gold, focal light behind the character, clean upper third reserved for title, exact title \"THE GLASS ASTRONOMER\", series \"THE STARFALL CYCLE\", publisher \"NORTHSTAR BOOKS\", premium fantasy typography, high contrast and safe margins.",
+      "negative_prompt": "misspelled title, extra lettering, watermark, title crossing face, cluttered magic effects, oversaturated neon, flat lighting, low-detail silhouette, deformed hands, extra limbs, random symbols resembling text, cropped title, illegible contrast.",
+      "why": "Cinematic light and silhouette create genre signals without crowding the title.",
+      "constraints": [
+        "avoid overfilling title zone",
+        "keep one focal subject",
+        "do not imply unrequested franchise styling"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "typography proofread",
+        "thumbnail and grayscale contrast test",
+        "anatomy review"
+      ]
+    },
+    {
+      "id": "adult_mandala_coloring",
+      "goal": "Intricate monochrome mandala cover or interior-style line-art presentation.",
+      "audience": {
+        "age_min": 18,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 42,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1024,
+        "upscaler": "4x_ultrasharp_f16.ckpt"
+      },
+      "prompt": "Square adult mandala coloring-book cover, perfectly centered intricate radial mandala built from botanical petals, paisley, fine geometric rosettes and repeating symmetrical ornaments, clean black contour lines on pure white background, consistent printable line weight, closed shapes with ample spaces for colouring, no grey fill, no gradients, no shadows, crisp vector-like line art, outer border kept inside safe margins, leave a clear top title band, exact title \"MINDFUL MANDALAS\", subtitle \"A CALMING COLOURING COLLECTION\", publisher \"PAPER FERN PRESS\", legible high-contrast typography.",
+      "negative_prompt": "colour, gray fill, grayscale shading, gradients, drop shadows, pencil texture, crosshatching, sketchy strokes, broken contours, open gaps in shapes, fuzzy edges, dense black blobs, asymmetry, clutter, misspelled text, extra text, watermark, cropped border, text over mandala.",
+      "why": "Explicitly requests closed contours, white space, symmetry and no tonal shading for print-friendly colouring.",
+      "constraints": [
+        "white background",
+        "monochrome line art",
+        "closed shapes",
+        "no gray shading"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "inspect at 100% for closed contours",
+        "check line weight after upscale",
+        "print test on intended paper"
+      ]
+    },
+    {
+      "id": "kids_coloring_4_8",
+      "goal": "Simple kid-friendly coloring cover with thick outlines and large fillable regions.",
+      "audience": {
+        "age_min": 4,
+        "age_max": 8
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 36,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt"
+      },
+      "prompt": "Portrait kids coloring-book cover, three cheerful dinosaurs having a picnic, big simple rounded shapes, thick smooth black outlines, large enclosed areas for colouring, pure white line-art illustration with a few bright colour accents only in the cover banner, friendly expressions, minimal background, strong simple silhouette, title band at top, exact title \"DINOSAUR DOODLE TIME\", subtitle \"BIG AND EASY COLOURING\", publisher \"PAPER FERN PRESS\", text clearly separated from artwork, safe margins.",
+      "negative_prompt": "thin fragile lines, tiny intricate patterns, gray shading, gradients on coloring art, scratchy sketch, photorealism, scary teeth, aggressive dinosaurs, filled black regions, broken outlines, clutter, misspelled title, extra text, watermark, cropped text.",
+      "why": "Large enclosed areas and bold outlines suit younger children and reduce print-fill difficulty.",
+      "constraints": [
+        "thicker lines than adult coloring",
+        "large fillable regions",
+        "low background complexity"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "line thickness print check",
+        "text proofreading",
+        "check black areas do not fill small shapes"
+      ]
+    },
+    {
+      "id": "pencil_art_sketch",
+      "goal": "Traditional pencil or graphite-art cover with intentional paper texture.",
+      "audience": {
+        "age_min": 12,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 42,
+        "cfg": 3.8,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt"
+      },
+      "prompt": "Portrait fine-art sketchbook cover, a solitary old lighthouse on a windswept rocky coast, carefully observed graphite pencil drawing, varied hatching, subtle paper grain, confident contours, tonal range from delicate mid-gray to deep graphite, composed like a museum-quality study, quiet open sky reserved for title, exact title \"THE ART OF QUIET PLACES\", series \"STUDIO SKETCHBOOKS\", publisher \"PAPER FERN PRESS\", understated readable typography, safe margins.",
+      "negative_prompt": "plastic 3D render, glossy digital painting, oversaturated colour, messy scribbles, muddy smudges obscuring subject, low contrast, repeated objects, misspelled text, watermark, illegible lettering, cropped title, artificial skin texture.",
+      "why": "Preserves paper texture and graphite marks while avoiding unwanted digital gloss.",
+      "constraints": [
+        "retain intentional grain",
+        "do not over-sharpen hatching",
+        "title zone stays calm"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "inspect texture after upscale",
+        "print tonal range check",
+        "proofread typography"
+      ]
+    },
+    {
+      "id": "watercolor_storybook",
+      "goal": "Soft watercolor cover with pigment blooms, paper texture and gentle transitions.",
+      "audience": {
+        "age_min": 3,
+        "age_max": 12
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 40,
+        "cfg": 3.8,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt"
+      },
+      "prompt": "Portrait watercolor storybook cover, a tiny hedgehog carrying a lantern through a moonlit garden, transparent watercolor washes, visible cold-press paper grain, delicate pigment blooms, soft edges, layered blue-green foliage, warm golden lantern glow, charming handmade illustration, restrained detail, clear upper title area, exact title \"THE LITTLE LANTERN\", series \"GARDEN TALES\", publisher \"ACORN HOUSE\", readable classic storybook lettering, safe margins.",
+      "negative_prompt": "hard vector outlines, plastic 3D, photorealistic camera look, oversharpening, neon colours, muddy wash, harsh digital gradients, busy background, misspelled words, extra text, watermark, cropped lettering, high-frequency noise.",
+      "why": "A smoother upscaler is a reasonable first trial for delicate washes; compare against x2 if texture is lost.",
+      "constraints": [
+        "preserve paper texture",
+        "soft edges are intentional",
+        "avoid oversharpening"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "compare texture before and after upscale",
+        "check title contrast",
+        "print proof"
+      ]
+    },
+    {
+      "id": "oil_painting_fiction",
+      "goal": "Rich painterly oil-art cover with expressive brushwork and dramatic light.",
+      "audience": {
+        "age_min": 16,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 48,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt"
+      },
+      "prompt": "Portrait literary fantasy cover painted in traditional oil on linen, an ancient stone bridge disappearing into mist above a dark river, expressive visible brushstrokes, layered glazing, deep umber and teal palette, warm light from distant windows, painterly edges, atmospheric perspective, sophisticated gallery-quality composition, quiet upper area for title, exact title \"RIVER OF EMBERS\", series \"THE ASHEN KINGDOM\", publisher \"NORTHSTAR BOOKS\", elegant high-contrast type, safe margins.",
+      "negative_prompt": "flat vector art, anime, plastic CGI, photographic skin, over-smoothed paint, uniform digital texture, oversharpening, noisy detail, random lettering, misspelled title, watermark, cluttered title zone, cropped text.",
+      "why": "Brushwork and atmospheric perspective establish a painterly mood; detail-heavy upscale must be checked for artificial texture.",
+      "constraints": [
+        "retain visible brushwork",
+        "avoid competing focal points",
+        "text must contrast with background"
+      ],
+      "confidence": "low-medium",
+      "validation_requirements": [
+        "compare upscale crops",
+        "inspect for invented brush texture",
+        "proofread text"
+      ]
+    },
+    {
+      "id": "anime_2d",
+      "goal": "Polished 2D anime cover with clean linework and expressive characters.",
+      "audience": {
+        "age_min": 10,
+        "age_max": 25
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 42,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt"
+      },
+      "prompt": "Portrait 2D anime light-novel cover, a determined young inventor holding a glowing mechanical bird on a rooftop at sunset, clean confident line art, cel shading, expressive eyes, elegant hair shapes, cinematic rim light, crisp colour blocking, strong diagonal composition, uncluttered title zone, exact title \"CLOCKWORK SKY\", series \"THE AETHER CHRONICLES\", publisher \"MOONBRIDGE PRESS\", clear readable lettering, safe margins.",
+      "negative_prompt": "photorealism, 3D plastic render, muddy gradients, inconsistent line thickness, duplicate eyes, malformed hands, extra fingers, extra limbs, distorted face, cluttered effects, misspelled title, gibberish text, watermark, cropped typography.",
+      "why": "Anime-oriented upscaling is the first candidate for clean cel edges and stylised character features.",
+      "constraints": [
+        "consistent line weight",
+        "clear face",
+        "no title overlap"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "inspect eyes and hands",
+        "check line edges for halos",
+        "proofread all text"
+      ]
+    },
+    {
+      "id": "anime_3d_stylized",
+      "goal": "Stylised 3D animated-film look without copying a specific studio or franchise.",
+      "audience": {
+        "age_min": 5,
+        "age_max": 16
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 42,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x4plus_f16.ckpt"
+      },
+      "prompt": "Portrait family adventure book cover, original stylised 3D animated characters, a cheerful young astronaut and a small round robot on a colourful alien meadow, appealing sculpted forms, soft cinematic lighting, polished materials, expressive faces, playful scale, rich but controlled palette, simple background, clear upper title space, exact title \"THE TINY STAR EXPLORERS\", series \"GALAXY GARDEN\", publisher \"ACORN HOUSE\", readable rounded lettering, safe margins.",
+      "negative_prompt": "flat line art, frightening realism, uncanny faces, waxy skin, excessive gloss, malformed hands, extra limbs, busy composition, misspelled text, random letters, watermark, cropped title, illegible low contrast.",
+      "why": "Treats 3D as lighting/material direction and keeps characters original; general RealESRGAN is the first upscale test.",
+      "constraints": [
+        "appealing stylised proportions",
+        "avoid uncanny faces",
+        "original characters only"
+      ],
+      "confidence": "low-medium",
+      "validation_requirements": [
+        "face review",
+        "material and edge inspection",
+        "text proofread"
+      ]
+    },
+    {
+      "id": "photorealistic_cover",
+      "goal": "Photographic cover with plausible lighting, texture, and a clear editorial subject.",
+      "audience": {
+        "age_min": 16,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 48,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x4plus_f16.ckpt"
+      },
+      "prompt": "Portrait photorealistic literary cover photograph, a weathered red canoe resting beside a still alpine lake at dawn, natural atmospheric haze, physically plausible reflections, fine wood grain, restrained editorial colour grading, 50mm lens look, realistic exposure, strong single focal subject, calm upper third for title, exact title \"WHERE THE WATER WAITS\", series \"FIELD NOTES\", publisher \"NORTHSTAR BOOKS\", refined high-contrast typography, safe margins.",
+      "negative_prompt": "illustration, cartoon, anime, CGI sheen, impossible reflections, warped objects, oversaturated HDR, excessive clarity, unnatural fog, duplicate canoe, misspelled words, random text, watermark, cropped title, illegible typography.",
+      "why": "Emphasises physical plausibility and restrained editorial grading rather than generic quality tags.",
+      "constraints": [
+        "plausible lighting and reflections",
+        "avoid HDR look",
+        "subject must read at thumbnail size"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "inspect object geometry",
+        "check reflections and edges",
+        "proofread text"
+      ]
+    },
+    {
+      "id": "nonfiction_editorial",
+      "goal": "Professional non-fiction cover with a clear concept, credibility, and typography hierarchy.",
+      "audience": {
+        "age_min": 18,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 45,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x2plus_f16.ckpt"
+      },
+      "prompt": "Portrait contemporary nonfiction book cover about sustainable cities, elegant editorial photograph of a tree-lined urban street with cyclists and modern low-carbon buildings, realistic daylight, calm neutral palette with one leaf-green accent, credible documentary style, uncluttered geometry, strong vertical composition, large clear title field at top, exact title \"CITIES THAT BREATHE\", subtitle \"DESIGNING A GREENER FUTURE\", publisher \"NORTHSTAR BOOKS\", precise typographic hierarchy, generous safe margins.",
+      "negative_prompt": "futuristic fantasy city, impossible architecture, oversaturated colours, clutter, fake charts, random labels, misspelled words, watermark, tiny illegible text, warped bicycles, distorted buildings, title over important subject.",
+      "why": "A restrained editorial treatment supports credibility; 2x is a conservative first pass when source detail is already adequate.",
+      "constraints": [
+        "no fabricated data labels",
+        "maintain credibility",
+        "avoid decorative clutter"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "factual claims checked externally",
+        "architecture/object geometry check",
+        "typography proofread"
+      ]
+    },
+    {
+      "id": "photography_landscape",
+      "goal": "Landscape photography cover with depth and restrained atmospheric treatment.",
+      "audience": {
+        "age_min": 16,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 45,
+        "cfg": 3.8,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x2plus_f16.ckpt"
+      },
+      "prompt": "Portrait landscape photography book cover, dramatic sandstone cliffs above a quiet turquoise bay at early morning, realistic natural light, believable geological texture, subtle atmospheric depth, carefully balanced highlights, professional travel-editorial photography, clean sky area for title, exact title \"EDGE OF THE BLUE\", series \"LANDSCAPE JOURNALS\", publisher \"PAPER FERN PRESS\", restrained elegant typography, safe margins.",
+      "negative_prompt": "fantasy landscape, painted texture, impossible rock formations, oversaturated turquoise, excessive HDR, halo sharpening, artificial gradients, duplicated cliffs, misspelled title, watermark, random text, cropped letters.",
+      "why": "Conservative CFG and 2x upscaling aim to retain natural texture without exaggerated sharpening.",
+      "constraints": [
+        "natural colour",
+        "plausible landscape forms",
+        "protect highlight detail"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "inspect rock/water geometry",
+        "compare x2 with x4 crop",
+        "proofread text"
+      ]
+    },
+    {
+      "id": "generic_cover_text_priority",
+      "goal": "Prioritise exact embedded title, series, and publisher lettering over visual complexity.",
+      "audience": {
+        "age_min": 0,
+        "age_max": 99
+      },
+      "candidate_settings": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "steps": 50,
+        "cfg": 4.0,
+        "sampler_id": 0,
+        "width": 1024,
+        "height": 1536,
+        "upscaler": "realesrgan_x2plus_f16.ckpt"
+      },
+      "prompt": "Professional portrait book cover. Simple elegant background with one clear focal illustration and generous uncluttered typography area. Render these exact strings verbatim and in this hierarchy: title \"[TITLE EXACTLY]\"; series name \"[SERIES EXACTLY]\"; publisher name \"[PUBLISHER EXACTLY]\". Preserve spelling, capitalization, spacing and word order. Title largest, series smaller, publisher smallest but legible. High contrast, balanced margins, no other words or labels.",
+      "negative_prompt": "misspelled text, changed capitalization, missing words, duplicated letters, extra words, pseudo-text, random symbols, watermark, logo, cropped letters, overlapping text, low contrast, text over faces, decorative clutter.",
+      "why": "Simplifying the artwork reduces competing demands on text rendering; use separate typesetting if exact copy is mandatory.",
+      "constraints": [
+        "replace all bracket placeholders before generation",
+        "do not trust generated text without proofing",
+        "prefer separate typesetting for publication"
+      ],
+      "confidence": "medium",
+      "validation_requirements": [
+        "OCR/manual exact-string comparison",
+        "proof series and publisher names",
+        "check thumbnail and print size"
+      ]
+    }
+  ],
+  "selection_rules": [
+    {
+      "priority": 100,
+      "when": {
+        "goal": "exact_text_or_commercial_publication"
+      },
+      "choose_profile": "generic_cover_text_priority",
+      "actions": [
+        "reduce scene complexity",
+        "reserve typography zones",
+        "require OCR or manual proof",
+        "recommend separate typesetting if exact text fails"
+      ],
+      "confidence": "high"
+    },
+    {
+      "priority": 90,
+      "when": {
+        "content_type": "coloring_page_or_mandala"
+      },
+      "choose_profile_by": "audience_age_then_complexity",
+      "upscaler_candidates": [
+        "4x_ultrasharp_f16.ckpt",
+        "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
+        "realesrgan_x2plus_f16.ckpt"
+      ],
+      "actions": [
+        "enforce white background and black closed contours",
+        "reject gray shading",
+        "print-test line weight"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "priority": 85,
+      "when": {
+        "style": "anime_2d"
+      },
+      "upscaler_candidates": [
+        "realesrgan_x4plus_anime_6b_f16.ckpt",
+        "realesrgan_x2plus_f16.ckpt"
+      ],
+      "actions": [
+        "inspect eyes, line edges, and halos"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "priority": 80,
+      "when": {
+        "style": "watercolor_or_soft_storybook"
+      },
+      "upscaler_candidates": [
+        "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
+        "realesrgan_x2plus_f16.ckpt"
+      ],
+      "actions": [
+        "preserve paper grain and pigment blooms",
+        "reject excessive sharpening"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "priority": 75,
+      "when": {
+        "style": "photorealism_or_editorial_photography"
+      },
+      "upscaler_candidates": [
+        "realesrgan_x4plus_f16.ckpt",
+        "realesrgan_x2plus_f16.ckpt",
+        "4x_ultrasharp_f16.ckpt"
+      ],
+      "actions": [
+        "check geometry, texture, halos and facial detail"
+      ],
+      "confidence": "medium"
+    },
+    {
+      "priority": 70,
+      "when": {
+        "style": "oil_painting_or_detailed_fantasy"
+      },
+      "upscaler_candidates": [
+        "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
+        "realesrgan_x4plus_f16.ckpt",
+        "realesrgan_x2plus_f16.ckpt"
+      ],
+      "actions": [
+        "inspect invented microtexture",
+        "preserve intentional brush strokes"
+      ],
+      "confidence": "low-medium"
+    },
+    {
+      "priority": 60,
+      "when": {
+        "audience_age_max": 8
+      },
+      "actions": [
+        "prefer simple silhouettes",
+        "use large lettering",
+        "reduce background detail",
+        "avoid frightening imagery"
+      ],
+      "confidence": "high"
+    },
+    {
+      "priority": 50,
+      "when": {
+        "hardware_memory_gb": {
+          "max": 48
+        }
+      },
+      "actions": [
+        "generate one image per run during baseline testing",
+        "start at 1024x1536 portrait or smaller",
+        "increase dimensions only after measuring memory and latency"
+      ],
+      "confidence": "medium"
+    }
+  ],
+  "prompt_strategy": {
+    "positive_prompt_order": [
+      "cover format and intended audience",
+      "one primary subject and action",
+      "style/material/medium",
+      "composition and focal hierarchy",
+      "palette and lighting",
+      "background complexity",
+      "typography safe zone and contrast",
+      "exact title, series name, publisher name",
+      "safe margins and no-overlap constraints"
+    ],
+    "negative_prompt_strategy": [
+      "List failure modes relevant to the chosen profile, not a giant universal list.",
+      "For text-heavy covers: misspellings, extra words, pseudo-text, watermark, cropped or overlapping letters.",
+      "For coloring art: color, gray fill, gradients, shadows, broken contours, scratchy lines, filled black blobs.",
+      "For children: frightening expressions, gore, adult themes, clutter, tiny detail.",
+      "For photorealism: CGI sheen, impossible geometry, oversaturated HDR, unnatural reflections, halos.",
+      "Avoid contradictory negative terms that suppress desired style; for example do not ban texture in a pencil sketch."
+    ],
+    "iteration_policy": "Fix one class of error per iteration: composition first, then text zone, then typography, then details/upscale. Keep seed fixed for comparisons if the CLI supports a seed argument."
+  },
+  "evaluation": {
+    "weighted_score": {
+      "text_exactness": 0.3,
+      "composition_and_hierarchy": 0.2,
+      "audience_and_genre_fit": 0.15,
+      "visual_quality": 0.15,
+      "print_readiness": 0.1,
+      "upscale_artifact_resistance": 0.1
+    },
+    "hard_fail_conditions": [
+      "title, series, or publisher name misspelled when exact embedded text is required",
+      "unsafe or age-inappropriate content for the specified audience",
+      "important text cropped or outside safe margins",
+      "coloring-book line art has pervasive gray shading or open contours",
+      "upscaler introduces visible halos, face damage, or destructive line merging"
+    ],
+    "confidence_policy": {
+      "high": "Documented runtime compatibility and repeatable evaluation on local build.",
+      "medium": "Reasonable profile prior but needs local image comparison.",
+      "low": "Model/upscaler interaction or style match is uncertain; benchmark before automation."
+    }
+  },
+  "validation_plan": [
+    "Record draw-things-cli version and confirm model loads successfully.",
+    "Confirm sampler numeric IDs for the installed build; do not assume IDs are stable across versions.",
+    "Generate a fixed-seed baseline at 1024x1536, 40 steps, CFG 4, sampler ID 0.",
+    "For each profile, compare one setting at a time: steps 32/40/50; CFG 3.5/4.0/4.5; two candidate upscalers.",
+    "Inspect full image and 160-pixel thumbnail; inspect 100% crops for line quality, faces, text and artifacts.",
+    "Run OCR plus manual proofreading on title, series and publisher strings.",
+    "Test final dimensions and bleed/safe-area rules in the actual print layout.",
+    "Store run metadata, seed, prompt, negative prompt, CLI version, model hash, settings, output checksum and evaluation score."
+  ]
+}

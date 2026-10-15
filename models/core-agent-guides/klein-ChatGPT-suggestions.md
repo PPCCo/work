@@ -2,7 +2,7 @@
 
 For your MacBook Pro M4 with 48 GB unified memory, I'd build a profile-based image-generation recommendation engine rather than one configuration for every genre. Children's illustrations, adult coloring pages, photorealistic images and anime have different priorities, and a LoRA that helps one style can damage another.
 
-The recommendations below are designed around `flux_2_klein_4b_f16.ckpt`, your `draw-things-cli` workflow, and your preferred `--config-json` format.
+The recommendations below are designed around `flux_2_klein_4b_q8p.ckpt`, your `draw-things-cli` workflow, and your preferred `--config-json` format.
 
 A few important distinctions:
 
@@ -21,7 +21,7 @@ Start with these three candidates. The first two have explicit Klein 4B support;
 
 Sawata97/flux2_4b_koni_animestyle
 
-File: `Flux_klein_4b_anime_Koni.safetensors`
+File: `klein_anime_koni_lora_f16.ckpt`
 
 Trigger: `anime_style`
 
@@ -41,7 +41,7 @@ Use for 2D anime, manga-inspired storybooks, stylized teen characters and cel-sh
 
 adirik/pixel-art-lora-flux.2-klein-4B
 
-File: `pixelart_lora.safetensors`
+File: `klein_pixelart_lora_f16.ckpt`
 
 Trigger: `PXART4`
 
@@ -206,7 +206,7 @@ Suggested size: 768 × 1024 · LoRA: none initially · Upscaler: none
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/preschool_fox.png" \
   --prompt "A warm children's picture book illustration for ages 2 to 5, one friendly baby fox sitting beside a tiny rabbit in a sunny meadow, rounded simple shapes, large expressive eyes, soft watercolor washes, pastel orange green and sky blue palette, clear silhouettes, gentle daylight, minimal flowers and grass, uncluttered pale cream background, both characters fully visible, ample whitespace around the scene, no lettering, polished traditional picture-book artwork" \
   --width 768 --height 1024 --steps 4 --cfg 1.0 \
@@ -229,7 +229,7 @@ Suggested size: 768 × 1024 · LoRA: optional `minote` · Weight: 0.7
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/early_reader_owl.png" \
   --prompt "minote, an illustrated early-reader storybook scene for ages 5 to 8, a curious young child wearing a yellow raincoat discovers a friendly owl in a wooden treehouse, clear storytelling action, expressive faces, soft hand-painted watercolor and colored pencil texture, warm greens and golden yellow, three simple background props, coherent perspective, clear separation between characters and background, full figures visible, charming and reassuring mood, no text, polished children's book illustration" \
   --width 768 --height 1024 --steps 4 --cfg 1.0 \
@@ -237,7 +237,7 @@ draw-things-cli generate \
     "sampler": 17,
     "schedule_sampler": 1,
     "loras": [
-      {"file": "minoteflux-klein.safetensors", "weight": 0.7, "mode": "all"}
+      {"file": "klein_minoteflux_lora_f16.ckpt", "weight": 0.7, "mode": "all"}
     ]
   }'
 ```
@@ -254,7 +254,7 @@ Suggested size: 832 × 1216 · Anime option: `anime_style` · Weight: 0.65
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/teen_fantasy.png" \
   --prompt "anime_style, a polished fantasy storybook illustration for readers aged 12 to 17, two teenage adventurers crossing an ancient stone bridge above a misty mountain valley, one carrying a lantern and the other holding a folded map, dynamic but readable silhouettes, layered mountains, cinematic morning light, intricate clothing details, rich teal and amber palette, controlled atmospheric depth, consistent facial proportions, coherent hands and fingers, wide environmental composition, professional anime background painting, no lettering" \
   --width 832 --height 1216 --steps 4 --cfg 1.0 \
@@ -262,7 +262,7 @@ draw-things-cli generate \
     "sampler": 17,
     "schedule_sampler": 1,
     "loras": [
-      {"file": "Flux_klein_4b_anime_Koni.safetensors", "weight": 0.65, "mode": "all"}
+      {"file": "klein_anime_koni_lora_f16.ckpt", "weight": 0.65, "mode": "all"}
     ]
   }'
 ```
@@ -279,7 +279,7 @@ Suggested size: 768 × 768 · LoRA: none initially · Upscaler: optional
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/kids_coloring_dinosaur.png" \
   --prompt "Printable black and white coloring book page for children ages 4 to 8, one cute baby dinosaur hatching from a large egg, bold smooth continuous black outlines of uniform thickness, pure white background, closed clearly separated shapes, large easy-to-color areas, simple rounded cartoon anatomy, a few large clouds and flowers, centered composition, generous white margins, crisp vector-like line art, black outlines only, no gray, no gradients, no shadows, no crosshatching, no filled black regions, no lettering" \
   --width 768 --height 768 --steps 4 --cfg 1.0 \
@@ -302,7 +302,7 @@ Suggested size: 1024 × 1024 · LoRA: none initially · Upscaler: selective 2×
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/adult_mandala_owl.png" \
   --prompt "Intricate adult coloring book page, a majestic owl centered inside a perfectly radial circular mandala, layered symmetrical feather motifs, repeating botanical ornaments, balanced geometric rings, fine consistent black contour lines, many distinct enclosed coloring regions, elegant symmetrical composition, pure white background, uniform line weight, crisp monochrome vector-like ink drawing, full circular design inside a generous white margin, no grayscale, no gradients, no shadows, no crosshatching, no solid black background, no lettering" \
   --width 1024 --height 1024 --steps 4 --cfg 1.0 \
@@ -325,7 +325,7 @@ Suggested size: 1024 × 768 · LoRA: none · Add typography separately
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/volcano_education.png" \
   --prompt "A scientifically grounded educational textbook illustration for readers aged 9 to 14, a clear cutaway cross-section of a volcano showing the cone, central vent, magma chamber, branching side vent and ash plume, distinct layers with clean boundaries, accurate spatial relationships, clear uncluttered composition, professional museum educational illustration, restrained orange red brown and blue palette, plain light background, leave empty callout spaces around the diagram for later labels, no text, no letters, no numbers, no decorative clutter" \
   --width 1024 --height 768 --steps 4 --cfg 1.0 \
@@ -348,7 +348,7 @@ Suggested size: 768 × 1024 · LoRA: none · Upscaler: optional
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/pencil_bird.png" \
   --prompt "Traditional graphite pencil study of a small bird perched on a natural branch, realistic bird anatomy and feather layering, confident pencil contours, delicate hatching, varied graphite pressure, subtle paper grain, carefully observed proportions, soft natural daylight, white sketchbook paper, elegant hand-drawn fine-art study, visible pencil strokes, restrained tonal shading, no ink outlines, no color, no digital airbrush, no lettering" \
   --width 768 --height 1024 --steps 4 --cfg 1.0 \
@@ -371,7 +371,7 @@ Suggested size: 832 × 1024 · LoRA: optional `minote` for whimsical watercolor
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/watercolor_cottage.png" \
   --prompt "A traditional watercolor landscape painting of a small stone cottage surrounded by wildflowers, translucent pigment washes, soft wet-on-wet transitions, visible cold-pressed paper texture, delicate granulation, loose natural brushwork, subtle edges, fresh spring palette, atmospheric depth, gentle morning light, carefully composed foreground and background, authentic watercolor medium, no glossy digital finish, no lettering" \
   --width 832 --height 1024 --steps 4 --cfg 1.0 \
@@ -394,7 +394,7 @@ Suggested size: 1024 × 768 · LoRA: none initially
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/photorealistic_fox.png" \
   --prompt "Photorealistic wildlife photograph of a red fox standing on a mossy forest path, natural fur texture, anatomically plausible body and paws, alert but relaxed posture, soft morning sunlight filtered through trees, physically consistent shadows, realistic depth of field, natural woodland colors, professional wildlife photography, credible lens perspective, sharp focus on the fox's eyes, restrained background bokeh, no painterly texture, no illustration, no lettering" \
   --width 1024 --height 768 --steps 4 --cfg 1.0 \
@@ -411,14 +411,14 @@ Why: photographic cues are specified as camera, lighting and material properties
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/anime_character.png" \
   --prompt "anime_style, polished 2D anime character illustration, a young adult fantasy cartographer with short silver hair and a deep blue travel coat, holding an antique compass, expressive but natural face, clean confident linework, controlled cel shading, carefully designed clothing folds, limited navy teal and gold palette, three-quarter view, attractive readable silhouette, softly painted fantasy library background, professional anime concept art, coherent hands, no lettering" \
   --width 832 --height 1024 --steps 4 --cfg 1.0 \
   --config-json '{
     "sampler": 17,
     "loras": [
-      {"file": "Flux_klein_4b_anime_Koni.safetensors", "weight": 0.65, "mode": "all"}
+      {"file": "klein_anime_koni_lora_f16.ckpt", "weight": 0.65, "mode": "all"}
     ]
   }'
 ```
@@ -429,7 +429,7 @@ Why: explicit cel shading and linework make this a more useful 2D profile than �
 
 ```
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/3d_fantasy_scene.png" \
   --prompt "A polished stylized 3D render of a small friendly robot exploring a miniature greenhouse, appealing rounded geometry, physically based materials, subtle surface roughness, coherent perspective, soft global illumination, realistic contact shadows, glass panels with controlled reflections, colorful plants, cinematic three-point lighting, carefully modeled proportions, clean studio-quality rendering, clear foreground and background separation, no text, no watermark" \
   --width 1024 --height 768 --steps 4 --cfg 1.0 \
@@ -453,7 +453,7 @@ A conservative reusable template is:
 
 ```bash
 draw-things-cli generate \
-  --model flux_2_klein_4b_f16.ckpt \
+  --model flux_2_klein_4b_q8p.ckpt \
   --output "$HOME/Dev/t2/example.png" \
   --prompt "A clearly described subject, action, medium, composition and lighting, with explicit visual requirements" \
   --width 768 --height 768 --steps 4 --cfg 1.0 \
@@ -483,7 +483,7 @@ I would store recommendations as data, not just prose. Each profile should ident
 ```json
 {
   "profile": "adult_coloring_mandala",
-  "model": "flux_2_klein_4b_f16.ckpt",
+  "model": "flux_2_klein_4b_q8p.ckpt",
   "purpose": "printable monochrome line art",
   "age_group": "adult",
   "style": ["mandala", "botanical", "geometric"],

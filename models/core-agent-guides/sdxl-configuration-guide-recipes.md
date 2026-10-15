@@ -53,16 +53,16 @@ Weights below are **empirical starting points**, not guarantees. Increase by 0.0
 
 | LoRA file                                                     | Main task                                                                          | Start weight | Prompt activation / usage                                                                       |
 | ------------------------------------------------------------- | ---------------------------------------------------------------------------------- | -----------: | ----------------------------------------------------------------------------------------------- |
-| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors`          | Children's picture books, gentle story illustrations, narrative vignettes          |    0.70–0.90 | Include `KidsRedmAF, Kids Book`; steer with `colorful`, `minimalist`, or `detailed`             |
-| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors` | Black-and-white printable coloring pages, kids/adult coloring books, mandala pages |    0.85–1.00 | Include `ColoringBookAF, Coloring Book`; explicitly request black outlines and white background |
-| `LineAniRedmondV2-Lineart-LineAniAF.safetensors`              | Manga/anime line art, inked character illustrations                                |    0.35–0.65 | Include `LineAniAF, lineart`; pair with Animagine for 2D anime work                             |
-| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors`             | Filmic/analog-looking photography, vintage editorial images                        |    0.40–0.70 | Include `AnalogRedmAF, Analog`; pair with Juggernaut X for photographs                          |
-| `3d_render_style_xl.safetensors`                              | 3D-rendered character/product/scene illustration                                   |    0.50–0.75 | Include `3D style`, `3D render`, smooth materials and coherent studio lighting                  |
-| `pixar-style.safetensors`                                     | Feature-animation-like 3D characters and family-friendly cinematic cartoons        |    0.35–0.65 | Include `pixar-style`; treat as a style slider, not a substitute for clear scene description    |
-| `add-detail-xl.safetensors`                                   | Small details, texture and micro-detail support                                    |    0.15–0.35 | Usually no special trigger; optional and easy to overdo, especially on line art                 |
-| `sketch-style-xl.safetensors`                                 | Pencil sketch, grayscale drawing, loose artistic sketch                            |    0.45–0.75 | Prompt `pencil sketch`, `graphite`, `visible pencil strokes`, or `gesture drawing`              |
-| `oil-painting-slider.safetensors`                             | Oil-painting look                                                                  |    0.35–0.65 | Describe brushwork, paint thickness, canvas and palette; test positive weight only              |
-| `epic-oil-painting-slider.safetensors`                        | Stronger / more dramatic oil-painting stylization                                  |    0.30–0.60 | Use as an **alternative** to `oil-painting-slider`, not automatically stacked with it           |
+| `redmondv2_kids_storybook_lora_f16.ckpt`          | Children's picture books, gentle story illustrations, narrative vignettes          |    0.70–0.90 | Include `KidsRedmAF, Kids Book`; steer with `colorful`, `minimalist`, or `detailed`             |
+| `redmond_coloringbook_lora_f16.ckpt` | Black-and-white printable coloring pages, kids/adult coloring books, mandala pages |    0.85–1.00 | Include `ColoringBookAF, Coloring Book`; explicitly request black outlines and white background |
+| `redmondv2_lineart_lineani_lora_f16.ckpt`              | Manga/anime line art, inked character illustrations                                |    0.35–0.65 | Include `LineAniAF, lineart`; pair with Animagine for 2D anime work                             |
+| `redmondv2_analog_lora_f16.ckpt`             | Filmic/analog-looking photography, vintage editorial images                        |    0.40–0.70 | Include `AnalogRedmAF, Analog`; pair with Juggernaut X for photographs                          |
+| `3d_render_style_xl_lora_f16.ckpt`                              | 3D-rendered character/product/scene illustration                                   |    0.50–0.75 | Include `3D style`, `3D render`, smooth materials and coherent studio lighting                  |
+| `pixar_style_lora_f16.ckpt`                                     | Feature-animation-like 3D characters and family-friendly cinematic cartoons        |    0.35–0.65 | Include `pixar-style`; treat as a style slider, not a substitute for clear scene description    |
+| `add_detail_xl_lora_f16.ckpt`                                   | Small details, texture and micro-detail support                                    |    0.15–0.35 | Usually no special trigger; optional and easy to overdo, especially on line art                 |
+| `sketch_style_lora_f16.ckpt`                                 | Pencil sketch, grayscale drawing, loose artistic sketch                            |    0.45–0.75 | Prompt `pencil sketch`, `graphite`, `visible pencil strokes`, or `gesture drawing`              |
+| `oil_painting_slider_lora_f16.ckpt`                             | Oil-painting look                                                                  |    0.35–0.65 | Describe brushwork, paint thickness, canvas and palette; test positive weight only              |
+| `oil_painting_slider_epic_lora_f16.ckpt`                        | Stronger / more dramatic oil-painting stylization                                  |    0.30–0.60 | Use as an **alternative** to `oil-painting-slider`, not automatically stacked with it           |
 
 **LoRA stacking policy:** use one dominant style LoRA; add at most one supporting LoRA. Do not stack Storybook + ColoringBook for the same image unless a deliberately hybrid outcome is wanted. Avoid `add-detail-xl` on coloring pages unless it demonstrably improves line integrity.
 
@@ -72,12 +72,12 @@ These recommendations describe the likely visual tendencies implied by each mode
 
 | Upscaler file                                    | Best first test                                                                          | Main risk                                                               |
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| `4x_foolhardy_Remacri_ExtraSmoother.safetensors` | Smooth children's illustration, clean linework, softer painterly textures                | Can soften fine hatch marks or tiny details                             |
-| `4x_NMKD-Superscale-SP_178000_G.safetensors`     | General illustration, mixed texture, painterly work, general-purpose backup              | May emphasize invented surface texture; inspect faces and small objects |
-| `4x-UltraSharpV2.safetensors`                    | Crisp digital drawing, bold outlines, graphic illustration                               | May oversharpen/halo edges and make coloring contours harsh             |
-| `RealESRGAN_x4plus_anime_6B.safetensors`         | Anime, manga-color illustrations, cel-shaded cartoon work                                | Can oversharpen gradients and line joins                                |
-| `RealESRGAN_x4plus.safetensors`                  | Photorealism, natural textures, realistic objects/animals                                | May add crunchy microtexture or alter smooth paint transitions          |
-| `RealESRGAN_x2plus.safetensors`                  | Conservative 2x enlargement, quality proofing, images where 4x enhancement is too strong | Less size gain; won't fix composition or anatomy                        |
+| `4x_foolhardy_remacri_extrasmoother_f16.ckpt` | Smooth children's illustration, clean linework, softer painterly textures                | Can soften fine hatch marks or tiny details                             |
+| `4x_nmkd_superscale_sp_178000_g_f16.ckpt`     | General illustration, mixed texture, painterly work, general-purpose backup              | May emphasize invented surface texture; inspect faces and small objects |
+| `4x_ultrasharp_f16.ckpt`                    | Crisp digital drawing, bold outlines, graphic illustration                               | May oversharpen/halo edges and make coloring contours harsh             |
+| `realesrgan_x4plus_anime_6b_f16.ckpt`         | Anime, manga-color illustrations, cel-shaded cartoon work                                | Can oversharpen gradients and line joins                                |
+| `realesrgan_x4plus_f16.ckpt`                  | Photorealism, natural textures, realistic objects/animals                                | May add crunchy microtexture or alter smooth paint transitions          |
+| `realesrgan_x2plus_f16.ckpt`                  | Conservative 2x enlargement, quality proofing, images where 4x enhancement is too strong | Less size gain; won't fix composition or anatomy                        |
 
 Use upscaling late, after composition and anatomy are already good. Upscalers cannot repair bad hands, fused coloring shapes, invented text, or incorrect educational facts. For print, upscale once, not repeatedly.
 
@@ -164,7 +164,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "KidsRedmAF, Kids Book, colorful, a friendly red fox kit carrying a tiny blue umbrella through a puddle, full-body clear silhouette, eye-level view, one main character, simple garden path and two oversized flowers, cheerful picture-book watercolor and gouache, warm soft daylight, limited harmonious palette, generous whitespace around the character, simple child-friendly shapes, no text" \
   --negative-prompt "photorealistic, gritty texture, busy background, tiny repeated details, scary expression, excessive microtexture, text, watermark, malformed paws, extra limbs, blurry" \
   --width 768 --height 768 --steps 26 --cfg 5.2 \
-  --config-json '{"sampler":0,"loras":[{"file":"StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors","weight":0.82,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_foolhardy_Remacri_ExtraSmoother.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_kids_storybook_lora_f16.ckpt","weight":0.82,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_foolhardy_remacri_extrasmoother_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### B. Early-reader story scene (ages 5–7)
@@ -178,7 +178,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "KidsRedmAF, Kids Book, colorful, two children planting a sunflower seed in a small garden bed, three-quarter view, clearly visible hands and watering can, friendly expressions, simple cottage garden, storybook gouache with soft paper texture, rounded shapes, bright warm palette, balanced composition, clean focus on the planting action, no text" \
   --negative-prompt "photorealistic, ominous mood, crowded background, tiny intricate foliage, confusing overlapping hands, text, watermark, malformed fingers, blur" \
   --width 768 --height 768 --steps 28 --cfg 5.4 \
-  --config-json '{"sampler":0,"loras":[{"file":"StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors","weight":0.72,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.26,"upscaler":"4x_foolhardy_Remacri_ExtraSmoother.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_kids_storybook_lora_f16.ckpt","weight":0.72,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.26,"upscaler":"4x_foolhardy_remacri_extrasmoother_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### C. Middle-grade fantasy illustration (ages 8–12)
@@ -192,7 +192,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "KidsRedmAF, Kids Book, detailed, a young explorer discovering a glowing library hidden inside an ancient tree, full figure on the lower left, winding roots, tiny warm lanterns, readable arch-shaped doorway, layered forest depth, adventurous but gentle mood, painterly digital storybook illustration, rich teal and amber palette, cinematic rim light, clear focal hierarchy, no text" \
   --negative-prompt "photorealistic, horror, gore, chaotic composition, excessive foliage covering the doorway, extreme grunge, text, watermark, extra limbs, deformed hands" \
   --width 768 --height 768 --steps 30 --cfg 5.6 \
-  --config-json '{"sampler":0,"loras":[{"file":"StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors","weight":0.60,"mode":"all"},{"file":"add-detail-xl.safetensors","weight":0.20,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.30,"upscaler":"4x_NMKD-Superscale-SP_178000_G.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_kids_storybook_lora_f16.ckpt","weight":0.60,"mode":"all"},{"file":"add_detail_xl_lora_f16.ckpt","weight":0.20,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.30,"upscaler":"4x_nmkd_superscale_sp_178000_g_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### D. Teen nonfiction: rainforest ecology illustration (ages 13–18)
@@ -206,7 +206,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "educational natural-history illustration of a rainforest canopy cross-section, emergent trees above the canopy, understory, forest floor, vines, epiphytes, a toucan perched on a branch and a tree frog on a leaf, visually separated ecological layers, scientifically plausible plant forms, clean editorial illustration, natural greens with restrained earth tones, soft daylight, uncluttered shapes, no labels or text" \
   --negative-prompt "fantasy plants, impossible anatomy, repeated identical animals, overcrowded leaves, cartoon eyes, text, labels, numbers, watermark, blur, oversaturated colors" \
   --width 768 --height 768 --steps 30 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"add-detail-xl.safetensors","weight":0.18,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.24,"upscaler":"RealESRGAN_x4plus.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"add_detail_xl_lora_f16.ckpt","weight":0.18,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.24,"upscaler":"realesrgan_x4plus_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### E. Children's coloring page (ages 3–5)
@@ -220,7 +220,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "ColoringBookAF, Coloring Book, black and white printable coloring page for preschool children, one smiling baby dinosaur standing beside one large fern and a round sun, very bold smooth uniform black outlines, large simple closed shapes, few details, pure white background, no gray tones, no filled black areas, centered composition, wide white margins, no text" \
   --negative-prompt "color, colored fills, grayscale shading, gray shadows, gradients, halftone, crosshatching, solid black areas, thin scratchy lines, broken outlines, open contours, crowded background, text, watermark, blurry edges" \
   --width 768 --height 768 --steps 26 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors","weight":0.96,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.20,"upscaler":"4x_foolhardy_Remacri_ExtraSmoother.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmond_coloringbook_lora_f16.ckpt","weight":0.96,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.20,"upscaler":"4x_foolhardy_remacri_extrasmoother_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### F. Children's coloring page (ages 6–8)
@@ -234,7 +234,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "ColoringBookAF, Coloring Book, black and white kids coloring book page for ages 6 to 8, two friendly raccoons roasting marshmallows beside a small tent, a few stars and pine trees, bold consistent black line art, distinct closed contours, simple decorative patterns on the tent, medium-large areas to color, white background, clean spacing, no gray shading, no text" \
   --negative-prompt "color, grayscale, shadows, gradients, crosshatching, scratchy sketch lines, dense micro-patterns, large filled black shapes, tangled outlines, open contours, text, watermark, gray paper" \
   --width 768 --height 768 --steps 28 --cfg 5.2 \
-  --config-json '{"sampler":0,"loras":[{"file":"ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors","weight":0.92,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"4x-UltraSharpV2.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmond_coloringbook_lora_f16.ckpt","weight":0.92,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"4x_ultrasharp_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### G. Teen coloring page (ages 9–12)
@@ -248,7 +248,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "ColoringBookAF, Coloring Book, intricate but readable coloring book page for older children, moonlit botanical garden with a moth, layered leaves, winding stems, berries, tiny stars and a decorative gate, crisp black outlines, several levels of detail, all shapes enclosed, balanced negative space, white background, no solid fills, no grayscale, no text" \
   --negative-prompt "color, gradients, gray shadows, grayscale, halftone, photographic texture, charcoal smudges, broken contours, overlapping unreadable patterns, huge black filled areas, text, watermark" \
   --width 768 --height 768 --steps 30 --cfg 5.3 \
-  --config-json '{"sampler":0,"loras":[{"file":"ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors","weight":0.95,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"4x-UltraSharpV2.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmond_coloringbook_lora_f16.ckpt","weight":0.95,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"4x_ultrasharp_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### H. Adult mandala coloring page
@@ -262,7 +262,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "ColoringBookAF, Coloring Book, intricate adult coloring book page, perfectly centered radial mandala formed from a wise owl, crescent moon, feathers, leaves and repeating geometric petals, precise symmetrical rings, intricate closed regions of varied sizes, pure black outlines on pure white background, uniform clean line weight with fine interior details, no grayscale, no shading, no solid black fills, generous outer margin, no text" \
   --negative-prompt "color, colored fills, gray shadows, grayscale, gradients, halftone, crosshatching, pencil smudges, sketch lines, asymmetrical rings, open shapes, broken linework, large black filled areas, text, signature, watermark" \
   --width 768 --height 768 --steps 32 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors","weight":0.98,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.16,"upscaler":"4x-UltraSharpV2.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmond_coloringbook_lora_f16.ckpt","weight":0.98,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.16,"upscaler":"4x_ultrasharp_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### I. 2D anime illustration
@@ -276,7 +276,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "masterpiece, best quality, very aesthetic, absurdres, LineAniAF, lineart, 1girl, a teen anime student reading a thick astronomy book by a dormitory window, thoughtful expression, waist-up three-quarter view, clear hands holding the book, midnight blue hair, warm desk lamp and cool moonlight, clean cel shading, precise expressive outlines, star map pinned to the wall, detailed but uncluttered anime illustration, no text" \
   --negative-prompt "photorealistic, live action, 3d render, malformed hands, extra fingers, fused fingers, broken linework, muddy colors, text, watermark, logo, low contrast, blurry" \
   --width 768 --height 768 --steps 28 --cfg 5.5 \
-  --config-json '{"sampler":0,"loras":[{"file":"LineAniRedmondV2-Lineart-LineAniAF.safetensors","weight":0.48,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.24,"upscaler":"RealESRGAN_x4plus_anime_6B.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_lineart_lineani_lora_f16.ckpt","weight":0.48,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.24,"upscaler":"realesrgan_x4plus_anime_6b_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### J. Family-friendly 3D / animation still
@@ -290,7 +290,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "3D style, 3D render, a cheerful small turtle inventor showing a cardboard rocket to a friend, appealing stylized proportions, smooth clay-like shell, large readable eyes, soft studio key light, gentle contact shadows, colorful family animation still, simple pastel workshop background, medium shot, clear silhouette, polished materials, no text" \
   --negative-prompt "flat black-and-white line art, horror, photorealistic reptile, gritty pores, overly glossy plastic, harsh specular highlights, clutter, text, watermark, malformed limbs" \
   --width 768 --height 768 --steps 28 --cfg 5.4 \
-  --config-json '{"sampler":0,"loras":[{"file":"3d_render_style_xl.safetensors","weight":0.62,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_NMKD-Superscale-SP_178000_G.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"3d_render_style_xl_lora_f16.ckpt","weight":0.62,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_nmkd_superscale_sp_178000_g_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### K. Pixar-style family character
@@ -304,7 +304,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "pixar-style, a tiny penguin wearing an oversized yellow scarf, standing at a snowy train platform and looking hopeful, expressive eyes, appealing rounded silhouette, polished stylized 3D animation, soft global illumination, teal and amber color contrast, medium-wide shot, simple snow-covered station, cinematic family-film composition, no text" \
   --negative-prompt "flat coloring-book line art, realistic wildlife photo, horror, uncanny face, plastic glare, busy background, text, watermark, malformed wings" \
   --width 768 --height 768 --steps 26 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"pixar-style.safetensors","weight":0.50,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_NMKD-Superscale-SP_178000_G.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"pixar_style_lora_f16.ckpt","weight":0.50,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.28,"upscaler":"4x_nmkd_superscale_sp_178000_g_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### L. Pencil / artistic sketch
@@ -318,7 +318,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "graphite pencil sketch of a barn owl perched on a weathered branch, three-quarter profile, anatomical feather structure, varied pencil pressure, fine cross-contours, visible graphite strokes on warm white drawing paper, delicate hatching concentrated under the wings, lightly suggested background, observational natural-history sketch, no color" \
   --negative-prompt "full color, glossy 3d, polished vector art, photorealistic color photograph, plastic texture, heavy charcoal smears, messy construction lines obscuring the subject, text, watermark" \
   --width 768 --height 768 --steps 30 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"sketch-style-xl.safetensors","weight":0.62,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.22,"upscaler":"RealESRGAN_x2plus.safetensors","upscalerScaleFactor":2}'
+  --config-json '{"sampler":0,"loras":[{"file":"sketch_style_lora_f16.ckpt","weight":0.62,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.22,"upscaler":"realesrgan_x2plus_f16.ckpt","upscalerScaleFactor":2}'
 ```
 
 ### M. Oil painting
@@ -332,7 +332,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "oil painting of a small fishing harbor at dawn, wet boats and reflections, broad confident brush strokes, visible impasto highlights on the water, canvas tooth, layered pigments, muted cobalt blue and warm ochre palette, painterly edges, balanced fine-art composition, believable perspective, soft overcast light, no lettering" \
   --negative-prompt "photographic sharpness, vector outlines, flat digital gradients, glossy 3d surfaces, oversmoothed texture, text, watermark, malformed boats, distorted horizon" \
   --width 768 --height 768 --steps 32 --cfg 5.2 \
-  --config-json '{"sampler":0,"loras":[{"file":"oil-painting-slider.safetensors","weight":0.52,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.26,"upscaler":"4x_NMKD-Superscale-SP_178000_G.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"oil_painting_slider_lora_f16.ckpt","weight":0.52,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.26,"upscaler":"4x_nmkd_superscale_sp_178000_g_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### N. Watercolor storybook illustration
@@ -346,7 +346,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "KidsRedmAF, Kids Book, a small sailboat crossing a calm seaside bay, translucent watercolor washes, pigment blooms, soft wet-on-wet edges, visible cold-press paper grain, pale cerulean and coral palette, distant headland and a few seabirds, airy book illustration, simple readable shapes, gentle afternoon light, no text" \
   --negative-prompt "hard vector edges, glossy 3d, photorealistic camera rendering, oil impasto, muddy overworked pigment, heavy black outlines, clutter, text, watermark" \
   --width 768 --height 768 --steps 30 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors","weight":0.38,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.22,"upscaler":"4x_foolhardy_Remacri_ExtraSmoother.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_kids_storybook_lora_f16.ckpt","weight":0.38,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.22,"upscaler":"4x_foolhardy_remacri_extrasmoother_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### O. Analog film / editorial photography
@@ -360,7 +360,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "AnalogRedmAF, Analog, candid analog film photograph of a young adult riding a bicycle along a quiet tree-lined street after rain, 35mm lens, eye-level documentary framing, natural skin texture, subtle halation around highlights, fine organic film grain, soft overcast daylight, restrained warm color response, realistic wet pavement reflections, authentic imperfect film exposure, no text" \
   --negative-prompt "illustration, anime, cartoon, 3d render, plastic skin, excessive clarity, overprocessed HDR, fake bokeh, oversaturated colors, text, logo, watermark, malformed hands, blur" \
   --width 768 --height 768 --steps 32 --cfg 5.2 \
-  --config-json '{"sampler":0,"loras":[{"file":"AnalogRedmondV2-Analog-AnalogRedmAF.safetensors","weight":0.58,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.20,"upscaler":"RealESRGAN_x4plus.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"redmondv2_analog_lora_f16.ckpt","weight":0.58,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.20,"upscaler":"realesrgan_x4plus_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### P. Photorealistic wildlife / non-fiction photo
@@ -374,7 +374,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "photorealistic wildlife photograph of a sacred kingfisher perched on a weathered mangrove branch, sharp natural feather structure, small water droplets on the bark, bird at eye level, 400mm telephoto lens, soft morning side light, distant creamy natural bokeh, accurate bird proportions, realistic color and exposure, documentary natural-history photography, no text" \
   --negative-prompt "painting, drawing, illustration, anime, cartoon, 3d render, plastic feathers, oversaturated color, crunchy HDR, fake bokeh, duplicated bird, malformed beak, text, watermark, blur" \
   --width 768 --height 768 --steps 34 --cfg 5.0 \
-  --config-json '{"sampler":0,"loras":[{"file":"add-detail-xl.safetensors","weight":0.20,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"RealESRGAN_x4plus.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":0,"loras":[{"file":"add_detail_xl_lora_f16.ckpt","weight":0.20,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.18,"upscaler":"realesrgan_x4plus_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ### Q. Informative black-and-white biology line art
@@ -388,7 +388,7 @@ mkdir -p "$HOME/Dev/tmp" && draw-things-cli generate \
   --prompt "ColoringBookAF, Coloring Book, clean educational black-and-white line illustration of a butterfly in dorsal view with symmetrical wings, anatomically plausible wing veins, head thorax and abdomen clearly separated, a few host plant leaves below, thin consistent black contour lines, no labels, no arrows, no text, white background, uncluttered textbook figure" \
   --negative-prompt "color, gradients, gray shading, decorative mandala, excessive patterning, inaccurate wing anatomy, overlapping body parts, broken contours, text, numbers, watermark, solid black background" \
   --width 768 --height 768 --steps 28 --cfg 4.8 \
-  --config-json '{"sampler":2,"loras":[{"file":"ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors","weight":0.78,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.16,"upscaler":"4x_foolhardy_Remacri_ExtraSmoother.safetensors","upscalerScaleFactor":4}'
+  --config-json '{"sampler":2,"loras":[{"file":"redmond_coloringbook_lora_f16.ckpt","weight":0.78,"mode":"all"}],"hiresFix":true,"hiresFixWidth":1024,"hiresFixHeight":1024,"hiresFixStrength":0.16,"upscaler":"4x_foolhardy_remacri_extrasmoother_f16.ckpt","upscalerScaleFactor":4}'
 ```
 
 ## 9. Decision rules for an agent

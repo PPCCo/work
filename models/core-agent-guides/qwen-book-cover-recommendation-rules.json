@@ -1,0 +1,3626 @@
+{
+  "schema_version": "1.0",
+  "generated_for": "AI agent / recommendation engine",
+  "target": {
+    "tool": "draw-things-cli generate",
+    "model": "qwen_image_2512_bf16_q8p.ckpt",
+    "hardware": "MacBook Pro M4, 12-core, 48GB unified memory"
+  },
+  "facts": {
+    "verified": [
+      "Sampler integer enum (Draw Things SamplerType) as listed in enums.samplers, from mirrored Draw Things source (3 sources agree).",
+      "config-json carries sampler as integer (Draw Things config docs/clients).",
+      "Qwen-Image-2512 community ranges: steps 20-50 (30-40 typical), CFG ~2.5-4 base model, euler-family samplers; lower CFG first if letters deform.",
+      "Known issue: qwen_image_2512 q8p can yield NaN/blue/black final image for some prompts (draw-things-community #136)."
+    ],
+    "unverified_must_check_once": [
+      "config-json keys 'upscaler' and 'upscalerScaleFactor' accepted by the installed CLI; fallback flags: --upscaler <file> --upscaler-scale <2|4>.",
+      "Exact upscaler filenames; list with: ls ~/Library/Containers/com.liuliu.draw-things/Data/Documents/Models | grep -i -E 'esrgan|sharp|remacri'",
+      "Precedence when both flag and config-json set the same field (examples never duplicate fields).",
+      "Per-genre sampler choice and CFG offsets are heuristics, not benchmarks."
+    ]
+  },
+  "enums": {
+    "samplers": {
+      "0": "DPM++ 2M Karras",
+      "1": "Euler A",
+      "2": "DDIM",
+      "3": "PLMS",
+      "4": "DPM++ SDE Karras",
+      "5": "UniPC",
+      "6": "LCM",
+      "7": "Euler A Substep",
+      "8": "DPM++ SDE Substep",
+      "9": "TCD",
+      "10": "Euler A Trailing",
+      "11": "DPM++ SDE Trailing",
+      "12": "DPM++ 2M AYS",
+      "13": "Euler A AYS",
+      "14": "DPM++ SDE AYS",
+      "15": "DPM++ 2M Trailing",
+      "16": "DDIM Trailing",
+      "17": "UniPC Trailing",
+      "18": "UniPC AYS",
+      "19": "TCD Trailing"
+    },
+    "preferred_samplers": {
+      "10": "soft/painterly/organic",
+      "15": "crisp lines, text, detail",
+      "17": "alt for photo",
+      "0": "legacy alt for line art"
+    },
+    "upscalers": {
+      "realesrgan_x2plus_f16.ckpt": {
+        "scale": 2,
+        "best_for": "General 2x. Safe default for painterly, photo, mixed content."
+      },
+      "realesrgan_x4plus_f16.ckpt": {
+        "scale": 4,
+        "best_for": "General 4x. Photos and realism when >2x is needed."
+      },
+      "realesrgan_x4plus_anime_6b_f16.ckpt": {
+        "scale": 4,
+        "best_for": "4x for flat colour, anime, cel shading, clean line art."
+      },
+      "4x_ultrasharp_f16.ckpt": {
+        "scale": 4,
+        "best_for": "4x crisp edges. Best for ink line art, mandalas, graphic type."
+      },
+      "remacri_4x_f16.ckpt": {
+        "scale": 4,
+        "best_for": "4x texture reconstruction. Good for photo/oil/canvas texture."
+      }
+    },
+    "aspect_sizes_px": {
+      "2:3 final": [
+        1024,
+        1536
+      ],
+      "2:3 draft": [
+        640,
+        960
+      ],
+      "0.69 anime": [
+        832,
+        1216
+      ],
+      "3:4 interior": [
+        768,
+        1024
+      ],
+      "0.76 interior large": [
+        1024,
+        1344
+      ],
+      "1:1": [
+        1024,
+        1024
+      ]
+    },
+    "print_targets_px_300dpi": {
+      "6x9in": [
+        1800,
+        2700
+      ],
+      "8.5x11in": [
+        2550,
+        3300
+      ],
+      "8.5in_square": [
+        2550,
+        2550
+      ],
+      "8x10in": [
+        2400,
+        3000
+      ]
+    }
+  },
+  "global_defaults": {
+    "model": "qwen_image_2512_bf16_q8p.ckpt",
+    "seed": "random; store used seed",
+    "batch": "4 seeds at draft tier, pick best",
+    "output_dir": "$HOME/Dev/tmp",
+    "output_path_note": "Use double-quoted $HOME; '~' is not expanded inside single quotes.",
+    "memory_notes": [
+      "48GB handles 1024x1536 comfortably",
+      "set tiledDecoding true if either side >1280",
+      "close other heavy apps for 4x upscales"
+    ],
+    "fallback_if_blue_or_black_output": [
+      "change seed",
+      "reword prompt slightly",
+      "try alt sampler",
+      "lower resolution one step",
+      "see draw-things-community #136"
+    ]
+  },
+  "age_modifiers": {
+    "3-5": {
+      "text": "<=4 words title, huge rounded letters",
+      "palette": "primary, high contrast",
+      "composition": "one subject, simple background",
+      "negative_add": [
+        "scary",
+        "dark",
+        "realistic",
+        "clutter",
+        "sharp teeth"
+      ],
+      "cfg_delta": 0
+    },
+    "6-8": {
+      "text": "<=6 words, whimsical serif/rounded",
+      "palette": "warm, saturated, soft light",
+      "composition": "1-2 characters, layered depth",
+      "negative_add": [
+        "horror",
+        "gore",
+        "harsh shadows"
+      ],
+      "cfg_delta": 0
+    },
+    "9-12": {
+      "text": "<=6 words, bold sans",
+      "palette": "vivid, high contrast",
+      "composition": "dynamic, informative",
+      "negative_add": [
+        "gore",
+        "dense paragraphs"
+      ],
+      "cfg_delta": 0
+    },
+    "13-17": {
+      "text": "short punchy, condensed caps",
+      "palette": "stylised, restrained or neon",
+      "composition": "poster-like, negative space",
+      "negative_add": [
+        "childish",
+        "clip art"
+      ],
+      "cfg_delta": 0
+    },
+    "adult": {
+      "text": "refined serif/metal/thin sans",
+      "palette": "premium, restrained",
+      "composition": "symmetry/space/elegance",
+      "negative_add": [
+        "childish",
+        "cartoon (unless wanted)"
+      ],
+      "cfg_delta": 0
+    }
+  },
+  "profiles": [
+    {
+      "id": "kids_picture_book_3_5",
+      "name": "Picture / early-reading book, ages 3-5",
+      "goal": "Generate a print-ready cover image: Picture / early-reading book, ages 3-5.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "picture book",
+          "toddler",
+          "preschool",
+          "nursery",
+          "bedtime",
+          "ages 3",
+          "board book",
+          "early reader",
+          "simple story"
+        ],
+        "genres_any": [
+          "kids reading book",
+          "picture book",
+          "board book",
+          "nursery"
+        ],
+        "age_groups_any": [
+          "3-5"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 32,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          26,
+          40
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Children's picture book cover for ages 3 to 5, flat gouache illustration with thick soft outlines. A smiling round baby fox in a red scarf waves from a green hill under a big yellow sun, with a few simple clouds and three flowers. Warm primary colors, one big central character, plenty of empty sky at the top. Title \"Finn the Brave Little Fox\" in large bold rounded hand-lettered capitals in the sky; series name \"Little Woodland Tales\" in small rounded letters at the very top; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Children's picture book cover for ages 3 to 5, flat gouache illustration with thick soft outlines. A smiling round baby fox in a red scarf waves from a green hill under a big yellow sun, with a few simple clouds and three flowers. Warm primary colors, one big central character, plenty of empty sky at the top.",
+        "text_clause_template": "Title \"Finn the Brave Little Fox\" in large bold rounded hand-lettered capitals in the sky; series name \"Little Woodland Tales\" in small rounded letters at the very top; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "scary, dark, realistic, photograph, sharp teeth, clutter, tiny details, misspelled text, garbled letters, extra words, watermark, blurry, deformed hands",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.68,
+        "settings": 0.72,
+        "sampler": 0.55,
+        "upscaler": 0.65,
+        "prompt": 0.78,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Letters wrong: shorten title to <=4 words, steps 40, CFG 3.5.",
+        "Too busy: add 'minimal background, one subject' to prompt."
+      ],
+      "why": "Euler A Trailing gives soft, forgiving shapes. CFG 4 keeps the exact text and single-subject layout. 2x general upscaler avoids over-sharpening flat colour.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_picture_book_3_5.png\" \\\n--prompt \"Children's picture book cover for ages 3 to 5, flat gouache illustration with thick soft outlines. A smiling round baby fox in a red scarf waves from a green hill under a big yellow sun, with a few simple clouds and three flowers. Warm primary colors, one big central character, plenty of empty sky at the top. Title \\\"Finn the Brave Little Fox\\\" in large bold rounded hand-lettered capitals in the sky; series name \\\"Little Woodland Tales\\\" in small rounded letters at the very top; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"scary, dark, realistic, photograph, sharp teeth, clutter, tiny details, misspelled text, garbled letters, extra words, watermark, blurry, deformed hands\" \\\n--width 1024 --height 1536 --steps 32 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_picture_book_3_5_draft.png\" \\\n--prompt \"Children's picture book cover for ages 3 to 5, flat gouache illustration with thick soft outlines. A smiling round baby fox in a red scarf waves from a green hill under a big yellow sun, with a few simple clouds and three flowers. Warm primary colors, one big central character, plenty of empty sky at the top. Title \\\"Finn the Brave Little Fox\\\" in large bold rounded hand-lettered capitals in the sky; series name \\\"Little Woodland Tales\\\" in small rounded letters at the very top; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"scary, dark, realistic, photograph, sharp teeth, clutter, tiny details, misspelled text, garbled letters, extra words, watermark, blurry, deformed hands\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "kids_storybook_6_8",
+      "name": "Illustrated storybook, ages 6-8",
+      "goal": "Generate a print-ready cover image: Illustrated storybook, ages 6-8.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "storybook",
+          "fairy tale",
+          "chapter book",
+          "ages 6",
+          "illustrated story",
+          "adventure",
+          "bedtime story"
+        ],
+        "genres_any": [
+          "storybook",
+          "illustrated book",
+          "fairy tale",
+          "chapter book"
+        ],
+        "age_groups_any": [
+          "6-8"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 34,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          28,
+          42
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Storybook cover for ages 6 to 8, painterly digital illustration in a soft watercolor-gouache style. Two children and a small owl carrying a lantern walk down a mossy path into a glowing moonlit forest with fireflies and tiny lit cottage windows. Warm golden light against deep teal shadows, layered trees for depth, room for the title in the upper third. Title \"The Lantern Owl of Hollow Wood\" in whimsical serif lettering across the upper third; series name \"Hollow Wood Tales, Book 2\" in small clean letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Storybook cover for ages 6 to 8, painterly digital illustration in a soft watercolor-gouache style. Two children and a small owl carrying a lantern walk down a mossy path into a glowing moonlit forest with fireflies and tiny lit cottage windows. Warm golden light against deep teal shadows, layered trees for depth, room for the title in the upper third.",
+        "text_clause_template": "Title \"The Lantern Owl of Hollow Wood\" in whimsical serif lettering across the upper third; series name \"Hollow Wood Tales, Book 2\" in small clean letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "horror, gore, photorealistic, harsh shadows, muddy colors, crowded composition, misspelled text, garbled letters, extra words, watermark, deformed hands, extra fingers",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.68,
+        "settings": 0.72,
+        "sampler": 0.55,
+        "upscaler": 0.65,
+        "prompt": 0.78,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Characters distorted: steps 40 and reduce to 2 characters.",
+        "Flat look: add lighting words (rim light, glow)."
+      ],
+      "why": "Richer scene than 3-5 so steps 34. Euler A Trailing keeps painterly softness. CFG 4 balances scene detail and title accuracy.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_storybook_6_8.png\" \\\n--prompt \"Storybook cover for ages 6 to 8, painterly digital illustration in a soft watercolor-gouache style. Two children and a small owl carrying a lantern walk down a mossy path into a glowing moonlit forest with fireflies and tiny lit cottage windows. Warm golden light against deep teal shadows, layered trees for depth, room for the title in the upper third. Title \\\"The Lantern Owl of Hollow Wood\\\" in whimsical serif lettering across the upper third; series name \\\"Hollow Wood Tales, Book 2\\\" in small clean letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"horror, gore, photorealistic, harsh shadows, muddy colors, crowded composition, misspelled text, garbled letters, extra words, watermark, deformed hands, extra fingers\" \\\n--width 1024 --height 1536 --steps 34 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_storybook_6_8_draft.png\" \\\n--prompt \"Storybook cover for ages 6 to 8, painterly digital illustration in a soft watercolor-gouache style. Two children and a small owl carrying a lantern walk down a mossy path into a glowing moonlit forest with fireflies and tiny lit cottage windows. Warm golden light against deep teal shadows, layered trees for depth, room for the title in the upper third. Title \\\"The Lantern Owl of Hollow Wood\\\" in whimsical serif lettering across the upper third; series name \\\"Hollow Wood Tales, Book 2\\\" in small clean letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"horror, gore, photorealistic, harsh shadows, muddy colors, crowded composition, misspelled text, garbled letters, extra words, watermark, deformed hands, extra fingers\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "kids_nonfiction_8_12",
+      "name": "Informative non-fiction for kids, ages 8-12",
+      "goal": "Generate a print-ready cover image: Informative non-fiction for kids, ages 8-12.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "non-fiction",
+          "nonfiction",
+          "informative",
+          "educational",
+          "science",
+          "facts",
+          "ages 8",
+          "ages 9",
+          "ages 10",
+          "discover",
+          "encyclopedia"
+        ],
+        "genres_any": [
+          "non-fiction",
+          "informative",
+          "science",
+          "history",
+          "educational"
+        ],
+        "age_groups_any": [
+          "8-12"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Informative non-fiction book cover for ages 8 to 12 about volcanoes. Clean educational illustration of a cutaway volcano showing the magma chamber, rock layers, lava and an ash cloud, with a small curious explorer kid in a helmet pointing at it. Bright saturated flat colors, crisp outlines, bold orange and blue palette, uncluttered composition. Title \"Volcanoes Up Close\" in chunky sans-serif capitals at the top; series name \"Discover Science Series\" in a small colored band above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Informative non-fiction book cover for ages 8 to 12 about volcanoes. Clean educational illustration of a cutaway volcano showing the magma chamber, rock layers, lava and an ash cloud, with a small curious explorer kid in a helmet pointing at it. Bright saturated flat colors, crisp outlines, bold orange and blue palette, uncluttered composition.",
+        "text_clause_template": "Title \"Volcanoes Up Close\" in chunky sans-serif capitals at the top; series name \"Discover Science Series\" in a small colored band above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "photograph, gore, scary, dense paragraphs, tiny captions, misspelled text, garbled letters, extra words, watermark, blurry, muddy colors, low contrast",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.65,
+        "settings": 0.7,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Soft outlines: alt sampler Euler A Trailing is NOT better here; raise steps to 42 instead.",
+        "Lettering weak: use 4x_ultrasharp upscaler."
+      ],
+      "why": "DPM++ 2M Trailing converges cleanly for crisp outlines and sharp lettering. Steps 36 for diagram-like detail. CFG 4 for accuracy.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_nonfiction_8_12.png\" \\\n--prompt \"Informative non-fiction book cover for ages 8 to 12 about volcanoes. Clean educational illustration of a cutaway volcano showing the magma chamber, rock layers, lava and an ash cloud, with a small curious explorer kid in a helmet pointing at it. Bright saturated flat colors, crisp outlines, bold orange and blue palette, uncluttered composition. Title \\\"Volcanoes Up Close\\\" in chunky sans-serif capitals at the top; series name \\\"Discover Science Series\\\" in a small colored band above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photograph, gore, scary, dense paragraphs, tiny captions, misspelled text, garbled letters, extra words, watermark, blurry, muddy colors, low contrast\" \\\n--width 1024 --height 1536 --steps 36 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_nonfiction_8_12_draft.png\" \\\n--prompt \"Informative non-fiction book cover for ages 8 to 12 about volcanoes. Clean educational illustration of a cutaway volcano showing the magma chamber, rock layers, lava and an ash cloud, with a small curious explorer kid in a helmet pointing at it. Bright saturated flat colors, crisp outlines, bold orange and blue palette, uncluttered composition. Title \\\"Volcanoes Up Close\\\" in chunky sans-serif capitals at the top; series name \\\"Discover Science Series\\\" in a small colored band above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photograph, gore, scary, dense paragraphs, tiny captions, misspelled text, garbled letters, extra words, watermark, blurry, muddy colors, low contrast\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "teen_nonfiction_13_17",
+      "name": "Teen non-fiction / informative, ages 13-17",
+      "goal": "Generate a print-ready cover image: Teen non-fiction / informative, ages 13-17.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "teen",
+          "teenager",
+          "young adult non-fiction",
+          "ages 13",
+          "ya non-fiction",
+          "self-help teens",
+          "modern",
+          "graphic design"
+        ],
+        "genres_any": [
+          "non-fiction",
+          "self-help",
+          "teen",
+          "informative",
+          "psychology",
+          "science"
+        ],
+        "age_groups_any": [
+          "13-17"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "4x_ultrasharp_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            6144
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 17,
+            "name": "UniPC Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          15,
+          17
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Modern teen non-fiction book cover about the psychology of sleep and the teenage brain. Bold graphic design with a stylized glowing brain made of layered paper-cut shapes over a deep indigo and electric coral gradient, a crescent moon, minimal clean composition with generous negative space, contemporary editorial poster look. Title \"WIDE AWAKE\" in huge condensed sans-serif capitals across the middle; series name \"The Mind Lab Series\" in small spaced capitals above the title; publisher name \"North Harbor Books\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Modern teen non-fiction book cover about the psychology of sleep and the teenage brain. Bold graphic design with a stylized glowing brain made of layered paper-cut shapes over a deep indigo and electric coral gradient, a crescent moon, minimal clean composition with generous negative space, contemporary editorial poster look.",
+        "text_clause_template": "Title \"WIDE AWAKE\" in huge condensed sans-serif capitals across the middle; series name \"The Mind Lab Series\" in small spaced capitals above the title; publisher name \"North Harbor Books\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "childish, cartoon mascot, clip art, stock photo look, cluttered, rainbow colors, misspelled text, garbled letters, extra words, watermark, low contrast, blurry",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.65,
+        "settings": 0.7,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Output too large: downscale to print size.",
+        "Too childish: add 'sophisticated, restrained palette'."
+      ],
+      "why": "Graphic poster style benefits from DPM++ 2M Trailing precision. 4x ultrasharp keeps typography edges crisp (downscale after).",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x6144",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_teen_nonfiction_13_17.png\" \\\n--prompt \"Modern teen non-fiction book cover about the psychology of sleep and the teenage brain. Bold graphic design with a stylized glowing brain made of layered paper-cut shapes over a deep indigo and electric coral gradient, a crescent moon, minimal clean composition with generous negative space, contemporary editorial poster look. Title \\\"WIDE AWAKE\\\" in huge condensed sans-serif capitals across the middle; series name \\\"The Mind Lab Series\\\" in small spaced capitals above the title; publisher name \\\"North Harbor Books\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"childish, cartoon mascot, clip art, stock photo look, cluttered, rainbow colors, misspelled text, garbled letters, extra words, watermark, low contrast, blurry\" \\\n--width 1024 --height 1536 --steps 36 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"4x_ultrasharp_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_teen_nonfiction_13_17_draft.png\" \\\n--prompt \"Modern teen non-fiction book cover about the psychology of sleep and the teenage brain. Bold graphic design with a stylized glowing brain made of layered paper-cut shapes over a deep indigo and electric coral gradient, a crescent moon, minimal clean composition with generous negative space, contemporary editorial poster look. Title \\\"WIDE AWAKE\\\" in huge condensed sans-serif capitals across the middle; series name \\\"The Mind Lab Series\\\" in small spaced capitals above the title; publisher name \\\"North Harbor Books\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"childish, cartoon mascot, clip art, stock photo look, cluttered, rainbow colors, misspelled text, garbled letters, extra words, watermark, low contrast, blurry\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "kids_coloring_cover",
+      "name": "Kids coloring book cover (colour cover)",
+      "goal": "Generate a print-ready cover image: Kids coloring book cover (colour cover).",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "coloring book cover",
+          "colouring book cover",
+          "kids coloring book",
+          "crayon",
+          "coloring book for kids"
+        ],
+        "genres_any": [
+          "coloring book",
+          "kids coloring"
+        ],
+        "age_groups_any": [
+          "3-5",
+          "6-8",
+          "9-12"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 32,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          26,
+          40
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Cover of a children's coloring book. A cheerful friendly dinosaur holding a giant crayon, bold black outlines with bright flat colors on a pale yellow background, with three uncolored black-and-white line-art dinosaur outlines floating around to hint at the pages inside. Playful, simple, high contrast. Title \"Dino Colors\" in big bubbly multicolor capitals at the top; series name \"Crayon Club\" in small letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Cover of a children's coloring book. A cheerful friendly dinosaur holding a giant crayon, bold black outlines with bright flat colors on a pale yellow background, with three uncolored black-and-white line-art dinosaur outlines floating around to hint at the pages inside. Playful, simple, high contrast.",
+        "text_clause_template": "Title \"Dino Colors\" in big bubbly multicolor capitals at the top; series name \"Crayon Club\" in small letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "scary teeth, realistic, photograph, gradient shading, dark background, clutter, misspelled text, garbled letters, extra words, watermark, blurry",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.67,
+        "settings": 0.7,
+        "sampler": 0.55,
+        "upscaler": 0.65,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Teaser outlines coloured in: add 'pure white uncolored outlines' and lower CFG slightly is NOT needed; raise CFG to 4.5."
+      ],
+      "why": "Colour cover with line-art teasers. Same recipe as picture-book covers; short 2-word title is the most reliable text case.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_cover.png\" \\\n--prompt \"Cover of a children's coloring book. A cheerful friendly dinosaur holding a giant crayon, bold black outlines with bright flat colors on a pale yellow background, with three uncolored black-and-white line-art dinosaur outlines floating around to hint at the pages inside. Playful, simple, high contrast. Title \\\"Dino Colors\\\" in big bubbly multicolor capitals at the top; series name \\\"Crayon Club\\\" in small letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"scary teeth, realistic, photograph, gradient shading, dark background, clutter, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 1024 --height 1536 --steps 32 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_cover_draft.png\" \\\n--prompt \"Cover of a children's coloring book. A cheerful friendly dinosaur holding a giant crayon, bold black outlines with bright flat colors on a pale yellow background, with three uncolored black-and-white line-art dinosaur outlines floating around to hint at the pages inside. Playful, simple, high contrast. Title \\\"Dino Colors\\\" in big bubbly multicolor capitals at the top; series name \\\"Crayon Club\\\" in small letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"scary teeth, realistic, photograph, gradient shading, dark background, clutter, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "adult_coloring_cover",
+      "name": "Adult coloring book cover (colour cover)",
+      "goal": "Generate a print-ready cover image: Adult coloring book cover (colour cover).",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "adult coloring book cover",
+          "stress relief coloring",
+          "mindful coloring",
+          "calm coloring",
+          "coloring book for adults cover"
+        ],
+        "genres_any": [
+          "coloring book",
+          "adult coloring",
+          "stress relief"
+        ],
+        "age_groups_any": [
+          "adult"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 4.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "4x_ultrasharp_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            6144
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          4.0,
+          5.5
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Elegant cover for an adult coloring book. A rich, fully colored, highly detailed owl-and-moon mandala centered on a deep navy background with gold accents, plus a small framed inset of the same design as black outline line art on cream paper. Refined symmetrical layout, premium feel. Title \"Midnight Mandalas\" in elegant gold serif capitals at the top; series name \"Calm Hours Coloring Series\" in small gold capitals under the title; publisher name \"Juniper & Ash Press\" in small gold letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Elegant cover for an adult coloring book. A rich, fully colored, highly detailed owl-and-moon mandala centered on a deep navy background with gold accents, plus a small framed inset of the same design as black outline line art on cream paper. Refined symmetrical layout, premium feel.",
+        "text_clause_template": "Title \"Midnight Mandalas\" in elegant gold serif capitals at the top; series name \"Calm Hours Coloring Series\" in small gold capitals under the title; publisher name \"Juniper & Ash Press\" in small gold letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "childish, cartoon, messy lines, muddy colors, flat clip art, cluttered, misspelled text, garbled letters, extra words, watermark, blurry",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.64,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.72,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Inset missing: describe it earlier in the prompt.",
+        "Output 4x large: downscale after."
+      ],
+      "why": "Fine ornament needs precise convergence (DPM++ 2M Trailing) and 36 steps. CFG 4.5 enforces symmetry and inset. Ultrasharp keeps gold linework crisp.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x6144",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_coloring_cover.png\" \\\n--prompt \"Elegant cover for an adult coloring book. A rich, fully colored, highly detailed owl-and-moon mandala centered on a deep navy background with gold accents, plus a small framed inset of the same design as black outline line art on cream paper. Refined symmetrical layout, premium feel. Title \\\"Midnight Mandalas\\\" in elegant gold serif capitals at the top; series name \\\"Calm Hours Coloring Series\\\" in small gold capitals under the title; publisher name \\\"Juniper & Ash Press\\\" in small gold letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"childish, cartoon, messy lines, muddy colors, flat clip art, cluttered, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 1024 --height 1536 --steps 36 --cfg 4.5 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"4x_ultrasharp_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_coloring_cover_draft.png\" \\\n--prompt \"Elegant cover for an adult coloring book. A rich, fully colored, highly detailed owl-and-moon mandala centered on a deep navy background with gold accents, plus a small framed inset of the same design as black outline line art on cream paper. Refined symmetrical layout, premium feel. Title \\\"Midnight Mandalas\\\" in elegant gold serif capitals at the top; series name \\\"Calm Hours Coloring Series\\\" in small gold capitals under the title; publisher name \\\"Juniper & Ash Press\\\" in small gold letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"childish, cartoon, messy lines, muddy colors, flat clip art, cluttered, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 640 --height 960 --steps 20 --cfg 4.5 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "kids_coloring_page_3_6",
+      "name": "Kids coloring page (interior), ages 3-6",
+      "goal": "Generate a print-ready interior image: Kids coloring page (interior), ages 3-6.",
+      "mode": "interior",
+      "aspect_ratio": "768:1024",
+      "match": {
+        "keywords_any": [
+          "coloring page",
+          "colouring page",
+          "kids coloring",
+          "simple line art",
+          "thick lines",
+          "toddler coloring",
+          "ages 3",
+          "easy coloring"
+        ],
+        "genres_any": [
+          "coloring book",
+          "kids coloring",
+          "line art"
+        ],
+        "age_groups_any": [
+          "3-5",
+          "6-8"
+        ],
+        "mode_hint_words": [
+          "page",
+          "interior",
+          "inside",
+          "pages to color",
+          "line art"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 576,
+          "height": 768,
+          "steps": 20,
+          "cfg": 5.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 768,
+          "height": 1024,
+          "steps": 28,
+          "cfg": 5.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            3072,
+            4096
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          22,
+          36
+        ],
+        "cfg": [
+          4.5,
+          6.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 0,
+        "text_in_negative_prompt": "required",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Children's coloring book page for ages 3 to 6. A single big happy elephant holding a balloon, very thick clean black outlines, simple large shapes, pure white background, no shading, no fill, centered with wide white margins, easy to color.",
+        "scene_style": "Children's coloring book page for ages 3 to 6. A single big happy elephant holding a balloon, very thick clean black outlines, simple large shapes, pure white background, no shading, no fill, centered with wide white margins, easy to color.",
+        "text_clause_template": null,
+        "structure": [
+          "format (coloring page)",
+          "subject",
+          "line rules (weight, white bg, closed shapes)",
+          "composition/margins"
+        ],
+        "length_words": [
+          35,
+          90
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "color, gray, shading, gradient, shadows, texture, tiny details, background scenery, text, watermark, sketchy lines, broken lines",
+        "never_include": [],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.71,
+        "settings": 0.75,
+        "sampler": 0.55,
+        "upscaler": 0.7,
+        "prompt": 0.8,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Gray fills appear: CFG 5.5 and add 'solid black lines only' to prompt.",
+        "Lines too thin: add 'extra thick bold outline'."
+      ],
+      "why": "Higher CFG 5 enforces pure white background and no fill. 28 steps is enough for few shapes. Anime 6B 4x keeps thick lines clean. Base 768x1024 x4 = 3072x4096 (>8.5x11 at 300dpi).",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "no_text_requested",
+          "'text' and 'watermark' present in negative prompt",
+          "pure_white_background_requested"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_3072x4096",
+          "grayscale_mean>=235",
+          "mid_gray_pixel_fraction<=0.08 (heuristic)",
+          "no_filled_black_regions>25%",
+          "all_outlines_closed_visual_check",
+          "no_text_or_signature"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_page_3_6.png\" \\\n--prompt \"Children's coloring book page for ages 3 to 6. A single big happy elephant holding a balloon, very thick clean black outlines, simple large shapes, pure white background, no shading, no fill, centered with wide white margins, easy to color.\" \\\n--negative-prompt \"color, gray, shading, gradient, shadows, texture, tiny details, background scenery, text, watermark, sketchy lines, broken lines\" \\\n--width 768 --height 1024 --steps 28 --cfg 5.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x4plus_anime_6b_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_page_3_6_draft.png\" \\\n--prompt \"Children's coloring book page for ages 3 to 6. A single big happy elephant holding a balloon, very thick clean black outlines, simple large shapes, pure white background, no shading, no fill, centered with wide white margins, easy to color.\" \\\n--negative-prompt \"color, gray, shading, gradient, shadows, texture, tiny details, background scenery, text, watermark, sketchy lines, broken lines\" \\\n--width 576 --height 768 --steps 20 --cfg 5.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "kids_coloring_page_7_12",
+      "name": "Kids coloring page (interior), ages 7-12",
+      "goal": "Generate a print-ready interior image: Kids coloring page (interior), ages 7-12.",
+      "mode": "interior",
+      "aspect_ratio": "768:1024",
+      "match": {
+        "keywords_any": [
+          "coloring page ages 7",
+          "tween coloring",
+          "medium detail coloring",
+          "kids line art",
+          "ages 8",
+          "ages 10"
+        ],
+        "genres_any": [
+          "coloring book",
+          "kids coloring",
+          "line art"
+        ],
+        "age_groups_any": [
+          "9-12",
+          "6-8"
+        ],
+        "mode_hint_words": [
+          "page",
+          "interior",
+          "inside",
+          "pages to color",
+          "line art"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 576,
+          "height": 768,
+          "steps": 20,
+          "cfg": 5.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 768,
+          "height": 1024,
+          "steps": 32,
+          "cfg": 5.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            3072,
+            4096
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          26,
+          40
+        ],
+        "cfg": [
+          4.5,
+          6.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 0,
+        "text_in_negative_prompt": "required",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Coloring book page for ages 7 to 12. A friendly dragon curled around a castle tower with scales, clouds and stars, medium-detail clean black line art, uniform line weight, pure white background, closed shapes ready to color, no shading.",
+        "scene_style": "Coloring book page for ages 7 to 12. A friendly dragon curled around a castle tower with scales, clouds and stars, medium-detail clean black line art, uniform line weight, pure white background, closed shapes ready to color, no shading.",
+        "text_clause_template": null,
+        "structure": [
+          "format (coloring page)",
+          "subject",
+          "line rules (weight, white bg, closed shapes)",
+          "composition/margins"
+        ],
+        "length_words": [
+          35,
+          90
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "color, gray fill, shading, gradients, shadows, sketchy, messy overlapping lines, text, watermark, blurry, cropped",
+        "never_include": [],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.71,
+        "settings": 0.75,
+        "sampler": 0.55,
+        "upscaler": 0.7,
+        "prompt": 0.8,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Too complex: say 'fewer, larger shapes'.",
+        "Open shapes: add 'every shape fully closed'."
+      ],
+      "why": "Same recipe as 3-6 with more steps for medium detail. Closed shapes cue prevents open regions that are hard to colour.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "no_text_requested",
+          "'text' and 'watermark' present in negative prompt",
+          "pure_white_background_requested"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_3072x4096",
+          "grayscale_mean>=235",
+          "mid_gray_pixel_fraction<=0.08 (heuristic)",
+          "no_filled_black_regions>25%",
+          "all_outlines_closed_visual_check",
+          "no_text_or_signature"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_page_7_12.png\" \\\n--prompt \"Coloring book page for ages 7 to 12. A friendly dragon curled around a castle tower with scales, clouds and stars, medium-detail clean black line art, uniform line weight, pure white background, closed shapes ready to color, no shading.\" \\\n--negative-prompt \"color, gray fill, shading, gradients, shadows, sketchy, messy overlapping lines, text, watermark, blurry, cropped\" \\\n--width 768 --height 1024 --steps 32 --cfg 5.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x4plus_anime_6b_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_kids_coloring_page_7_12_draft.png\" \\\n--prompt \"Coloring book page for ages 7 to 12. A friendly dragon curled around a castle tower with scales, clouds and stars, medium-detail clean black line art, uniform line weight, pure white background, closed shapes ready to color, no shading.\" \\\n--negative-prompt \"color, gray fill, shading, gradients, shadows, sketchy, messy overlapping lines, text, watermark, blurry, cropped\" \\\n--width 576 --height 768 --steps 20 --cfg 5.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "adult_coloring_line_art",
+      "name": "Adult coloring page (interior), intricate line art",
+      "goal": "Generate a print-ready interior image: Adult coloring page (interior), intricate line art.",
+      "mode": "interior",
+      "aspect_ratio": "1024:1344",
+      "match": {
+        "keywords_any": [
+          "adult coloring page",
+          "intricate line art",
+          "detailed coloring",
+          "floral coloring",
+          "animal coloring adult",
+          "zentangle",
+          "ink line art"
+        ],
+        "genres_any": [
+          "coloring book",
+          "adult coloring",
+          "line art"
+        ],
+        "age_groups_any": [
+          "adult",
+          "13-17"
+        ],
+        "mode_hint_words": [
+          "page",
+          "interior",
+          "inside",
+          "pages to color",
+          "line art"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 832,
+          "steps": 20,
+          "cfg": 5.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1344,
+          "steps": 36,
+          "cfg": 5.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "4x_ultrasharp_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            5376
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 0,
+            "name": "DPM++ 2M Karras"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          5.0,
+          6.5
+        ],
+        "samplers_allowed": [
+          0,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 0,
+        "text_in_negative_prompt": "required",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Intricate adult coloring page. A mystical owl perched on a crescent moon surrounded by floral mandala patterns, feathers drawn with fine repeating patterns, fine uniform black ink lines, pure white background, no shading, symmetrical balanced composition, closed shapes, high detail.",
+        "scene_style": "Intricate adult coloring page. A mystical owl perched on a crescent moon surrounded by floral mandala patterns, feathers drawn with fine repeating patterns, fine uniform black ink lines, pure white background, no shading, symmetrical balanced composition, closed shapes, high detail.",
+        "text_clause_template": null,
+        "structure": [
+          "format (coloring page)",
+          "subject",
+          "line rules (weight, white bg, closed shapes)",
+          "composition/margins"
+        ],
+        "length_words": [
+          35,
+          90
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "3d render, color, grayscale shading, gray shadows, sketch, charcoal, messy lines, blurry, text, watermark, bg color, cropped",
+        "never_include": [],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.69,
+        "settings": 0.72,
+        "sampler": 0.5,
+        "upscaler": 0.7,
+        "prompt": 0.8,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Lines merge: raise base to 1152x1536 (needs ~tiledDecoding true).",
+        "Gray tone: CFG 6 and add 'high contrast pure black ink'."
+      ],
+      "why": "1024 base keeps fine lines separate. CFG 5.5 pushes strict black-on-white. Ultrasharp 4x preserves hairlines; downscale 4096x5376 to 2550x3300.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "no_text_requested",
+          "'text' and 'watermark' present in negative prompt",
+          "pure_white_background_requested"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x5376",
+          "grayscale_mean>=235",
+          "mid_gray_pixel_fraction<=0.08 (heuristic)",
+          "no_filled_black_regions>25%",
+          "all_outlines_closed_visual_check",
+          "no_text_or_signature"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_coloring_line_art.png\" \\\n--prompt \"Intricate adult coloring page. A mystical owl perched on a crescent moon surrounded by floral mandala patterns, feathers drawn with fine repeating patterns, fine uniform black ink lines, pure white background, no shading, symmetrical balanced composition, closed shapes, high detail.\" \\\n--negative-prompt \"3d render, color, grayscale shading, gray shadows, sketch, charcoal, messy lines, blurry, text, watermark, bg color, cropped\" \\\n--width 1024 --height 1344 --steps 36 --cfg 5.5 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"4x_ultrasharp_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_coloring_line_art_draft.png\" \\\n--prompt \"Intricate adult coloring page. A mystical owl perched on a crescent moon surrounded by floral mandala patterns, feathers drawn with fine repeating patterns, fine uniform black ink lines, pure white background, no shading, symmetrical balanced composition, closed shapes, high detail.\" \\\n--negative-prompt \"3d render, color, grayscale shading, gray shadows, sketch, charcoal, messy lines, blurry, text, watermark, bg color, cropped\" \\\n--width 640 --height 832 --steps 20 --cfg 5.5 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "adult_mandala",
+      "name": "Adult mandala coloring page (interior)",
+      "goal": "Generate a print-ready interior image: Adult mandala coloring page (interior).",
+      "mode": "interior",
+      "aspect_ratio": "1024:1024",
+      "match": {
+        "keywords_any": [
+          "mandala",
+          "radial",
+          "symmetrical pattern",
+          "meditation coloring",
+          "geometric coloring",
+          "lotus mandala"
+        ],
+        "genres_any": [
+          "mandala",
+          "coloring book",
+          "line art"
+        ],
+        "age_groups_any": [
+          "adult"
+        ],
+        "mode_hint_words": [
+          "page",
+          "interior",
+          "inside",
+          "pages to color",
+          "line art"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 640,
+          "steps": 20,
+          "cfg": 5.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1024,
+          "steps": 36,
+          "cfg": 5.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "4x_ultrasharp_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            4096
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 0,
+            "name": "DPM++ 2M Karras"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          5.0,
+          6.5
+        ],
+        "samplers_allowed": [
+          0,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 0,
+        "text_in_negative_prompt": "required",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Circular mandala coloring page, perfectly symmetrical radial design with layered petals, paisley, geometric lotus rings and fine dot borders, fine black linework, pure white background, centered with white margin all around, no shading.",
+        "scene_style": "Circular mandala coloring page, perfectly symmetrical radial design with layered petals, paisley, geometric lotus rings and fine dot borders, fine black linework, pure white background, centered with white margin all around, no shading.",
+        "text_clause_template": null,
+        "structure": [
+          "format (coloring page)",
+          "subject",
+          "line rules (weight, white bg, closed shapes)",
+          "composition/margins"
+        ],
+        "length_words": [
+          35,
+          90
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "color, shading, gradient, asymmetry, off-center, messy lines, blurry, text, watermark, background texture, cropped",
+        "never_include": [],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.69,
+        "settings": 0.72,
+        "sampler": 0.5,
+        "upscaler": 0.7,
+        "prompt": 0.8,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Asymmetry: CFG 6 and add 'exact radial symmetry, 12-fold'.",
+        "Fill artefacts: DPM++ 2M Karras [0] as alt sampler."
+      ],
+      "why": "Square canvas suits radial symmetry. DPM++ 2M Trailing yields stable repeating geometry. 4096x4096 output exceeds 8.5in square at 300dpi; downscale.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "no_text_requested",
+          "'text' and 'watermark' present in negative prompt",
+          "pure_white_background_requested"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x4096",
+          "grayscale_mean>=235",
+          "mid_gray_pixel_fraction<=0.08 (heuristic)",
+          "no_filled_black_regions>25%",
+          "all_outlines_closed_visual_check",
+          "no_text_or_signature"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_mandala.png\" \\\n--prompt \"Circular mandala coloring page, perfectly symmetrical radial design with layered petals, paisley, geometric lotus rings and fine dot borders, fine black linework, pure white background, centered with white margin all around, no shading.\" \\\n--negative-prompt \"color, shading, gradient, asymmetry, off-center, messy lines, blurry, text, watermark, background texture, cropped\" \\\n--width 1024 --height 1024 --steps 36 --cfg 5.5 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"4x_ultrasharp_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_adult_mandala_draft.png\" \\\n--prompt \"Circular mandala coloring page, perfectly symmetrical radial design with layered petals, paisley, geometric lotus rings and fine dot borders, fine black linework, pure white background, centered with white margin all around, no shading.\" \\\n--negative-prompt \"color, shading, gradient, asymmetry, off-center, messy lines, blurry, text, watermark, background texture, cropped\" \\\n--width 640 --height 640 --steps 20 --cfg 5.5 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "pencil_sketch",
+      "name": "Pencil / graphite artistic sketch book",
+      "goal": "Generate a print-ready cover image: Pencil / graphite artistic sketch book.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "pencil",
+          "graphite",
+          "charcoal sketch",
+          "sketchbook",
+          "cross-hatching",
+          "drawing book",
+          "art of sketching"
+        ],
+        "genres_any": [
+          "sketchbook",
+          "art book",
+          "pencil",
+          "drawing"
+        ],
+        "age_groups_any": [
+          "adult",
+          "13-17"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Book cover in the style of a graphite pencil sketch on cream paper. An old fisherman mending nets on a harbor pier at dawn, expressive cross-hatching, soft smudged shading, visible paper grain, loose construction lines, monochrome graphite tones. Title \"The Harbor Sketchbook\" in hand-lettered pencil capitals at the top; series name \"Studio Notes Series\" in small pencil letters under the title; publisher name \"Maple Lane Press\" in small pencil letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Book cover in the style of a graphite pencil sketch on cream paper. An old fisherman mending nets on a harbor pier at dawn, expressive cross-hatching, soft smudged shading, visible paper grain, loose construction lines, monochrome graphite tones.",
+        "text_clause_template": "Title \"The Harbor Sketchbook\" in hand-lettered pencil capitals at the top; series name \"Studio Notes Series\" in small pencil letters under the title; publisher name \"Maple Lane Press\" in small pencil letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "color, saturated, digital gloss, 3d render, cartoon, vector, photograph, clean outlines, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.64,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.72,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Too clean/digital: lower CFG 3.5, add 'rough, imperfect, hand-drawn'.",
+        "Colour leaks: add 'monochrome only' and CFG 4.5."
+      ],
+      "why": "Euler A Trailing preserves organic grain and loose strokes. CFG 4 keeps tone monochrome. 2x general upscaler keeps grain rather than smoothing.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_pencil_sketch.png\" \\\n--prompt \"Book cover in the style of a graphite pencil sketch on cream paper. An old fisherman mending nets on a harbor pier at dawn, expressive cross-hatching, soft smudged shading, visible paper grain, loose construction lines, monochrome graphite tones. Title \\\"The Harbor Sketchbook\\\" in hand-lettered pencil capitals at the top; series name \\\"Studio Notes Series\\\" in small pencil letters under the title; publisher name \\\"Maple Lane Press\\\" in small pencil letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"color, saturated, digital gloss, 3d render, cartoon, vector, photograph, clean outlines, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 36 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_pencil_sketch_draft.png\" \\\n--prompt \"Book cover in the style of a graphite pencil sketch on cream paper. An old fisherman mending nets on a harbor pier at dawn, expressive cross-hatching, soft smudged shading, visible paper grain, loose construction lines, monochrome graphite tones. Title \\\"The Harbor Sketchbook\\\" in hand-lettered pencil capitals at the top; series name \\\"Studio Notes Series\\\" in small pencil letters under the title; publisher name \\\"Maple Lane Press\\\" in small pencil letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"color, saturated, digital gloss, 3d render, cartoon, vector, photograph, clean outlines, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "watercolor",
+      "name": "Watercolor painting book",
+      "goal": "Generate a print-ready cover image: Watercolor painting book.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "watercolor",
+          "watercolour",
+          "wash",
+          "wet-on-wet",
+          "aquarelle",
+          "soft painting"
+        ],
+        "genres_any": [
+          "art book",
+          "watercolor",
+          "painting",
+          "storybook"
+        ],
+        "age_groups_any": [
+          "adult",
+          "13-17",
+          "6-8",
+          "9-12"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 34,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          28,
+          42
+        ],
+        "cfg": [
+          3.0,
+          4.5
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Watercolor painting book cover. A misty lavender field with a lone cottage at sunrise, wet-on-wet washes, soft bleeding edges, pigment blooms, visible cold-press paper texture, white paper left unpainted near the edges, soft peach and lavender palette. Title \"Lavender Mornings\" in delicate hand-painted serif letters in the sky; series name \"The Wash Series\" in small painted letters above the title; publisher name \"Maple Lane Press\" in small painted letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Watercolor painting book cover. A misty lavender field with a lone cottage at sunrise, wet-on-wet washes, soft bleeding edges, pigment blooms, visible cold-press paper texture, white paper left unpainted near the edges, soft peach and lavender palette.",
+        "text_clause_template": "Title \"Lavender Mornings\" in delicate hand-painted serif letters in the sky; series name \"The Wash Series\" in small painted letters above the title; publisher name \"Maple Lane Press\" in small painted letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "vector, hard outlines, digital gradient, oversharpened, plastic, photograph, airbrushed, muddy colors, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.64,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.72,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Text too rigid or garbled: CFG 3.8, steps 40.",
+        "Too sharp: skip upscaler or use x2plus only."
+      ],
+      "why": "Lower CFG 3.5 allows soft bleeding and pigment variation; higher CFG makes it look digital. Euler A Trailing keeps loose edges.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_watercolor.png\" \\\n--prompt \"Watercolor painting book cover. A misty lavender field with a lone cottage at sunrise, wet-on-wet washes, soft bleeding edges, pigment blooms, visible cold-press paper texture, white paper left unpainted near the edges, soft peach and lavender palette. Title \\\"Lavender Mornings\\\" in delicate hand-painted serif letters in the sky; series name \\\"The Wash Series\\\" in small painted letters above the title; publisher name \\\"Maple Lane Press\\\" in small painted letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"vector, hard outlines, digital gradient, oversharpened, plastic, photograph, airbrushed, muddy colors, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 34 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_watercolor_draft.png\" \\\n--prompt \"Watercolor painting book cover. A misty lavender field with a lone cottage at sunrise, wet-on-wet washes, soft bleeding edges, pigment blooms, visible cold-press paper texture, white paper left unpainted near the edges, soft peach and lavender palette. Title \\\"Lavender Mornings\\\" in delicate hand-painted serif letters in the sky; series name \\\"The Wash Series\\\" in small painted letters above the title; publisher name \\\"Maple Lane Press\\\" in small painted letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"vector, hard outlines, digital gradient, oversharpened, plastic, photograph, airbrushed, muddy colors, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "oil_painting",
+      "name": "Oil painting book",
+      "goal": "Generate a print-ready cover image: Oil painting book.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "oil painting",
+          "impasto",
+          "canvas",
+          "classical painting",
+          "palette knife",
+          "renaissance",
+          "baroque"
+        ],
+        "genres_any": [
+          "art book",
+          "oil painting",
+          "classical",
+          "fine art"
+        ],
+        "age_groups_any": [
+          "adult"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "remacri_4x_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            6144
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.0,
+          4.5
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Oil painting book cover. A stormy sea with a lone sailing ship at golden hour, thick impasto brushstrokes, palette-knife highlights, rich warm ochre and deep prussian blue, visible canvas weave, dramatic chiaroscuro, classical composition with calm sky area at the top. Title \"Storm Light\" in engraved gold serif capitals in the sky area; series name \"Masters of the Sea\" in small gold capitals above the title; publisher name \"Juniper & Ash Press\" in small gold capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Oil painting book cover. A stormy sea with a lone sailing ship at golden hour, thick impasto brushstrokes, palette-knife highlights, rich warm ochre and deep prussian blue, visible canvas weave, dramatic chiaroscuro, classical composition with calm sky area at the top.",
+        "text_clause_template": "Title \"Storm Light\" in engraved gold serif capitals in the sky area; series name \"Masters of the Sea\" in small gold capitals above the title; publisher name \"Juniper & Ash Press\" in small gold capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "flat vector, airbrushed, plastic, cgi, photograph, digital noise, oversaturated, cartoon, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.64,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.72,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Smooth/plastic: add 'visible brushstrokes, thick paint'.",
+        "Large file: swap to realesrgan_x2plus."
+      ],
+      "why": "CFG 3.5 keeps brushwork natural. Remacri 4x reconstructs canvas/paint texture; downscale 4096x6144 to target.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x6144",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_oil_painting.png\" \\\n--prompt \"Oil painting book cover. A stormy sea with a lone sailing ship at golden hour, thick impasto brushstrokes, palette-knife highlights, rich warm ochre and deep prussian blue, visible canvas weave, dramatic chiaroscuro, classical composition with calm sky area at the top. Title \\\"Storm Light\\\" in engraved gold serif capitals in the sky area; series name \\\"Masters of the Sea\\\" in small gold capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small gold capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"flat vector, airbrushed, plastic, cgi, photograph, digital noise, oversaturated, cartoon, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 36 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"remacri_4x_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_oil_painting_draft.png\" \\\n--prompt \"Oil painting book cover. A stormy sea with a lone sailing ship at golden hour, thick impasto brushstrokes, palette-knife highlights, rich warm ochre and deep prussian blue, visible canvas weave, dramatic chiaroscuro, classical composition with calm sky area at the top. Title \\\"Storm Light\\\" in engraved gold serif capitals in the sky area; series name \\\"Masters of the Sea\\\" in small gold capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small gold capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"flat vector, airbrushed, plastic, cgi, photograph, digital noise, oversaturated, cartoon, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    },
+    {
+      "id": "anime_2d",
+      "name": "2D anime illustration book / light novel",
+      "goal": "Generate a print-ready cover image: 2D anime illustration book / light novel.",
+      "mode": "cover",
+      "aspect_ratio": "832:1216",
+      "match": {
+        "keywords_any": [
+          "anime",
+          "light novel",
+          "manga",
+          "cel shaded",
+          "2d anime",
+          "visual novel",
+          "waifu",
+          "shonen",
+          "shojo"
+        ],
+        "genres_any": [
+          "anime",
+          "light novel",
+          "manga-style",
+          "YA"
+        ],
+        "age_groups_any": [
+          "13-17",
+          "adult"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 576,
+          "height": 832,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 832,
+          "height": 1216,
+          "steps": 32,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            3328,
+            4864
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          26,
+          40
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "2D anime key visual style book cover for a teen light novel. A girl with short silver hair and a school uniform holds a glowing paper lantern on a rooftop at twilight, sakura petals drifting, vivid cel shading, clean linework, detailed twilight sky gradient, dynamic low angle. Title \"The Lantern Girl\" in large stylized brush-script capitals at the top; series name \"Sakura Nights, Vol. 1\" in small clean letters above the title; publisher name \"Kitsune Press\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "2D anime key visual style book cover for a teen light novel. A girl with short silver hair and a school uniform holds a glowing paper lantern on a rooftop at twilight, sakura petals drifting, vivid cel shading, clean linework, detailed twilight sky gradient, dynamic low angle.",
+        "text_clause_template": "Title \"The Lantern Girl\" in large stylized brush-script capitals at the top; series name \"Sakura Nights, Vol. 1\" in small clean letters above the title; publisher name \"Kitsune Press\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "3d render, photorealistic, western comic style, bad anatomy, extra fingers, deformed hands, blurry, jpeg artifacts, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.66,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.7,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Hands wrong: hide hands (behind back, holding object) in prompt.",
+        "Too soft: alt upscaler 4x_ultrasharp."
+      ],
+      "why": "Anime 6B 4x suits cel shading and line clarity. 832x1216 base x4 = 3328x4864. DPM++ 2M Trailing for clean lines.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_3328x4864",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_anime_2d.png\" \\\n--prompt \"2D anime key visual style book cover for a teen light novel. A girl with short silver hair and a school uniform holds a glowing paper lantern on a rooftop at twilight, sakura petals drifting, vivid cel shading, clean linework, detailed twilight sky gradient, dynamic low angle. Title \\\"The Lantern Girl\\\" in large stylized brush-script capitals at the top; series name \\\"Sakura Nights, Vol. 1\\\" in small clean letters above the title; publisher name \\\"Kitsune Press\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"3d render, photorealistic, western comic style, bad anatomy, extra fingers, deformed hands, blurry, jpeg artifacts, misspelled text, garbled letters, extra words, watermark\" \\\n--width 832 --height 1216 --steps 32 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x4plus_anime_6b_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_anime_2d_draft.png\" \\\n--prompt \"2D anime key visual style book cover for a teen light novel. A girl with short silver hair and a school uniform holds a glowing paper lantern on a rooftop at twilight, sakura petals drifting, vivid cel shading, clean linework, detailed twilight sky gradient, dynamic low angle. Title \\\"The Lantern Girl\\\" in large stylized brush-script capitals at the top; series name \\\"Sakura Nights, Vol. 1\\\" in small clean letters above the title; publisher name \\\"Kitsune Press\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"3d render, photorealistic, western comic style, bad anatomy, extra fingers, deformed hands, blurry, jpeg artifacts, misspelled text, garbled letters, extra words, watermark\" \\\n--width 576 --height 832 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "anime_3d",
+      "name": "3D stylized / animated-film look illustration",
+      "goal": "Generate a print-ready cover image: 3D stylized / animated-film look illustration.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "3d anime",
+          "3d render",
+          "3d animated",
+          "pixar-like",
+          "cgi cartoon",
+          "clay render",
+          "3d character",
+          "stylized 3d"
+        ],
+        "genres_any": [
+          "3d illustration",
+          "animated",
+          "kids"
+        ],
+        "age_groups_any": [
+          "6-8",
+          "9-12",
+          "13-17"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 34,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          28,
+          42
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Stylized 3D animated feature-film look book cover. A cheerful young inventor girl with a goggle headband and a small round robot companion in a cozy workshop, soft global illumination, gentle subsurface scattering, rounded appealing character design, shallow depth of field, warm teal and orange palette. Title \"Zoe and the Gizmo\" in chunky 3D beveled letters at the top; series name \"Workshop Friends\" in small rounded letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Stylized 3D animated feature-film look book cover. A cheerful young inventor girl with a goggle headband and a small round robot companion in a cozy workshop, soft global illumination, gentle subsurface scattering, rounded appealing character design, shallow depth of field, warm teal and orange palette.",
+        "text_clause_template": "Title \"Zoe and the Gizmo\" in chunky 3D beveled letters at the top; series name \"Workshop Friends\" in small rounded letters above the title; publisher name \"Maple Lane Press\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "photorealistic skin pores, uncanny valley, flat 2d, line art, harsh noise, bad anatomy, extra fingers, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.65,
+        "settings": 0.68,
+        "sampler": 0.5,
+        "upscaler": 0.65,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Too realistic: add 'toy-like, exaggerated proportions'.",
+        "Flat look: add 'soft volumetric light'."
+      ],
+      "why": "General 2x upscaler preserves smooth shaded surfaces. Do not name studios or characters (IP). CFG 4 balances look and text.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_anime_3d.png\" \\\n--prompt \"Stylized 3D animated feature-film look book cover. A cheerful young inventor girl with a goggle headband and a small round robot companion in a cozy workshop, soft global illumination, gentle subsurface scattering, rounded appealing character design, shallow depth of field, warm teal and orange palette. Title \\\"Zoe and the Gizmo\\\" in chunky 3D beveled letters at the top; series name \\\"Workshop Friends\\\" in small rounded letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photorealistic skin pores, uncanny valley, flat 2d, line art, harsh noise, bad anatomy, extra fingers, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 34 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_anime_3d_draft.png\" \\\n--prompt \"Stylized 3D animated feature-film look book cover. A cheerful young inventor girl with a goggle headband and a small round robot companion in a cozy workshop, soft global illumination, gentle subsurface scattering, rounded appealing character design, shallow depth of field, warm teal and orange palette. Title \\\"Zoe and the Gizmo\\\" in chunky 3D beveled letters at the top; series name \\\"Workshop Friends\\\" in small rounded letters above the title; publisher name \\\"Maple Lane Press\\\" in small letters at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photorealistic skin pores, uncanny valley, flat 2d, line art, harsh noise, bad anatomy, extra fingers, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "digital_painting",
+      "name": "Digital painting / concept art (fantasy, sci-fi, YA)",
+      "goal": "Generate a print-ready cover image: Digital painting / concept art (fantasy, sci-fi, YA).",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "digital painting",
+          "digital art",
+          "concept art",
+          "fantasy",
+          "sci-fi",
+          "epic",
+          "cinematic illustration",
+          "matte painting"
+        ],
+        "genres_any": [
+          "fantasy",
+          "sci-fi",
+          "digital art",
+          "YA"
+        ],
+        "age_groups_any": [
+          "13-17",
+          "adult"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "4x_ultrasharp_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Epic digital painting fantasy book cover. A lone armored traveler stands on a cliff overlooking a floating-island kingdom at dawn, volumetric light rays, painterly brushwork, dramatic scale, rich color grading, cinematic composition with clear space at the top for the title. Title \"EMBERFALL\" in large metallic engraved capitals at the top; series name \"The Shattered Crown, Book 1\" in small capitals under the title; publisher name \"Raven Gate Publishing\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Epic digital painting fantasy book cover. A lone armored traveler stands on a cliff overlooking a floating-island kingdom at dawn, volumetric light rays, painterly brushwork, dramatic scale, rich color grading, cinematic composition with clear space at the top for the title.",
+        "text_clause_template": "Title \"EMBERFALL\" in large metallic engraved capitals at the top; series name \"The Shattered Crown, Book 1\" in small capitals under the title; publisher name \"Raven Gate Publishing\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "photograph, flat vector, cartoon, low detail, muddy, oversaturated, extra limbs, deformed hands, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.65,
+        "settings": 0.7,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Title lost in art: reserve 'dark calm sky area' behind text.",
+        "More texture: alt upscaler 4x_ultrasharp (downscale)."
+      ],
+      "why": "DPM++ 2M Trailing gives detailed, stable painterly output. Single-word title is the most reliable for stylised lettering.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_digital_painting.png\" \\\n--prompt \"Epic digital painting fantasy book cover. A lone armored traveler stands on a cliff overlooking a floating-island kingdom at dawn, volumetric light rays, painterly brushwork, dramatic scale, rich color grading, cinematic composition with clear space at the top for the title. Title \\\"EMBERFALL\\\" in large metallic engraved capitals at the top; series name \\\"The Shattered Crown, Book 1\\\" in small capitals under the title; publisher name \\\"Raven Gate Publishing\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photograph, flat vector, cartoon, low detail, muddy, oversaturated, extra limbs, deformed hands, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 36 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_digital_painting_draft.png\" \\\n--prompt \"Epic digital painting fantasy book cover. A lone armored traveler stands on a cliff overlooking a floating-island kingdom at dawn, volumetric light rays, painterly brushwork, dramatic scale, rich color grading, cinematic composition with clear space at the top for the title. Title \\\"EMBERFALL\\\" in large metallic engraved capitals at the top; series name \\\"The Shattered Crown, Book 1\\\" in small capitals under the title; publisher name \\\"Raven Gate Publishing\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photograph, flat vector, cartoon, low detail, muddy, oversaturated, extra limbs, deformed hands, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "photography",
+      "name": "Photography book / documentary / travel / nature",
+      "goal": "Generate a print-ready cover image: Photography book / documentary / travel / nature.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "photography",
+          "photo book",
+          "landscape photo",
+          "travel photo",
+          "nature photography",
+          "documentary",
+          "35mm",
+          "film photo"
+        ],
+        "genres_any": [
+          "photography",
+          "travel",
+          "nature",
+          "documentary"
+        ],
+        "age_groups_any": [
+          "adult",
+          "13-17"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 36,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 17,
+            "name": "UniPC Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          30,
+          44
+        ],
+        "cfg": [
+          3.0,
+          4.5
+        ],
+        "samplers_allowed": [
+          15,
+          17
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Photographic book cover. A misty alpine lake at sunrise, shot on a full-frame camera with a 35mm lens, natural light, soft fog, true-to-life color, fine film grain, calm sky area at the top for the title. Title \"Silent Peaks\" in thin elegant white sans-serif capitals in the sky; series name \"Wild Places Series\" in small white capitals above the title; publisher name \"Juniper & Ash Press\" in small white capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Photographic book cover. A misty alpine lake at sunrise, shot on a full-frame camera with a 35mm lens, natural light, soft fog, true-to-life color, fine film grain, calm sky area at the top for the title.",
+        "text_clause_template": "Title \"Silent Peaks\" in thin elegant white sans-serif capitals in the sky; series name \"Wild Places Series\" in small white capitals above the title; publisher name \"Juniper & Ash Press\" in small white capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "illustration, painting, cgi, oversaturated hdr, plastic, heavy vignette, oversharpened, lens flare, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.65,
+        "settings": 0.7,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Too CGI: add film stock, 'natural imperfections'.",
+        "Soft: remacri upscaler."
+      ],
+      "why": "CFG 3.5 avoids over-contrasty HDR look. Camera/lens words anchor photo realism. Light, thin lettering fits photo covers.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_photography.png\" \\\n--prompt \"Photographic book cover. A misty alpine lake at sunrise, shot on a full-frame camera with a 35mm lens, natural light, soft fog, true-to-life color, fine film grain, calm sky area at the top for the title. Title \\\"Silent Peaks\\\" in thin elegant white sans-serif capitals in the sky; series name \\\"Wild Places Series\\\" in small white capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small white capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"illustration, painting, cgi, oversaturated hdr, plastic, heavy vignette, oversharpened, lens flare, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 36 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_photography_draft.png\" \\\n--prompt \"Photographic book cover. A misty alpine lake at sunrise, shot on a full-frame camera with a 35mm lens, natural light, soft fog, true-to-life color, fine film grain, calm sky area at the top for the title. Title \\\"Silent Peaks\\\" in thin elegant white sans-serif capitals in the sky; series name \\\"Wild Places Series\\\" in small white capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small white capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"illustration, painting, cgi, oversaturated hdr, plastic, heavy vignette, oversharpened, lens flare, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "photorealism",
+      "name": "Photorealism / hyperreal portraits and still life",
+      "goal": "Generate a print-ready cover image: Photorealism / hyperreal portraits and still life.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "photorealistic",
+          "photorealism",
+          "hyperrealistic",
+          "hyperreal",
+          "realistic portrait",
+          "memoir cover",
+          "biography",
+          "lifelike"
+        ],
+        "genres_any": [
+          "photorealism",
+          "portrait",
+          "still life",
+          "biography",
+          "memoir"
+        ],
+        "age_groups_any": [
+          "adult"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 40,
+          "cfg": 3.5,
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x4plus_f16.ckpt",
+            "scale": 4,
+            "config_keys": {
+              "upscaler": "realesrgan_x4plus_f16.ckpt",
+              "upscalerScaleFactor": 4
+            }
+          },
+          "output_px": [
+            4096,
+            6144
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 17,
+            "name": "UniPC Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "remacri_4x_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          34,
+          48
+        ],
+        "cfg": [
+          3.0,
+          4.5
+        ],
+        "samplers_allowed": [
+          15,
+          17
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": true,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Hyperrealistic photoreal cover photograph. A weathered elderly potter with clay-dusted hands at a wheel, natural window light, visible skin texture and fine hair, 85mm portrait lens, shallow depth of field, muted earthy tones, clear dark wall area at the top for the title. Title \"Hands of Clay\" in refined cream serif capitals at the top; series name \"Lives Well Lived\" in small cream capitals above the title; publisher name \"North Harbor Books\" in small cream capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Hyperrealistic photoreal cover photograph. A weathered elderly potter with clay-dusted hands at a wheel, natural window light, visible skin texture and fine hair, 85mm portrait lens, shallow depth of field, muted earthy tones, clear dark wall area at the top for the title.",
+        "text_clause_template": "Title \"Hands of Clay\" in refined cream serif capitals at the top; series name \"Lives Well Lived\" in small cream capitals above the title; publisher name \"North Harbor Books\" in small cream capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "plastic skin, airbrushed, cartoon, illustration, uncanny, extra fingers, deformed hands, oversmoothed, beauty filter, misspelled text, garbled letters, extra words, watermark",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.62,
+        "settings": 0.65,
+        "sampler": 0.5,
+        "upscaler": 0.6,
+        "prompt": 0.72,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Waxy skin: CFG 3.0, add 'pores, natural imperfections'.",
+        "4x file large: downscale or use x2plus."
+      ],
+      "why": "Steps 40 and CFG 3.5 favour natural skin and fine texture. Use only fictional people (no real named persons).",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_4096x6144",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_photorealism.png\" \\\n--prompt \"Hyperrealistic photoreal cover photograph. A weathered elderly potter with clay-dusted hands at a wheel, natural window light, visible skin texture and fine hair, 85mm portrait lens, shallow depth of field, muted earthy tones, clear dark wall area at the top for the title. Title \\\"Hands of Clay\\\" in refined cream serif capitals at the top; series name \\\"Lives Well Lived\\\" in small cream capitals above the title; publisher name \\\"North Harbor Books\\\" in small cream capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"plastic skin, airbrushed, cartoon, illustration, uncanny, extra fingers, deformed hands, oversmoothed, beauty filter, misspelled text, garbled letters, extra words, watermark\" \\\n--width 1024 --height 1536 --steps 40 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 15,\n\"upscaler\": \"realesrgan_x4plus_f16.ckpt\",\n\"upscalerScaleFactor\": 4\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_photorealism_draft.png\" \\\n--prompt \"Hyperrealistic photoreal cover photograph. A weathered elderly potter with clay-dusted hands at a wheel, natural window light, visible skin texture and fine hair, 85mm portrait lens, shallow depth of field, muted earthy tones, clear dark wall area at the top for the title. Title \\\"Hands of Clay\\\" in refined cream serif capitals at the top; series name \\\"Lives Well Lived\\\" in small cream capitals above the title; publisher name \\\"North Harbor Books\\\" in small cream capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"plastic skin, airbrushed, cartoon, illustration, uncanny, extra fingers, deformed hands, oversmoothed, beauty filter, misspelled text, garbled letters, extra words, watermark\" \\\n--width 640 --height 960 --steps 20 --cfg 3.5 \\\n--config-json '{\n\"sampler\": 15\n}'"
+    },
+    {
+      "id": "editorial_illustration",
+      "name": "Illustration book / editorial / risograph style",
+      "goal": "Generate a print-ready cover image: Illustration book / editorial / risograph style.",
+      "mode": "cover",
+      "aspect_ratio": "1024:1536",
+      "match": {
+        "keywords_any": [
+          "illustration book",
+          "editorial illustration",
+          "risograph",
+          "gouache",
+          "ink and wash",
+          "limited palette",
+          "poster style",
+          "flat illustration"
+        ],
+        "genres_any": [
+          "illustration book",
+          "editorial",
+          "graphic",
+          "art book"
+        ],
+        "age_groups_any": [
+          "adult",
+          "13-17",
+          "9-12"
+        ],
+        "mode_hint_words": [
+          "cover",
+          "title",
+          "series",
+          "publisher"
+        ]
+      },
+      "candidate_settings": [
+        {
+          "tier": "draft",
+          "purpose": "prompt/composition check",
+          "width": 640,
+          "height": 960,
+          "steps": 20,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": null
+        },
+        {
+          "tier": "final",
+          "recommended": true,
+          "width": 1024,
+          "height": 1536,
+          "steps": 34,
+          "cfg": 4.0,
+          "sampler": {
+            "id": 10,
+            "name": "Euler A Trailing"
+          },
+          "upscaler": {
+            "file": "realesrgan_x2plus_f16.ckpt",
+            "scale": 2,
+            "config_keys": {
+              "upscaler": "realesrgan_x2plus_f16.ckpt",
+              "upscalerScaleFactor": 2
+            }
+          },
+          "output_px": [
+            2048,
+            3072
+          ]
+        },
+        {
+          "tier": "alt_sampler",
+          "same_as": "final",
+          "sampler": {
+            "id": 15,
+            "name": "DPM++ 2M Trailing"
+          },
+          "use_when": "final output shows sampler-specific artefacts or user wants a different look"
+        },
+        {
+          "tier": "alt_upscaler",
+          "same_as": "final",
+          "upscaler": {
+            "file": "realesrgan_x4plus_anime_6b_f16.ckpt",
+            "scale": 4
+          },
+          "use_when": "edges too soft/hard or texture wrong"
+        }
+      ],
+      "tuning_ranges": {
+        "steps": [
+          28,
+          42
+        ],
+        "cfg": [
+          3.5,
+          5.0
+        ],
+        "samplers_allowed": [
+          10,
+          15
+        ]
+      },
+      "constraints": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width_height_multiple_of": 64,
+        "max_text_elements": 3,
+        "text_in_negative_prompt": "forbidden",
+        "downscale_after_4x_upscale": false,
+        "print_note": "Front-cover image only; spine/back/bleed assembled in layout software."
+      },
+      "prompt": {
+        "example": "Editorial book illustration cover in ink and gouache with a limited four-color risograph palette of teal, coral, mustard and cream. A surreal giant paper boat carries a tiny city across the night sky, bold simple shapes, subtle paper grain, flat color layers with slight misregistration. Title \"Paper Skies\" in bold hand-cut sans-serif capitals at the top; series name \"The Atlas of Dreams\" in small capitals above the title; publisher name \"Juniper & Ash Press\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "scene_style": "Editorial book illustration cover in ink and gouache with a limited four-color risograph palette of teal, coral, mustard and cream. A surreal giant paper boat carries a tiny city across the night sky, bold simple shapes, subtle paper grain, flat color layers with slight misregistration.",
+        "text_clause_template": "Title \"Paper Skies\" in bold hand-cut sans-serif capitals at the top; series name \"The Atlas of Dreams\" in small capitals above the title; publisher name \"Juniper & Ash Press\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.",
+        "structure": [
+          "medium/format",
+          "subject+action",
+          "composition+text space",
+          "palette/lighting/texture",
+          "text clause"
+        ],
+        "length_words": [
+          60,
+          150
+        ]
+      },
+      "negative_prompt": {
+        "recommended": "photorealistic, 3d render, glossy gradient, cluttered, generic stock art, extra colors, misspelled text, garbled letters, extra words, watermark, blurry",
+        "never_include": [
+          "text",
+          "letters",
+          "typography",
+          "words",
+          "title"
+        ],
+        "rule": "Negate only things absent from the positive prompt; <=25 terms."
+      },
+      "confidence": {
+        "overall": 0.67,
+        "settings": 0.7,
+        "sampler": 0.55,
+        "upscaler": 0.65,
+        "prompt": 0.75,
+        "basis": "Steps/CFG from community Qwen-Image-2512 ranges; sampler/upscaler genre mapping is heuristic. A/B test 3 seeds."
+      },
+      "tips": [
+        "Too many colours: repeat palette in prompt end.",
+        "Too clean: add 'misregistered print, grain'."
+      ],
+      "why": "Named limited palette controls colour; Euler A Trailing keeps hand-made feel. CFG 4 holds palette and text.",
+      "validation": {
+        "pre_run": [
+          "intent_resolved_to_this_profile",
+          "aspect_ratio_matches_target_trim",
+          "text_elements<=3",
+          "each_text_string_in_double_quotes_in_prompt",
+          "title<=6_words",
+          "no_real_brand_character_or_living_artist_names",
+          "'text' NOT in negative prompt"
+        ],
+        "post_run": [
+          "output_exists",
+          "output_px_equals_2048x3072",
+          "ocr_text_matches_title_series_publisher_exact",
+          "no_extra_or_duplicate_text",
+          "no_text_cropped_at_edges",
+          "title_contrast_legible_at_thumbnail_200px"
+        ],
+        "pass_rule": "all post_run checks pass on >=1 of 4 seeds",
+        "max_retries": 3
+      },
+      "example_command_final": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_editorial_illustration.png\" \\\n--prompt \"Editorial book illustration cover in ink and gouache with a limited four-color risograph palette of teal, coral, mustard and cream. A surreal giant paper boat carries a tiny city across the night sky, bold simple shapes, subtle paper grain, flat color layers with slight misregistration. Title \\\"Paper Skies\\\" in bold hand-cut sans-serif capitals at the top; series name \\\"The Atlas of Dreams\\\" in small capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photorealistic, 3d render, glossy gradient, cluttered, generic stock art, extra colors, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 1024 --height 1536 --steps 34 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10,\n\"upscaler\": \"realesrgan_x2plus_f16.ckpt\",\n\"upscalerScaleFactor\": 2\n}'",
+      "example_command_draft": "draw-things-cli generate \\\n--model qwen_image_2512_bf16_q8p.ckpt \\\n--output \"$HOME/Dev/tmp/qwen_editorial_illustration_draft.png\" \\\n--prompt \"Editorial book illustration cover in ink and gouache with a limited four-color risograph palette of teal, coral, mustard and cream. A surreal giant paper boat carries a tiny city across the night sky, bold simple shapes, subtle paper grain, flat color layers with slight misregistration. Title \\\"Paper Skies\\\" in bold hand-cut sans-serif capitals at the top; series name \\\"The Atlas of Dreams\\\" in small capitals above the title; publisher name \\\"Juniper & Ash Press\\\" in small capitals at the bottom center. All text spelled exactly as written, sharp and legible.\" \\\n--negative-prompt \"photorealistic, 3d render, glossy gradient, cluttered, generic stock art, extra colors, misspelled text, garbled letters, extra words, watermark, blurry\" \\\n--width 640 --height 960 --steps 20 --cfg 4.0 \\\n--config-json '{\n\"sampler\": 10\n}'"
+    }
+  ],
+  "selection_rules": {
+    "algorithm": [
+      "1. Extract: mode (cover vs interior page), medium/style, genre, age group, text strings, size/print target, speed vs quality.",
+      "2. mode: words 'page/interior/inside/pages to colour' => interior; 'cover/title/series/publisher' or any text request => cover. Interior profiles never contain text.",
+      "3. Style beats genre: explicit medium (watercolor, oil, pencil, anime, photo) selects that profile; genre/age then tunes prompt and negatives.",
+      "4. Score each profile: +3 style keyword, +2 genre match, +2 age match, +1 mode hint; pick highest, list runner-up.",
+      "5. Apply age_modifiers to prompt and negative; keep within profile.tuning_ranges.",
+      "6. If user wants speed/preview => draft tier; if print/final => final tier incl. upscaler; if low memory => draft dims, no upscaler.",
+      "7. Emit command from example_command_final with user's text substituted; run validation.pre_run."
+    ],
+    "tie_breakers": [
+      "prefer higher confidence.overall",
+      "prefer profile with matching age group",
+      "prefer cover over interior if text requested"
+    ],
+    "conflicts": [
+      {
+        "if": "coloring book + wants title text",
+        "then": "use kids_coloring_cover or adult_coloring_cover; interior pages separately"
+      },
+      {
+        "if": "photorealistic + children's book",
+        "then": "use kids_storybook_6_8 and warn photoreal is unusual for ages <9"
+      },
+      {
+        "if": "anime + adult coloring",
+        "then": "use adult_coloring_line_art with anime subject in prompt"
+      },
+      {
+        "if": "more than 3 text elements or title>6 words",
+        "then": "shorten or move extra text to layout software"
+      },
+      {
+        "if": "real brand, character, person or living-artist style requested",
+        "then": "decline that element; substitute original description"
+      }
+    ],
+    "ask_user_only_when": [
+      "overall confidence <0.6 and mode ambiguous",
+      "no title/series/publisher text given for a cover",
+      "print size unknown and user wants print-ready"
+    ],
+    "default_when_unknown": {
+      "profile": "editorial_illustration",
+      "mode": "cover",
+      "age": "adult"
+    }
+  },
+  "validation_global": {
+    "ocr": "If tesseract is available: compare recognised text to requested strings (case-insensitive, edit distance <=1 per string).",
+    "line_art_check": "Convert to grayscale; require mean>=235 and mid-gray fraction (30-220) <=8%.",
+    "visual_checks": [
+      "hands/fingers",
+      "faces",
+      "text edge crop",
+      "stray symbols"
+    ],
+    "iteration_policy": "Up to 3 retries: new seed -> alt sampler -> steps+6/cfg-0.5 (text) or cfg+0.5 (line art)."
+  },
+  "failure_playbook": [
+    {
+      "symptom": "garbled/misspelled text",
+      "actions": [
+        "shorten strings",
+        "cfg -0.5",
+        "steps +6",
+        "move text to simple area",
+        "new seed"
+      ]
+    },
+    {
+      "symptom": "blurry/soft",
+      "actions": [
+        "steps +6",
+        "switch sampler 10->15",
+        "alt upscaler 4x_ultrasharp",
+        "raise base resolution"
+      ]
+    },
+    {
+      "symptom": "gray fills in line art",
+      "actions": [
+        "cfg +0.5",
+        "add 'solid pure black ink lines only'",
+        "add color/shading/gray to negative"
+      ]
+    },
+    {
+      "symptom": "over-smooth plastic look",
+      "actions": [
+        "cfg -0.5",
+        "add texture words",
+        "remacri or x2plus upscaler"
+      ]
+    },
+    {
+      "symptom": "blue/black/noise image",
+      "actions": [
+        "new seed",
+        "reword prompt",
+        "alt sampler",
+        "lower resolution",
+        "ref draw-things-community #136"
+      ]
+    },
+    {
+      "symptom": "wrong colour/medium",
+      "actions": [
+        "put medium first in prompt",
+        "strengthen negative for wrong medium",
+        "cfg +0.5"
+      ]
+    }
+  ]
+}

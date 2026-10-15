@@ -67,7 +67,7 @@ Add `"seed": 12345` inside `--config-json` to lock. Generate 4 candidates per id
 
 | File | Type | Best for | Avoid for | Typical |
 |---|---|---|---|---|
-| `flux_2_klein_4b_f16.ckpt` | Klein 4B flow model (assumed distilled) | Fast drafts, flat vector, text-in-image, photoreal (non-child), simple kids art | Dense line art, painterly texture, 4+ subjects, hands, any SDXL LoRA | 4-8 steps, CFG 1.0, sampler 10 |
+| `flux_2_klein_4b_q8p.ckpt` | Klein 4B flow model (assumed distilled) | Fast drafts, flat vector, text-in-image, photoreal (non-child), simple kids art | Dense line art, painterly texture, 4+ subjects, hands, any SDXL LoRA | 4-8 steps, CFG 1.0, sampler 10 |
 | `juggernaut_xl_v9_f16.ckpt` | SDXL, photoreal-leaning all-rounder | Photo, sketch, line art base, 3D, oil | Anime | 30-35 steps, CFG 4-6, sampler 0/4 |
 | `juggernaut_xl_x_f16.ckpt` | SDXL, newer Juggernaut, better adherence/detail | Complex scenes, intricate line art, detailed photo/painting | Anime | 30-36 steps, CFG 3.5-6, sampler 0/4 |
 | `colorfulxl_v6.0_f16.ckpt` | SDXL, vivid saturated illustration | Kids books, digital painting, fantasy, bright 3D | Muted photoreal, B/W line art (color leaks) | 28-32 steps, CFG 5-7, sampler 0 |
@@ -77,16 +77,16 @@ Add `"seed": 12345` inside `--config-json` to lock. Generate 4 candidates per id
 
 | File | Effect | Trigger (verify) | Weight range | Notes |
 |---|---|---|---|---|
-| `StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors` | Children's picture-book look | `KidsRedmAF, kids book illustration` | 0.5-0.95 | Strongest on colorfulxl. Lower to blend with oil/3D. |
-| `ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors` | Black-on-white coloring pages | `ColoringBookAF, Coloring Book` | 0.8-1.0 | Pair with strong color/shading negatives. |
-| `LineAniRedmondV2-Lineart-LineAniAF.safetensors` | Clean line art / ink | `LineAniAF, lineart` | 0.3-0.8 | Secondary LoRA for coloring/sketch/anime lineart. |
-| `sketch-style-xl.safetensors` | Pencil / ink sketch | `sketch style` | 0.7-0.9 | Add `monochrome` + paper words. |
-| `add-detail-xl.safetensors` | Detail slider | none | -1.0 to +1.0 | **Negative = simpler** (toddler art). Positive = intricate. |
-| `pixar-style.safetensors` | Rounded animated-film 3D characters | per LoRA card | 0.6-0.8 | Describe qualities in the prompt, do not name studios/franchises. |
-| `3d_render_style_xl.safetensors` | Soft 3D render material look | per LoRA card | 0.4-0.8 | Stack under pixar-style at 0.3-0.5. |
-| `AnalogRedmondV2-Analog-AnalogRedmAF.safetensors` | Analog film photo look | `AnalogRedmAF, analog style photo` | 0.5-0.8 | Photo only. |
-| `oil-painting-slider.safetensors` | Oil paint slider | none | 0.7-1.2 | Realistic-leaning oil. Negative reverses. |
-| `epic-oil-painting-slider.safetensors` | Dramatic impasto | per LoRA card | 0.8-1.0 | Do not stack with oil-painting-slider above 1.0 combined. |
+| `redmondv2_kids_storybook_lora_f16.ckpt` | Children's picture-book look | `KidsRedmAF, kids book illustration` | 0.5-0.95 | Strongest on colorfulxl. Lower to blend with oil/3D. |
+| `redmond_coloringbook_lora_f16.ckpt` | Black-on-white coloring pages | `ColoringBookAF, Coloring Book` | 0.8-1.0 | Pair with strong color/shading negatives. |
+| `redmondv2_lineart_lineani_lora_f16.ckpt` | Clean line art / ink | `LineAniAF, lineart` | 0.3-0.8 | Secondary LoRA for coloring/sketch/anime lineart. |
+| `sketch_style_lora_f16.ckpt` | Pencil / ink sketch | `sketch style` | 0.7-0.9 | Add `monochrome` + paper words. |
+| `add_detail_xl_lora_f16.ckpt` | Detail slider | none | -1.0 to +1.0 | **Negative = simpler** (toddler art). Positive = intricate. |
+| `pixar_style_lora_f16.ckpt` | Rounded animated-film 3D characters | per LoRA card | 0.6-0.8 | Describe qualities in the prompt, do not name studios/franchises. |
+| `3d_render_style_xl_lora_f16.ckpt` | Soft 3D render material look | per LoRA card | 0.4-0.8 | Stack under pixar-style at 0.3-0.5. |
+| `redmondv2_analog_lora_f16.ckpt` | Analog film photo look | `AnalogRedmAF, analog style photo` | 0.5-0.8 | Photo only. |
+| `oil_painting_slider_lora_f16.ckpt` | Oil paint slider | none | 0.7-1.2 | Realistic-leaning oil. Negative reverses. |
+| `oil_painting_slider_epic_lora_f16.ckpt` | Dramatic impasto | per LoRA card | 0.8-1.0 | Do not stack with oil-painting-slider above 1.0 combined. |
 
 Stacking rule: sum of style-LoRA weights (excluding add-detail) <= ~1.5. More than 3 LoRAs raises artifact risk.
 
@@ -94,12 +94,14 @@ Stacking rule: sum of style-LoRA weights (excluding add-detail) <= ~1.5. More th
 
 | File | Short | Character | Use for |
 |---|---|---|---|
-| `4x_foolhardy_Remacri_ExtraSmoother.safetensors` | Remacri | Smooth, painterly, forgiving | Painted illustration, oil, 3D, portraits |
-| `4x_NMKD-Superscale-SP_178000_G.safetensors` | NMKD | Clean edges, low halo | Line art, coloring pages, mixed content |
-| `4x-UltraSharpV2.safetensors` | UltraSharpV2 | Crisp, high micro-contrast (can halo) | Detailed photo, mandalas, hatching, product |
-| `RealESRGAN_x4plus_anime_6B.safetensors` | ESRGAN-anime | Flat color, solid black lines | Anime, flat vector, kids coloring, cartoon |
-| `RealESRGAN_x4plus.safetensors` | ESRGAN | General photo, keeps grain | Photo, analog film |
-| `SwinIR-L_x4_PSNR.safetensors` | SwinIR-L | Faithful, no hallucination, slightly soft | Pencil/ink sketch, when fidelity > sharpness |
+| `4x_foolhardy_remacri_extrasmoother_f16.ckpt` | Remacri | Smooth, painterly, forgiving | Painted illustration, oil, 3D, portraits |
+| `4x_nmkd_superscale_sp_178000_g_f16.ckpt` | NMKD | Clean edges, low halo | Line art, coloring pages, mixed content |
+| `4x_ultrasharp_f16.ckpt` | UltraSharpV2 | Crisp, high micro-contrast (can halo) | Detailed photo, mandalas, hatching, product |
+| `realesrgan_x4plus_anime_6b_f16.ckpt` | ESRGAN-anime | Flat color, solid black lines | Anime, flat vector, kids coloring, cartoon |
+| `realesrgan_x4plus_f16.ckpt` | ESRGAN | General photo, keeps grain | Photo, analog film |
+| `SwinIR-L_x4_PSNR.ckpt` | SwinIR-L | Faithful, no hallucination, slightly soft | Pencil/ink sketch, when fidelity > sharpness |
+
+`SwinIR-L_x4_PSNR` is not compatible, so we will use `4x_nmkd_superscale_sp_178000_g_f16.ckpt`
 
 ---
 
@@ -119,8 +121,8 @@ Stacking rule: sum of style-LoRA weights (excluding add-detail) <= ~1.5. More th
 | ADC-B | Adult mandala | teen, adult | juggernaut_xl_v9 | ColoringBook 0.85, add-detail 1.0 | 1024x1024 | 32 | 7.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | UltraSharpV2 |
 | ADC-C | Adult mandala (subject) | teen, adult | juggernaut_xl_x | ColoringBook 0.8, LineAni 0.35, add-detail 0.9 | 1024x1024 | 30 | 6.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | NMKD |
 | SKT-A | Pencil/graphite sketch | teen, adult | juggernaut_xl_v9 | sketch-style 0.85, add-detail 0.3 | 896x1152 | 30 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | UltraSharpV2 |
-| SKT-B | Ink/travel sketch | teen, adult | juggernaut_xl_x | sketch-style 0.7, LineAni 0.5 | 1216x832 | 30 | 5.5 | Euler A [1] | Euler A Trailing [10] | SwinIR-L |
-| SKT-C | Simple pencil drawing | 8-10 | juggernaut_xl_v9 | sketch-style 0.7, add-detail -0.3 | 1024x1024 | 28 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | SwinIR-L |
+| SKT-B | Ink/travel sketch | teen, adult | juggernaut_xl_x | sketch-style 0.7, LineAni 0.5 | 1216x832 | 30 | 5.5 | Euler A [1] | Euler A Trailing [10] | NMKD |
+| SKT-C | Simple pencil drawing | 8-10 | juggernaut_xl_v9 | sketch-style 0.7, add-detail -0.3 | 1024x1024 | 28 | 5.0 | DPM++ 2M Karras [0] | DPM++ 2M AYS [12] | NMKD |
 | ANI-A | 2D anime chibi/mascot | 5-10 | animagine_xl_v3.1 | none | 1024x1024 | 28 | 6.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
 | ANI-B | 2D anime illustration (SFW) | teen, adult | animagine_xl_v3.1 | add-detail 0.5 | 832x1216 | 28 | 7.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
 | ANI-C | Anime line art (coloring) | teen, adult | animagine_xl_v3.1 | LineAni 0.8, ColoringBook 0.4 | 832x1216 | 28 | 6.0 | Euler A [1] | Euler A Trailing [10] | ESRGAN-anime |
@@ -156,10 +158,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.9, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -0.6, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -0.6, "mode": "all"}
   ]
 }'
 ```
@@ -177,9 +179,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.85, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.85, "mode": "all"}
   ]
 }'
 ```
@@ -197,10 +199,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
@@ -210,14 +212,14 @@ Why: juggernaut_x adds depth; lower Storybook weight keeps detail; SDE sampler f
 Match: quick draft, flat vector, bold outlines, flashcards, app art. No negative prompt, no LoRA.
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output "$HOME/Dev/tmp/klein_illustration_2-7_cat_ball.png" \
 --prompt "A round orange cat balancing on a beach ball, joyful with a wide smile, chunky flat vector children's illustration with bold thick outlines and simple rounded shapes, bright cheerful palette, a sunny garden with two daisies and a red bucket, soft even light, the cat is color #E8913A and the ball is color #3FA7D6, single centred subject with generous space around it" \
 --width 1024 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
@@ -235,10 +237,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 1.0, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -1.0, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -1.0, "mode": "all"}
   ]
 }'
 ```
@@ -256,9 +258,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.95, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.95, "mode": "all"}
   ]
 }'
 ```
@@ -276,10 +278,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.9, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
   ]
 }'
 ```
@@ -289,14 +291,14 @@ Why: positive add-detail + "decorative patterns" = pattern-rich areas older kids
 Match: instant coloring-page draft. Expect occasional broken outlines; if so use COL-A.
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output "$HOME/Dev/tmp/klein_coloring_2-4_bear.png" \
 --prompt "A big friendly bear waving hello, a coloring book page with thick uniform black outlines, every shape fully closed, flat pure white background, large open areas left blank ready for coloring, simple clear shapes, even flat lighting, single centred subject, whole bear inside the frame, wide white margin around the edges" \
 --width 1216 --height 1600 --steps 8 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
@@ -314,11 +316,11 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.4, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.9, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.4, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
   ]
 }'
 ```
@@ -336,10 +338,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 1.0, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
   ]
 }'
 ```
@@ -357,11 +359,11 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_NMKD-Superscale-SP_178000_G.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.35, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.9, "mode": "all"}
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.35, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.9, "mode": "all"}
   ]
 }'
 ```
@@ -379,10 +381,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.85, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.3, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.3, "mode": "all"}
   ]
 }'
 ```
@@ -400,10 +402,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "SwinIR-L_x4_PSNR.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
@@ -421,10 +423,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "SwinIR-L_x4_PSNR.safetensors",
+"upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
-    {"file": "sketch-style-xl.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": -0.3, "mode": "all"}
+    {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": -0.3, "mode": "all"}
   ]
 }'
 ```
@@ -442,7 +444,7 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
@@ -460,9 +462,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
@@ -480,10 +482,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 1,
 "schedule_sampler": 10,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
-    {"file": "LineAniRedmondV2-Lineart-LineAniAF.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
@@ -501,10 +503,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "pixar-style.safetensors", "weight": 0.8, "mode": "all"},
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "pixar_style_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
@@ -522,11 +524,11 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "pixar-style.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.5, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "pixar_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
@@ -544,9 +546,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "3d_render_style_xl.safetensors", "weight": 0.8, "mode": "all"}
+    {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
   ]
 }'
 ```
@@ -556,14 +558,14 @@ Why: no character LoRA (object, not character); single LoRA at 0.8 keeps materia
 Match: sticker, icon, logo-like illustration, flat vector, app art, set of assets.
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output "$HOME/Dev/tmp/klein_digital_vector_rocket.png" \
 --prompt "A flat vector sticker of a smiling rocket ship launching between two stars, bold clean shapes with a thick white sticker border, limited bright palette, the rocket body is color #F4F1DE and the fins are color #E07A5F, soft even light, centred on a plain pale background" \
 --width 1024 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus_anime_6B.safetensors",
+"upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
 ```
@@ -581,9 +583,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.6, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
   ]
 }'
 ```
@@ -601,9 +603,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.5, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
   ]
 }'
 ```
@@ -621,9 +623,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.4, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
   ]
 }'
 ```
@@ -641,10 +643,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
-    {"file": "AnalogRedmondV2-Analog-AnalogRedmAF.safetensors", "weight": 0.7, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.2, "mode": "all"}
+    {"file": "redmondv2_analog_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.2, "mode": "all"}
   ]
 }'
 ```
@@ -662,9 +664,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x-UltraSharpV2.safetensors",
+"upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
-    {"file": "add-detail-xl.safetensors", "weight": 0.8, "mode": "all"}
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
   ]
 }'
 ```
@@ -674,14 +676,14 @@ Why: high add-detail + UltraSharpV2 = surface micro-texture; "logo" in negative 
 Match: quick photoreal draft, candid scene, adult subjects, text-in-scene. No negative prompt.
 ```bash
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output "$HOME/Dev/tmp/klein_photo_baker_dawn.png" \
 --prompt "A candid street photograph of an elderly baker sliding loaves from a wooden oven at dawn, warm light spilling from the doorway, shot on a 50mm lens at f/2, shallow depth of field, natural film-like colors, flour dust in the air" \
 --width 1360 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
 "schedule_sampler": 15,
-"upscaler": "RealESRGAN_x4plus.safetensors",
+"upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": []
 }'
 ```
@@ -699,10 +701,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "oil-painting-slider.safetensors", "weight": 1.0, "mode": "all"},
-    {"file": "add-detail-xl.safetensors", "weight": 0.3, "mode": "all"}
+    {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
+    {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.3, "mode": "all"}
   ]
 }'
 ```
@@ -720,9 +722,9 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 4,
 "schedule_sampler": 14,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "epic-oil-painting-slider.safetensors", "weight": 1.0, "mode": "all"}
+    {"file": "oil_painting_slider_epic_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
   ]
 }'
 ```
@@ -740,10 +742,10 @@ draw-things-cli generate \
 --config-json '{
 "sampler": 0,
 "schedule_sampler": 12,
-"upscaler": "4x_foolhardy_Remacri_ExtraSmoother.safetensors",
+"upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
-    {"file": "StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors", "weight": 0.5, "mode": "all"},
-    {"file": "oil-painting-slider.safetensors", "weight": 0.7, "mode": "all"}
+    {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.5, "mode": "all"},
+    {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 0.7, "mode": "all"}
   ]
 }'
 ```

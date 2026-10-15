@@ -4,7 +4,7 @@
   "purpose": "Machine-readable starting rules for selecting generation profiles, prompt constraints, candidate LoRAs, samplers, steps, CFG, dimensions, upscaling, and validation for book illustrations and related artwork.",
   "runtime": {
     "cli": "draw-things-cli",
-    "model_default": "flux_2_klein_4b_f16.ckpt",
+    "model_default": "flux_2_klein_4b_q8p.ckpt",
     "negative_prompt_supported": false,
     "config_json_policy": {
       "only_emit_fields_verified_by_installed_cli": true,
@@ -21,7 +21,7 @@
     }
   },
   "defaults": {
-    "model": "flux_2_klein_4b_f16.ckpt",
+    "model": "flux_2_klein_4b_q8p.ckpt",
     "steps": 4,
     "cfg": 1.0,
     "sampler": 17,
@@ -81,7 +81,7 @@
         "stylized_character_art"
       ],
       "repository": "Sawata97/flux2_4b_koni_animestyle",
-      "filename": "Flux_klein_4b_anime_Koni.safetensors",
+      "filename": "klein_anime_koni_lora_f16.ckpt",
       "trigger": "anime_style",
       "candidate_weight": 0.65,
       "weight_range": [
@@ -100,7 +100,7 @@
         "pixel_art_storybook"
       ],
       "repository": "adirik/pixel-art-lora-flux.2-klein-4B",
-      "filename": "pixelart_lora.safetensors",
+      "filename": "klein_pixelart_lora_f16.ckpt",
       "trigger": "PXART4",
       "candidate_weight": 0.8,
       "weight_range": [
@@ -410,7 +410,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 768,
         "height": 1024,
         "steps": 4,
@@ -456,7 +456,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 768,
         "height": 1024,
         "steps": 4,
@@ -508,7 +508,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 832,
         "height": 1216,
         "steps": 4,
@@ -550,7 +550,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 832,
         "height": 1024,
         "steps": 4,
@@ -596,7 +596,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 512,
         "height": 512,
         "steps": 4,
@@ -645,7 +645,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 768,
         "height": 768,
         "steps": 4,
@@ -694,7 +694,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 1024,
         "height": 1024,
         "steps": 4,
@@ -741,7 +741,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 1024,
         "height": 768,
         "steps": 4,
@@ -782,7 +782,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 768,
         "height": 1024,
         "steps": 4,
@@ -823,7 +823,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 832,
         "height": 1024,
         "steps": 4,
@@ -871,7 +871,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 832,
         "height": 1024,
         "steps": 4,
@@ -912,7 +912,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 1024,
         "height": 768,
         "steps": 4,
@@ -954,7 +954,7 @@
         ]
       },
       "candidate_settings": {
-        "model": "flux_2_klein_4b_f16.ckpt",
+        "model": "flux_2_klein_4b_q8p.ckpt",
         "width": 1024,
         "height": 768,
         "steps": 4,

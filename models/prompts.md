@@ -3,6 +3,11 @@ I'm using Flux Klein and SDXL (juggernaut_xl_v9_f16, juggernaut_xl_x_f16, colorf
 For each genre, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, sampler, schedule_sampler.
 
 ---
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_f16.ckpt.
+
+I wanted to use WikiQwen-Illustrator for how-to illustration books for kids but the license doesn't allow Commercial Use. What are the alternatives that are compatible with draw-things-cli and free for Commercial Use
+
+---
 
 For each genre and age group, can you think hard and come up with good examples that would illustrate good use of models, loras, as well as prompting (prompt and --negative-prompt), sampler, schedule_sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
 
@@ -36,6 +41,10 @@ I can only use these Models, LoRAs, and Upscalers:
 ## Models
 
 flux_2_klein_4b_f16.ckpt
+flux_2_klein_base_4b_f16.ckpt
+
+flux_2_klein_4b_q8p.ckpt
+flux_2_klein_base_4b_q8p.ckpt
 
 juggernaut_xl_v9_f16.ckpt
 juggernaut_xl_x_f16.ckpt
@@ -49,8 +58,8 @@ animagine_xl_v3.1_f16.ckpt
 - AnalogRedmondV2-Analog-AnalogRedmAF.safetensors
 - ColoringBookRedmond-ColoringBook-ColoringBookAF.safetensors
 - epic-oil-painting-slider.safetensors
-- LineAniRedmondV2-Lineart-LineAniAF.safetensors
 - oil-painting-slider.safetensors
+- LineAniRedmondV2-Lineart-LineAniAF.safetensors
 - pixar-style.safetensors
 - sketch-style-xl.safetensors
 - StorybookRedmondV2-KidsBook-KidsRedmAF.safetensors
@@ -62,8 +71,8 @@ add_detail_xl_lora_f16.ckpt
 redmondv2_analog_lora_f16.ckpt
 redmond_coloringbook_lora_f16.ckpt
 oil_painting_slider_epic_lora_f16.ckpt
-redmondv2_lineart_lineani_lora_f16.ckpt
 oil_painting_slider_lora_f16.ckpt
+redmondv2_lineart_lineani_lora_f16.ckpt
 pixar_style_lora_f16.ckpt
 sketch_style_lora_f16.ckpt
 redmondv2_kids_storybook_lora_f16.ckpt
@@ -84,11 +93,11 @@ pixelart_lora.safetensors
 
 ## Klein LoRAs - New Names
 
-klein_dutchbaroqueflux_lora_f16.ckpt 
-klein_light_fantasy_lora_f16.ckpt 
-klein_numzoo_lora_f16.ckpt 
-klein_ohiseeflux_lora_f16.ckpt 
-klein_wikiqwen_illustrator_lora_f16.ckpt 
+klein_dutchbaroqueflux_lora_f16.ckpt
+klein_light_fantasy_lora_f16.ckpt
+klein_numzoo_lora_f16.ckpt
+klein_ohiseeflux_lora_f16.ckpt
+klein_wikiqwen_illustrator_lora_f16.ckpt
 klein_yarn_art_lora_f16.ckpt
 
 klein_anime_koni_lora_f16.ckpt
@@ -97,12 +106,12 @@ klein_pixelart_lora_f16.ckpt
 
 ## Upscalers - Original Names
 
-- 4x_foolhardy_Remacri_ExtraSmoother.safetensors
-- 4x_NMKD-Superscale-SP_178000_G.safetensors
-- 4x-UltraSharpV2.safetensors
-- RealESRGAN_x4plus_anime_6B.safetensors
-- RealESRGAN_x4plus.safetensors
-- SwinIR-L_x4_PSNR.safetensors
+4x_foolhardy_Remacri_ExtraSmoother.safetensors
+4x_NMKD-Superscale-SP_178000_G.safetensors
+RealESRGAN_x4plus.safetensors
+RealESRGAN_x4plus_anime_6B.safetensors
+4x-UltraSharpV2.safetensors
+SwinIR-L_x4_PSNR.safetensors
 
 ## Upscalers
 
@@ -165,7 +174,7 @@ A few things are assumptions or deviations, all flagged in section 0 of the file
 - **`schedule_sampler`:** I couldn't find this as a native key in the Draw Things config, so I kept it from your template and treated it as the fallback sampler (the Karras, AYS or Trailing sibling of the main one). The agent is told to drop the key if the CLI rejects it. Is it meant to be something else?
 - **Sampler numbers:** I took them from a published copy of the Draw Things `SamplerType` list (0 = DPM++ 2M Karras, 1 = Euler A, 4 = DPM++ SDE Karras, 10 = Euler A Trailing, and so on). Newer builds may add values, so nothing above 18 should be used without checking.
 - **Upscaler:** I pass `"upscaler"` in the config JSON and left out any scale-factor key because I couldn't confirm its name.
-- **Klein:** I assumed `flux_2_klein_4b_f16.ckpt` is the distilled build (4 steps, CFG 1.0). Klein recipes have no `--negative-prompt` and no LoRAs, since Klein ignores negatives and your LoRAs are all SDXL-family.
+- **Klein:** Klein recipes have no `--negative-prompt` and no LoRAs, since Klein ignores negatives.
 - **Output path:** commands use `"$HOME/Dev/tmp/..."` instead of `'~/Dev/tmp/...'`, because the shell won't expand `~` inside quotes.
 
 The agent should smoke-test once before batch runs: `draw-things-cli generate --help`, then a small 4-step render per recipe family.
@@ -237,7 +246,7 @@ draw-things-cli generate \
 
 # Flux-2-Klein Strategy
 
-On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_f16.ckpt to create Kids Reading Book Illustrations, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketches, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_q8p.ckpt to create Kids Reading Book Illustrations, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketches, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
 
 Can you suggest which LoRAs and upscalers I should use that are compatible with "draw-things-cli", and the different tips and configuration to use for the different categories, genres, and age groups, for example, which steps, cfg, upscaler, sampler, etc to use. Also include (in brackets) numberic value for sampler.
 
@@ -249,7 +258,7 @@ All example commands should be executable in and should use `--config-json` in t
 
 ```json
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/klein_coloring_adult_owl.png' \
 --prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
 --width 768 --height 768 --steps 28 --cfg 5.5 \
@@ -320,7 +329,7 @@ I've written the agent reference as `klein4b_draw-things_reference.md`, with 24 
 **Fixes to your template command**
 - **`schedule_sampler` isn't a real key.** The CLI silently ignores it. The sampler variants are their own IDs instead, such as DDIM Trailing `[16]`, Euler A Trailing `[10]` and DPM++ 2M Trailing `[15]`.
 - **JSON keys must be camelCase.** For example `upscalerScaleFactor`, not snake_case. Unknown keys are dropped without an error.
-- **Your file is the step-distilled model.** `flux_2_klein_4b_f16.ckpt` has no "base" in its name, so use 4–8 steps and CFG 1.0. Draw Things' own defaults for it are 4 steps, CFG 1 and sampler `[16]`. Your `--steps 28 --cfg 5.5` only suits `flux_2_klein_base_4b_*`, which defaults to 30 steps and CFG 4.
+- **Your file is the step-distilled model.** `flux_2_klein_4b_q8p.ckpt` has no "base" in its name, so use 4–8 steps and CFG 1.0. Draw Things' own defaults for it are 4 steps, CFG 1 and sampler `[16]`. Your `--steps 28 --cfg 5.5` only suits `flux_2_klein_base_4b_*`, which defaults to 30 steps and CFG 4.
 - **`sampler 0` (DPM++ 2M Karras) is a legacy SD-era choice.** Use `[16]` for this model.
 
 **LoRAs are the weak spot.** Almost nothing exists for Klein 4B in your genres.
@@ -375,3 +384,34 @@ The file `klein-recommendation-rules.json` contains 13 generation profiles, 3 Lo
 - `sdxl-recommendation-rules.json` - Machine-readable settings and selection rules. Designed for an agent to map a request to a model, LoRA combination, sampler, CFG, steps, dimensions, upscaler and prompt constraints.
 
 Can you create a comprehensive recommendation rules JSON, with the recommendations you suggested stored as data for the AI agent. Each profile should identify the goal, candidate settings, constraints, confidence and validation requirements. A Machine-readable settings and selection rules designed for an agent to map a request to a model, LoRA combination, sampler, CFG, steps, dimensions, upscaler and prompt constraints. JSON syntax has been validated.
+
+
+---
+---
+---
+---
+
+
+# Qwen Prompt Strategy
+
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with qwen_image_2512_bf16_q8p.ckpt (Qwen BF16 8-bit S) to create book cover images with embedded book title, series name, and publisher name on different types of books, like Kids Reading Books, Illustrations books, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketch books, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, and other types of books.
+
+For each categories, genres, and age groups, also suggest which upscalers I should use that are compatible with "draw-things-cli", and give different tips and configuration to use for the different categories, genres, and age groups, for example, which steps, cfg, upscaler, sampler, etc to use. Also include (in brackets) numberic value for sampler.
+
+Also, can you suggest strategies on how to create good prompts, and strategies for good negtive prompts. For each genre and age group, think hard and come up with good examples that would illustrate good use of prompts and negtive prompts, and different settings for upscaler, sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+
+All example commands should be executable in and should use `--config-json` in this format:
+
+```json
+draw-things-cli generate \
+--model qwen_image_2512_bf16_q8p.ckpt \
+--output '~/Dev/tmp/sdxl_coloring_adult_owl.png' \
+--prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
+--negative-prompt "3d render, shading, gray shadows, sketch, charcoal, messy lines, text, bg color..." \
+--width 768 --height 768 --steps 28 --cfg 5.5 \
+--config-json '{
+"sampler": 0
+}'
+```
+
+Can you also create a comprehensive recommendation rules JSON, that will store recommendation as data for the AI agent. Each profile should identify the goal, candidate settings, constraints, confidence and validation requirements. A Machine-readable settings and selection rules designed for an agent to map a request to a model, sampler, CFG, steps, dimensions, upscaler and prompt constraints.

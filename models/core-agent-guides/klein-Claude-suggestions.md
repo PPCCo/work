@@ -7,7 +7,7 @@ Confidence tags: **[V]** verified in a primary source this session · **[I]** in
 
 ## 0. Critical corrections to the original setup (read first)
 
-1. **`flux_2_klein_4b_f16.ckpt` is not in Draw Things' official model list [V].** Official Klein 4B files are `flux_2_klein_4b_{q8p,q6p,i8x}.ckpt` (distilled) and `flux_2_klein_base_4b_{q8p,q6p,i8x}.ckpt` (base). The f16 file is therefore custom/self-converted and its variant (distilled vs base) is unknown. Run the variant test in §1.2.
+1. **`flux_2_klein_4b_q8p.ckpt` is not in Draw Things' official model list [V].** Official Klein 4B files are `flux_2_klein_4b_{q8p,q6p,i8x}.ckpt` (distilled) and `flux_2_klein_base_4b_{q8p,q6p,i8x}.ckpt` (base). The f16 file is therefore custom/self-converted and its variant (distilled vs base) is unknown. Run the variant test in §1.2.
 2. **Your template (`--steps 28 --cfg 5.5`) is base-model style, and cfg 5.5 is high.** Distilled Klein = 4 steps, CFG 1.0 [V]. Base Klein = 28–50 steps, CFG ≈4.0 (BFL reference 4.0; community LoRA cards use 3.0–4.5) [V]. Do not use cfg > 4.5.
 3. **`"schedule_sampler": 1` is not a field in Draw Things' config schema [V]** (checked `config.fbs`). Remove it. Valid keys used here: `sampler`, `loras`, `upscaler`.
 4. **LoRAs must be in Draw Things' own `<name>_lora_f16.ckpt` format and registered in `custom_lora.json`. A raw `.safetensors` passed to the CLI runs with no error and no effect [V].** The app converts on import; the CLI does not. See §3.
@@ -30,7 +30,7 @@ Confidence tags: **[V]** verified in a primary source this session · **[I]** in
 ```bash
 # Distilled-style run. Clean, sharp output at 4 steps/CFG 1 => distilled. Mushy/under-denoised => base.
 draw-things-cli generate \
---model flux_2_klein_4b_f16.ckpt \
+--model flux_2_klein_4b_q8p.ckpt \
 --output '~/Dev/t2/variant_test.png' \
 --prompt "a red ceramic teapot on a wooden table, soft window light, clean studio composition" \
 --width 768 --height 768 --steps 4 --cfg 1.0 --seed 7 \
@@ -69,18 +69,19 @@ Rules: flow models (Klein) want **Trailing** samplers [V — Draw Things wiki]. 
 
 ## 3. LoRAs
 
-### 3.1 Install workflow (HF `.safetensors` → Draw Things)
-**Option A (preferred, auto-detects the model version):** Draw Things app → Settings → LoRA → Manage → Import → *Select from Files* (installing from a downloaded file is more reliable than from a URL; choose "LoRA", not "Model"; if asked for the base, pick FLUX.2 4B) [V — DT wiki]. HF model pages also expose a "Draw Things" local-app deep link: `https://drawthings.ai/import/diffusers/pipeline.load_lora_weights?repo_id=<owner>/<repo>` [V].
-**Option B (CLI-only, community tool):** `vcspr/drawthings-lora-convert` builds Draw Things' own `LoRAConverter` (≈25 min first build, Swift toolchain, default tag `v26.0910.1`) [V].
-```bash
-git clone https://github.com/vcspr/drawthings-lora-convert && cd drawthings-lora-convert
-./build.sh
-python3 dtlora.py convert ~/Dev/t2/loras/numzoo/numzoo_klein.safetensors \
-  --models-dir ~/Library/Containers/com.liuliu.draw-things/Data/Documents/Models
-# Its filename-based version guess maps "flux" -> FLUX.1; for Klein, if auto-detect fails pass --version
-# explicitly (exact Klein-4B string unverified: copy it from the custom_lora.json entry of a LoRA the app imported).
-```
-Output name rule [V]: lowercase; every char except letters/digits/`.` becomes `_`; suffix `_lora_f16.ckpt` (e.g. `numzoo_klein.safetensors` → `numzoo_klein_lora_f16.ckpt`). **The app may name imports differently — after importing, run `ls "<models dir>" | grep _lora_f16` and use the exact filename in `--config-json`.** Example commands below use the predicted names [I].
+### 3.1 Compatible 4B LoRAs (all verified to exist, base = FLUX.2 klein **4B**, 2026-10-15)
+| Key | HF repo | File | Trigger / prompt pattern | Weight | Best for | License |
+|---|---|---|---|---|---|---|
+| `numzoo` | `goumsss/numzoo-flux2-klein-lora` | `klein_numzoo_lora_f16.ckpt` (92 MB) | prefix `NUMZOO.` (animals × places; caption-only, no style words) | 0.7–0.9 [H] | **Kids' kawaii storybook animals, ages 2–7** | Apache-2.0 |
+| `yarn` | `Barath/flux2-klein-yarn-art-lora` | `klein_yarn_art_lora_f16.ckpt` (final, step 1800; `…_000001200` is lighter) | prefix `Y4RN_ART,`; weak on plain objects (trained on creatures/figures) | 0.8–1.0 [H] | Craft/felt/yarn looks, kids, tricky anatomy | Apache-2.0 |
+| `ohisee` | `noema-art/ohiseeflux-klein` | `klein_ohiseeflux_lora_f16.ckpt` | prefix `ohisee,` ; "digital drawing in a soft pastel style" | 0.8–1.0 (card: 25 steps, cfg 4.0, 1024²) | 2D pastel anime/digital drawing, YA storybook | Apache-2.0 |
+| `dutchbaroque` | `noema-art/dutchbaroqueflux-klein` | `klein_dutchbaroqueflux_lora_f16.ckpt` | prefix `dutchbaroque,` | 0.8–1.0 | **Oil painting** (old-master, chiaroscuro, still life) | Apache-2.0 |
+| `lightfantasy` | `giannisan/light-fantasy-flux2-klein-base-lora` | `klein_light_fantasy_lora_f16.ckpt` (15.7 MB) | `light_fantasy, a detailed fantasy painting of <scene>` | 0.8–1.0 [H] | Fantasy painting/digital drawing, teens | "other" — read card before commercial use |
+| `wikiqwen` | `devon7y/WikiQwen-Illustrator` | `klein_wikiqwen_illustrator_lora_f16.ckpt` | prompt = plain description of what is visible; never name an art style; card: 512×384, 16 steps, CFG 4.0, **Base only** | 1.0 [H] | Non-fiction how-to/instructional illustration | **CC BY-NC-SA 4.0 (non-commercial; credit line required)** |
+
+
+Edit-only 4B LoRAs (need an input image; not for text-to-image): `fal/flux-2-klein-4B-outpaint-lora` (`flux-outpaint-lora.ckpt`), `fal/flux-2-klein-4B-zoom-lora`, `xocialize/spritesheet-FLUX.2-klein-4B-lora`, `HaaDeej/Flux2-3500K` (B&W colorize).
+**Incompatible (9B; would be silently ignored):** `artificialguybr/COLORINGBOOK-REDMOND-FLUXKLEIN9B`, `artificialguybr/LineartAnime-Redmond-Flux9BKlein`, `neonforestmist/flux-storybook-anime-lora`, `SOLRICKS/Flux2-Klein-9B-Realistic-Detail`, everything in `Alex995647/loras-flux2-klein-9b`, `joyfox/FLUX.2-klein-AC-Style-LORA`.
 
 **Always verify a LoRA is applied** (silent drop otherwise) [V method]:
 ```bash
@@ -92,20 +93,7 @@ python3 -c "from PIL import Image,ImageChops,ImageStat;import os;a,b=[Image.open
 # diff ≈ 0.0 => LoRA ignored (wrong version / not registered). Expect tens when applied.
 ```
 
-### 3.2 Compatible 4B LoRAs (all verified to exist, base = FLUX.2 klein **4B**, 2026-10-15)
-| Key | HF repo | File | Trigger / prompt pattern | Weight | Best for | License |
-|---|---|---|---|---|---|---|
-| `numzoo` | `goumsss/numzoo-flux2-klein-lora` | `numzoo_klein.safetensors` (92 MB) | prefix `NUMZOO.` (animals × places; caption-only, no style words) | 0.7–0.9 [H] | **Kids' kawaii storybook animals, ages 2–7** | Apache-2.0 |
-| `yarn` | `Barath/flux2-klein-yarn-art-lora` | `klein4b_yarn_art_lora_v1.safetensors` (final, step 1800; `…_000001200` is lighter) | prefix `Y4RN_ART,`; weak on plain objects (trained on creatures/figures) | 0.8–1.0 [H] | Craft/felt/yarn looks, kids, tricky anatomy | Apache-2.0 |
-| `ohisee` | `noema-art/ohiseeflux-klein` | `ohiseeflux_klein.safetensors` | prefix `ohisee,` ; "digital drawing in a soft pastel style" | 0.8–1.0 (card: 25 steps, cfg 4.0, 1024²) | 2D pastel anime/digital drawing, YA storybook | Apache-2.0 |
-| `dutchbaroque` | `noema-art/dutchbaroqueflux-klein` | `dutchbaroqueflux_klein.safetensors` | prefix `dutchbaroque,` | 0.8–1.0 | **Oil painting** (old-master, chiaroscuro, still life) | Apache-2.0 |
-| `lightfantasy` | `giannisan/light-fantasy-flux2-klein-base-lora` | `pytorch_lora_weights.safetensors` (15.7 MB) | `light_fantasy, a detailed fantasy painting of <scene>` | 0.8–1.0 [H] | Fantasy painting/digital drawing, teens | "other" — read card before commercial use |
-| `wikiqwen` | `devon7y/WikiQwen-Illustrator` | `pytorch_lora_weights.safetensors` | prompt = plain description of what is visible; never name an art style; card: 512×384, 16 steps, CFG 4.0, **Base only** | 1.0 [H] | Non-fiction how-to/instructional illustration | **CC BY-NC-SA 4.0 (non-commercial; credit line required)** |
-
-Edit-only 4B LoRAs (need an input image; not for text-to-image): `fal/flux-2-klein-4B-outpaint-lora` (`flux-outpaint-lora.safetensors`), `fal/flux-2-klein-4B-zoom-lora`, `xocialize/spritesheet-FLUX.2-klein-4B-lora`, `HaaDeej/Flux2-3500K` (B&W colorize).
-**Incompatible (9B; would be silently ignored):** `artificialguybr/COLORINGBOOK-REDMOND-FLUXKLEIN9B`, `artificialguybr/LineartAnime-Redmond-Flux9BKlein`, `neonforestmist/flux-storybook-anime-lora`, `SOLRICKS/Flux2-Klein-9B-Realistic-Detail`, everything in `Alex995647/loras-flux2-klein-9b`, `joyfox/FLUX.2-klein-AC-Style-LORA`.
-
-### 3.4 LoRA rules of thumb
+### 3.2 LoRA rules of thumb
 - Stack ≤2 LoRAs; style LoRA 0.7–1.0, never stack two *style* LoRAs (they fight) [H].
 - Trigger word goes **first** in the prompt (word order = weight). Without the trigger most of these LoRAs stay inert (yarn card confirms).
 - If a LoRA warps anatomy or overpowers the prompt: lower weight by 0.15 before changing the prompt.
@@ -121,7 +109,7 @@ Draw Things built-in upscalers [V — `UpscalerZoo.swift`]; use the filename in 
 | File | Scale | Best for | License note |
 |---|---|---|---|
 | `realesrgan_x2plus_f16.ckpt` | 2× | **default general, illustration, photo, painting** | BSD-3 (commercial OK) |
-| `realesrgan_x4plus_f16.ckpt` | 4× | photo/painting when 4× needed | BSD-3 |
+| `realesrgan_x4plus_anime_6b_f16.ckpt` | 4× | photo/painting when 4× needed | BSD-3 |
 | `realesrgan_x4plus_anime_6b_f16.ckpt` | 4× (6 blocks, fast) | **line art, coloring pages, anime, flat color, diagrams** | BSD-3 |
 | `esrgan_4x_universal_upscaler_v2_sharp_f16.ckpt` | 4× | extra crispness (can over-sharpen) | unverified |
 | `remacri_4x_f16.ckpt` | 4× | painterly/photo texture | CC-BY-NC-SA (community card) → non-commercial |
@@ -133,13 +121,13 @@ Print math: 8.5×11 in @300 DPI = 2550×3300 px. Generate 1216×1568 (1.9 MP) �
 Download (Draw Things format; **not on HF**). CDN pattern `https://static.libnnc.org/<file>` [I — JoyFusionAI's HF mirror documents byte-identical files from this host]. Easiest alternative: pick the upscaler once in the Draw Things app; it downloads it. SHA-256 values are from source [V]:
 ```bash
 cd ~/Library/Containers/com.liuliu.draw-things/Data/Documents/Models
-for f in realesrgan_x2plus_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt realesrgan_x4plus_f16.ckpt; do
+for f in realesrgan_x2plus_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt; do
   [ -f "$f" ] || curl -fL -o "$f" "https://static.libnnc.org/$f"
 done
-shasum -a 256 realesrgan_x2plus_f16.ckpt realesrgan_x4plus_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt
+shasum -a 256 realesrgan_x2plus_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt realesrgan_x4plus_anime_6b_f16.ckpt
 # expected:
 # 98ce77870b5ca059ec004fe8572182dc67ac8d6a2bba8a938df0ba44fbaccc66  realesrgan_x2plus_f16.ckpt
-# 3db00086d999e590e313dbf45f0701cdf0e3bca3a66a201a3078423501cb58fd  realesrgan_x4plus_f16.ckpt
+# 3db00086d999e590e313dbf45f0701cdf0e3bca3a66a201a3078423501cb58fd  realesrgan_x4plus_anime_6b_f16.ckpt
 # 3ad598b21e888590d1bd239dc55675de11b245c691728b56859aa05038c69099  realesrgan_x4plus_anime_6b_f16.ckpt
 # (non-commercial extras) remacri_4x_f16.ckpt 88d7ae8e…b70671 · 4x_ultrasharp_f16.ckpt c8e9a1ee…a9f0ec
 ```
@@ -409,7 +397,7 @@ draw-things-cli generate \
 "sampler": 10,
 "upscaler": "realesrgan_x2plus_f16.ckpt",
 "loras": [
-    {"file": "dutchbaroqueflux_klein_lora_f16.ckpt", "weight": 0.85, "mode": "all"}
+    {"file": "klein_dutchbaroqueflux_lora_f16.ckpt", "weight": 0.85, "mode": "all"}
   ]
 }'
 ```
@@ -531,7 +519,7 @@ Then re-run the chosen prompt on `flux_2_klein_base_4b_q8p.ckpt` with `--steps 2
     "nonfiction_howto_nc":    {"steps": 16, "sampler": 10, "size": [512, 384],   "loras": [["wikiqwen_illustrator_lora_f16.ckpt", 1.0]], "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt", "commercial_ok": false},
     "nonfiction_diagram":     {"steps": 32, "sampler": 15, "size": [1280, 960],  "loras": [], "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt", "commercial_ok": true},
     "pencil_sketch":          {"steps": 30, "sampler": 15, "size": [1152, 896],  "loras": [], "upscaler": "realesrgan_x2plus_f16.ckpt", "commercial_ok": true},
-    "oil_painting":           {"steps": 28, "sampler": 10, "size": [1024, 1024], "loras": [["dutchbaroqueflux_klein_lora_f16.ckpt", 0.85]], "upscaler": "realesrgan_x2plus_f16.ckpt", "commercial_ok": true},
+    "oil_painting":           {"steps": 28, "sampler": 10, "size": [1024, 1024], "loras": [["klein_dutchbaroqueflux_lora_f16.ckpt", 0.85]], "upscaler": "realesrgan_x2plus_f16.ckpt", "commercial_ok": true},
     "watercolor":             {"steps": 28, "sampler": 10, "size": [1152, 896],  "loras": [], "upscaler": "realesrgan_x2plus_f16.ckpt", "commercial_ok": true},
     "anime_2d":               {"steps": 25, "sampler": 10, "size": [896, 1152],  "loras": [["ohiseeflux_klein_lora_f16.ckpt", 0.9]], "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt", "commercial_ok": true},
     "anime_3d":               {"steps": 30, "sampler": 10, "size": [1024, 1280], "loras": [], "upscaler": "realesrgan_x2plus_f16.ckpt", "commercial_ok": true},
@@ -541,6 +529,24 @@ Then re-run the chosen prompt on `flux_2_klein_base_4b_q8p.ckpt` with `--steps 2
   }
 }
 ```
+
+#### 8.1.1 WikiQwen-Illustrator 4B License
+
+**What WikiQwen-Illustrator-4B is.** It's a style LoRA for FLUX.2 [klein] base 4B, the same model family you already use. It was trained on about 588k wikiHow step illustrations licensed CC BY-NC-SA 3.0. The LoRA and the pictures it makes are released as CC BY-NC-SA 4.0, so the restriction comes from the training data, not the base model. The 7B version in its demo Space is built on Qwen-Image-2.1, which is also non-commercial.
+
+**What this means for you:**
+
+- **Don't retrain on that dataset.** A LoRA you train on wikiHow's illustrations would carry the same non-commercial and share-alike terms.
+- **You lose only the style.** Klein 4B is Apache 2.0, so the base model is fine. What you can't use commercially is this particular LoRA's look.
+- **The model card is only a preview.** It's a checkpoint at 8,000 of 18,000 training steps, so the final weights may change.
+
+**Ways to get a similar look commercially:**
+
+1. **Prompt the style directly.** Try something like "flat vector how-to step illustration, clean outlines, bright friendly colors, simple white background, hands only, no text", then describe the scene in one to three sentences. The model card says that format works well. Keep any words out of the images, because text inside pictures comes out garbled. Add lettering in your layout tool instead.
+2. **Use Qwen-Image-Edit-2511 or Klein 4B's editing mode** for consistency. Generate one good character or object, then use it as a reference for each following step.
+3. **Train your own LoRA on Klein 4B Base (Apache 2.0)**, using images you can legally train on. Good sources are your own drawings, commissioned art, public-domain or CC0 material, or a curated set generated with Apache-licensed models. Avoid any CC-NC or share-alike data. Check Draw Things' LoRA training for Klein support yourself. I haven't verified that, and training on 48 GB of unified memory should be feasible.
+
+One more point: a LoRA trained on the base model may not behave identically on the distilled `flux_2_klein_4b_q8p.ckpt` you're running. Test your LoRA on that checkpoint, or switch to the Klein 4B Base file.
 
 ### 8.2 Decision rules
 1. **Detect intent → preset**: coloring/line art/mandala → `coloring_*`/`mandala`; "informative/educational/diagram/how-to" → `nonfiction_*`; named medium (oil, watercolor, pencil) → matching preset; "anime/manga" → `anime_2d` (3D/render → `anime_3d`); "photo/realistic" → `photo`; otherwise kids illustration by age.
@@ -559,15 +565,5 @@ Then re-run the chosen prompt on `flux_2_klein_base_4b_q8p.ckpt` with `--steps 2
 - Whether the CLI applies the `upscaler` key post-generation.
 - Exact Klein-4B `--version` string for `dtlora.py`; app-imported LoRA filenames.
 - CDN URL pattern `static.libnnc.org/<file>` (sandbox got 403).
-- Identity of `flux_2_klein_4b_f16.ckpt` (distilled vs base).
+- Identity of `flux_2_klein_4b_q8p.ckpt` (distilled vs base).
 - All step/CFG/weight values tagged [H]; no throughput benchmarks were run on the M4.
-
----
-
-## 9. Sources
-- Draw Things sources: `config.fbs` (sampler enum, LoRA/upscaler fields), `ModelZoo.swift` (Klein 4B/4B Base files, shared `flux2_4b` version), `UpscalerZoo.swift` (6 upscalers + SHA-256) — github.com/drawthingsai/draw-things-community; CLI quick start and models dir (same README); Sampler Basics / Install a Model or LoRA wiki — wiki.drawthings.ai.
-- LoRA silent-drop and conversion: github.com/vcspr/drawthings-lora-convert.
-- Klein variants and settings: github.com/black-forest-labs/flux2 (wiki), docs.jarvislabs.ai/tutorials/running-flux2-klein, huggingface.co/blog/black-forest-labs/flux-2-klein-lora.
-- LoRA cards: huggingface.co/goumsss/numzoo-flux2-klein-lora, Barath/flux2-klein-yarn-art-lora, noema-art/ohiseeflux-klein, noema-art/dutchbaroqueflux-klein, giannisan/light-fantasy-flux2-klein-base-lora, devon7y/WikiQwen-Illustrator.
-- Upscaler licensing: huggingface.co/easygoing0114/AI_upscalers; mirror provenance: huggingface.co/JoyFusionAI/dt-components.
-- Prompt contract: `klein-kids-art` skill (klein-prompt-standards.md, style-packs.md).
