@@ -1,0 +1,1231 @@
+{
+  "schema_version": "1.0.0",
+  "title": "Draw Things CLI image settings recommendation rules",
+  "updated_at": "2026-10-16",
+  "target_environment": {
+    "hardware": "MacBook Pro M4, 12-core, 48 GB unified memory",
+    "runtime": "draw-things-cli",
+    "default_batch_size": 1,
+    "native_working_resolution_recommendation": "Usually begin at 768-1216 px on the long side, then upscale approved selections; test 1536+ only when required and stable.",
+    "print_note": "For 8x10 inch at 300 DPI, final layout needs 2400x3000 pixels; generation size is not the same as print-ready layout."
+  },
+  "cli_contract": {
+    "preferred_example_shape": "draw-things-cli generate --model MODEL.ckpt --output \"$HOME/Dev/tmp/output.png\" --prompt \"...\" --negative-prompt \"...\" --width 1024 --height 1024 --steps 30 --cfg 4 --config-json '{\"sampler\":10,\"loras\":[]}'",
+    "config_json_minimum": {
+      "sampler": 10,
+      "loras": []
+    },
+    "valid_config_json_example": "'{\"sampler\":10,\"loras\":[]}'",
+    "invalid_example": "'\"loras\": '\n",
+    "important": [
+      "The supplied example in the request used \"loras\": '' which is not valid JSON. Use \"loras\": [] when no LoRAs are selected.",
+      "In this Draw Things schema, sampler is a numeric enum ordinal. The ordinal-to-name mapping below reflects the currently published DataModels config.fbs enum; verify against the installed CLI after upgrades.",
+      "Do not pass a separate \"scheduler\" key as though this were ComfyUI. In Draw Things, named schedule variants are represented by sampler choices such as Karras, AYS and Trailing.",
+      "Use --cfg in examples as supported by the current draw-things-cli generation examples; confirm with draw-things-cli generate --help if your installed release changes flags.",
+      "Use real existing model and upscaler filenames; exact local names vary by quantization and installation.",
+      "Always pass --output and create the output directory before generation. Use \"$HOME/...\" rather than single-quoting a tilde path, because shell tilde expansion does not occur inside single quotes."
+    ],
+    "config_keys_commonly_used": {
+      "sampler": "integer enum ID",
+      "loras": "array; use [] if none",
+      "shift": "float; flow model-specific",
+      "resolutionDependentShift": "boolean; flow model-specific",
+      "upscaler": "exact installed upscaler filename",
+      "hiresFix": "boolean; enable only after a baseline is selected",
+      "hiresFixStrength": "float 0-1 for second pass when supported",
+      "upscalerScaleFactor": "integer in current schema; verify behavior in installed release"
+    }
+  },
+  "sampler_enum": [
+    {
+      "id": 0,
+      "name": "DPM++ 2M Karras",
+      "best_for": [
+        "SDXL quality",
+        "photorealism",
+        "smooth detail"
+      ],
+      "notes": "Stable, strong general-purpose SDXL baseline; not a universal best sampler."
+    },
+    {
+      "id": 1,
+      "name": "Euler A",
+      "best_for": [
+        "anime",
+        "expressive illustration",
+        "texture variation"
+      ],
+      "notes": "Ancestral and more stochastic; useful when a livelier look is desired."
+    },
+    {
+      "id": 2,
+      "name": "DDIM",
+      "best_for": [
+        "reproducible/simple baselines"
+      ],
+      "notes": "Usually not the first choice for these modern models."
+    },
+    {
+      "id": 3,
+      "name": "PLMS",
+      "best_for": [
+        "legacy compatibility"
+      ],
+      "notes": "Legacy; rarely a first-choice profile."
+    },
+    {
+      "id": 4,
+      "name": "DPM++ SDE Karras",
+      "best_for": [
+        "SDXL detail exploration"
+      ],
+      "notes": "Alternative quality sampler; may cost more time."
+    },
+    {
+      "id": 5,
+      "name": "UniPC",
+      "best_for": [
+        "general alternative"
+      ],
+      "notes": "Useful comparison candidate if the baseline has artifacts."
+    },
+    {
+      "id": 6,
+      "name": "LCM",
+      "best_for": [
+        "LCM-distilled models or matching LCM LoRAs"
+      ],
+      "notes": "Do not choose for a regular checkpoint unless its training/settings support it."
+    },
+    {
+      "id": 7,
+      "name": "Euler A Substep",
+      "best_for": [
+        "model-specific experiments"
+      ],
+      "notes": "Substep variant; validate visually."
+    },
+    {
+      "id": 8,
+      "name": "DPM++ SDE Substep",
+      "best_for": [
+        "model-specific experiments"
+      ],
+      "notes": "Substep variant; validate visually."
+    },
+    {
+      "id": 9,
+      "name": "TCD",
+      "best_for": [
+        "matching TCD-distilled checkpoints/LoRAs"
+      ],
+      "notes": "Only prefer where training setup supports TCD."
+    },
+    {
+      "id": 10,
+      "name": "Euler A Trailing",
+      "best_for": [
+        "Qwen Image 2512 starting point",
+        "FLUX.2 Klein distilled starting point",
+        "fast/simple flow-model baseline"
+      ],
+      "notes": "Strong starter profile for supported Draw Things flow models. Keep model-specific steps/CFG."
+    },
+    {
+      "id": 11,
+      "name": "DPM++ SDE Trailing",
+      "best_for": [
+        "model-specific experiments"
+      ],
+      "notes": "Can be slower; compare only if default sampler underperforms."
+    },
+    {
+      "id": 12,
+      "name": "DPM++ 2M AYS",
+      "best_for": [
+        "SDXL detail",
+        "mandala and clean illustrative line work tests"
+      ],
+      "notes": "A good alternative to Karras; results remain checkpoint-dependent."
+    },
+    {
+      "id": 13,
+      "name": "Euler A AYS",
+      "best_for": [
+        "creative variation"
+      ],
+      "notes": "Alternative schedule; validate at same seed."
+    },
+    {
+      "id": 14,
+      "name": "DPM++ SDE AYS",
+      "best_for": [
+        "advanced comparison"
+      ],
+      "notes": "Optional comparison candidate, not a universal upgrade."
+    },
+    {
+      "id": 15,
+      "name": "DPM++ 2M Trailing",
+      "best_for": [
+        "flow-model comparisons"
+      ],
+      "notes": "Alternative trailing schedule."
+    },
+    {
+      "id": 16,
+      "name": "DDIM Trailing",
+      "best_for": [
+        "model-specific comparisons"
+      ],
+      "notes": "Alternative trailing schedule."
+    },
+    {
+      "id": 17,
+      "name": "UniPC Trailing",
+      "best_for": [
+        "Qwen/flow model sampler comparison"
+      ],
+      "notes": "Useful A/B candidate against Euler A Trailing."
+    },
+    {
+      "id": 18,
+      "name": "UniPC AYS",
+      "best_for": [
+        "advanced comparison"
+      ],
+      "notes": "Optional A/B candidate."
+    },
+    {
+      "id": 19,
+      "name": "TCD Trailing",
+      "best_for": [
+        "matching TCD workflows"
+      ],
+      "notes": "Use only when compatible with the model/workflow."
+    }
+  ],
+  "model_profiles": {
+    "qwen_image_2512": {
+      "match": [
+        "qwen_image_2512",
+        "Qwen Image 2512"
+      ],
+      "family": "Qwen Image flow model",
+      "baseline": {
+        "steps": 30,
+        "cfg": 4.0,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          32,
+          44
+        ],
+        "cfg": [
+          3.8,
+          5.0
+        ],
+        "sampler_candidates": [
+          10,
+          17,
+          12
+        ]
+      },
+      "prompting": [
+        "Use full natural-language scene descriptions.",
+        "Specify subject, pose/action, environment, composition, style, light and palette.",
+        "For any exact book text or factual labels, render art without labels and typeset text separately."
+      ],
+      "constraints": [
+        "Do not apply FLUX Klein's 4-step/CFG 1 settings to Qwen Image 2512.",
+        "Do not assume a separate scheduler field; compare supported sampler enum IDs.",
+        "Keep the model's default shift behavior as the starting point."
+      ],
+      "confidence": "high"
+    },
+    "flux2_klein_distilled": {
+      "match": [
+        "flux_2_klein_4b",
+        "flux_2_klein_9b",
+        "flux.2-klein",
+        "Klein distilled; filename does not include base"
+      ],
+      "family": "FLUX.2 Klein step- and guidance-distilled",
+      "baseline": {
+        "steps": 4,
+        "cfg": 1.0,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          4,
+          4
+        ],
+        "cfg": [
+          1.0,
+          1.0
+        ],
+        "sampler_candidates": [
+          10
+        ]
+      },
+      "prompting": [
+        "Use a concise but detailed narrative sentence, not only keyword tags.",
+        "Mention composition, lens/viewpoint if relevant, light, materials, mood and palette.",
+        "Use as a fast draft/production model; use Qwen or a suitable SDXL checkpoint when extensive iterative control is more important."
+      ],
+      "constraints": [
+        "Keep distilled Klein at 4 steps and CFG 1.0; avoid arbitrary increases.",
+        "Do not confuse distilled Klein with Klein Base.",
+        "For 9B, verify the local checkpoint license before commercial book production; official weights state non-commercial license for 9B."
+      ],
+      "confidence": "high"
+    },
+    "flux2_klein_base": {
+      "match": [
+        "flux_2_klein_base",
+        "Klein Base"
+      ],
+      "family": "FLUX.2 Klein undistilled/base",
+      "baseline": {
+        "steps": 40,
+        "cfg": 4.0,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          30,
+          50
+        ],
+        "cfg": [
+          3.5,
+          4.5
+        ],
+        "sampler_candidates": [
+          10,
+          17,
+          0
+        ]
+      },
+      "prompting": [
+        "Use full narrative prompts with placement, spatial relations and material cues."
+      ],
+      "constraints": [
+        "Do not use the distilled 4-step/CFG 1 profile for a Base/undistilled checkpoint.",
+        "Use the exact installed model filename; validate shift/defaults for this build."
+      ],
+      "confidence": "medium"
+    },
+    "juggernaut_xl_v9": {
+      "match": [
+        "juggernaut_xl_v9_f16.ckpt",
+        "Juggernaut XL v9"
+      ],
+      "family": "SDXL photorealistic/general-purpose fine-tune",
+      "baseline": {
+        "steps": 35,
+        "cfg": 4.5,
+        "sampler": 0,
+        "config_json": {
+          "sampler": 0,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          30,
+          40
+        ],
+        "cfg": [
+          3.0,
+          6.5
+        ],
+        "sampler_candidates": [
+          0,
+          4,
+          12
+        ]
+      },
+      "prompting": [
+        "For realism, specify photographic subject, lens/framing, light source, focus and believable material/skin detail.",
+        "Begin with no negative prompt or a short defect list; heavy negatives can reduce quality."
+      ],
+      "constraints": [
+        "Use model-native SDXL-ish sizes/aspects, e.g. 832x1216 portrait or 1216x832 landscape; test 1024 square for square pages.",
+        "Start with CFG 3.5-5 for realism; raise only when prompt adherence is poor."
+      ],
+      "confidence": "high"
+    },
+    "juggernaut_xl_x": {
+      "match": [
+        "juggernaut_xl_x_f16.ckpt",
+        "Juggernaut XL X"
+      ],
+      "family": "SDXL-style Juggernaut variant",
+      "baseline": {
+        "steps": 32,
+        "cfg": 5.0,
+        "sampler": 0,
+        "config_json": {
+          "sampler": 0,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          28,
+          38
+        ],
+        "cfg": [
+          4.0,
+          6.0
+        ],
+        "sampler_candidates": [
+          0,
+          12,
+          1
+        ]
+      },
+      "prompting": [
+        "Use model-specific visual descriptors; compare against v9 if realism is the goal."
+      ],
+      "constraints": [
+        "Exact recommended settings for this variant are less well documented; treat as a calibrated starting point, not authoritative preset."
+      ],
+      "confidence": "medium-low"
+    },
+    "colorfulxl_v6": {
+      "match": [
+        "colorfulxl_v6.0_f16.ckpt",
+        "ColorfulXL v6.0"
+      ],
+      "family": "SDXL-style vivid illustration fine-tune",
+      "baseline": {
+        "steps": 30,
+        "cfg": 5.8,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          26,
+          36
+        ],
+        "cfg": [
+          5.0,
+          6.5
+        ],
+        "sampler_candidates": [
+          1,
+          0,
+          12
+        ]
+      },
+      "prompting": [
+        "Best first try for vivid, highly coloured picture-book, fantasy and painterly illustration styles.",
+        "Describe edge treatment, palette, brush medium and contrast explicitly."
+      ],
+      "constraints": [
+        "Treat settings as empirical starting points; the exact checkpoint card may vary.",
+        "Reduce CFG if colors/edges look overcooked."
+      ],
+      "confidence": "medium"
+    },
+    "animagine_xl_v31": {
+      "match": [
+        "animagine_xl_v3.1_f16.ckpt",
+        "Animagine XL v3.1"
+      ],
+      "family": "SDXL anime/illustration fine-tune",
+      "baseline": {
+        "steps": 26,
+        "cfg": 6.0,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "quality_range": {
+        "steps": [
+          22,
+          29
+        ],
+        "cfg": [
+          5.0,
+          7.0
+        ],
+        "sampler_candidates": [
+          1,
+          12,
+          0
+        ]
+      },
+      "prompting": [
+        "Use anime-specific tags and quality tags; describe camera angle, expression, clothing, pose and background separately.",
+        "Use a short negative prompt targeted to quality defects."
+      ],
+      "constraints": [
+        "Avoid >30 steps as a default; it often has diminishing returns.",
+        "Keep CLIP skip at default unless the particular model card says otherwise."
+      ],
+      "confidence": "high"
+    }
+  },
+  "category_profiles": [
+    {
+      "id": "preschool_picture_book_2_5",
+      "intent": [
+        "preschool",
+        "toddlers",
+        "ages 2-5",
+        "early-reader illustration",
+        "simple cute characters"
+      ],
+      "goal": "Warm, readable picture-book scene with one dominant subject and uncluttered shapes.",
+      "models": [
+        "qwen_image_2512",
+        "colorfulxl_v6"
+      ],
+      "default": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 32,
+        "cfg": 4.0,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          28,
+          36
+        ],
+        "cfg": [
+          3.8,
+          4.8
+        ],
+        "samplers": [
+          10,
+          17
+        ]
+      },
+      "prompt_constraints": [
+        "One clear focal subject; large simple silhouette; friendly face; limited palette; background subordinate.",
+        "For multi-page consistency, lock a character description, outfit, palette, aspect ratio and seed where possible."
+      ],
+      "negative_prompt": "photorealistic, scary expression, cluttered background, text, watermark, blurry, malformed hands",
+      "example_prompt": "A charming picture-book illustration for preschool children: a small orange fox in blue overalls carefully waters a sunflower in a little garden, rounded friendly shapes, expressive face, warm pastel palette, simple clear composition, soft gouache texture, generous open space, no lettering.",
+      "upscale_policy": "Prefer native clean detail; mild 1.25-1.5x upscale only after approval; avoid sharpen halos.",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "children_storybook_6_9",
+      "intent": [
+        "children storybook",
+        "ages 6-9",
+        "fantasy adventure illustration",
+        "narrative spread"
+      ],
+      "goal": "Story-rich scene with clear staging and controlled visual detail.",
+      "models": [
+        "colorfulxl_v6",
+        "qwen_image_2512"
+      ],
+      "default": {
+        "model": "colorfulxl_v6.0_f16.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 30,
+        "cfg": 5.8,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          26,
+          36
+        ],
+        "cfg": [
+          5.0,
+          6.5
+        ],
+        "samplers": [
+          1,
+          0,
+          12
+        ]
+      },
+      "prompt_constraints": [
+        "State foreground/midground/background and the character action.",
+        "Use a consistent named style description across the book; save seed and prompt version.",
+        "Leave typography to page layout."
+      ],
+      "negative_prompt": "text, watermark, confusing composition, extra limbs, muddy colors, blurry",
+      "example_prompt": "A richly coloured children's storybook illustration: two young explorers cross a mossy stone bridge into a glowing forest, tiny friendly fireflies, oversized ferns, adventurous but reassuring mood, clear foreground and distant background, expressive hand-painted shapes, jewel-green and golden palette, no text.",
+      "upscale_policy": "Use a detail-preserving illustration upscaler after selecting the best composition; check fine edges and faces at 100%.",
+      "confidence": "medium"
+    },
+    {
+      "id": "educational_nonfiction_kids_teens",
+      "intent": [
+        "non-fiction",
+        "educational",
+        "science book",
+        "diagram",
+        "explainer illustration",
+        "ages 8-16"
+      ],
+      "goal": "Accurate-looking teaching illustration with clear objects and room for labels.",
+      "models": [
+        "qwen_image_2512",
+        "juggernaut_xl_v9"
+      ],
+      "default": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width": 1024,
+        "height": 768,
+        "steps": 38,
+        "cfg": 4.0,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          32,
+          44
+        ],
+        "cfg": [
+          3.8,
+          5.0
+        ],
+        "samplers": [
+          10,
+          17
+        ]
+      },
+      "prompt_constraints": [
+        "Say exactly which components must be visible and their spatial relationships.",
+        "Ask for no words/labels; add accurate labels, arrows, legends and facts in an editor.",
+        "Treat scientific/anatomical output as an illustration draft, not a factual source."
+      ],
+      "negative_prompt": "illegible text, random letters, watermark, decorative clutter, incorrect extra parts, blurry",
+      "example_prompt": "A clean educational illustration for a teen science book showing a large cutaway model of a flowering plant, roots, stem, leaves and flower clearly separated and anatomically plausible, simple light background, crisp colors, textbook-style clarity, leave open spaces for later labels, no text or arrows.",
+      "upscale_policy": "Use modest upscaling, then add labels and arrows as vector/text layers; never trust rendered scientific labels.",
+      "confidence": "medium-high"
+    },
+    {
+      "id": "kids_teens_coloring_line_art",
+      "intent": [
+        "kids coloring book",
+        "teen coloring book",
+        "line art",
+        "colouring page",
+        "printable outline"
+      ],
+      "goal": "High-contrast black contour art with white interiors that are easy to colour.",
+      "models": [
+        "qwen_image_2512",
+        "colorfulxl_v6",
+        "animagine_xl_v31"
+      ],
+      "default": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width": 768,
+        "height": 1024,
+        "steps": 32,
+        "cfg": 4.2,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          28,
+          38
+        ],
+        "cfg": [
+          3.8,
+          5.0
+        ],
+        "samplers": [
+          10,
+          12,
+          17
+        ]
+      },
+      "prompt_constraints": [
+        "Request pure black clean closed outlines, white background, consistent stroke width, large fillable regions and a complete page border only if needed.",
+        "Avoid gray fills, shadows, gradients, hatching, cross-hatching and texture.",
+        "For production-grade pages, inspect line closure and remove stray marks manually/vectorize if necessary."
+      ],
+      "negative_prompt": "colour, gray fill, grayscale shading, gradients, shadows, hatching, crosshatching, stippling, pencil texture, sketch, gray background, text, watermark, broken outlines, messy lines",
+      "example_prompt": "A printable children's coloring-book page of a cheerful baby dragon reading a book under a tree, pure black clean uniform outlines on a pure white background, closed shapes, simple bold contours, large open spaces to colour, minimal background details, no gray, no shading, no hatching, no text.",
+      "upscale_policy": "Do not use creative/generative upscaling that invents gray texture. Prefer lossless/Lanczos enlargement, threshold cleanup or vectorization after visual inspection.",
+      "confidence": "medium"
+    },
+    {
+      "id": "adult_coloring_mandala",
+      "intent": [
+        "adult coloring book",
+        "mandala",
+        "ornamental line art",
+        "intricate symmetrical patterns"
+      ],
+      "goal": "Dense, elegant, symmetric line art with closed, colourable compartments.",
+      "models": [
+        "qwen_image_2512",
+        "colorfulxl_v6"
+      ],
+      "default": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 36,
+        "cfg": 4.5,
+        "sampler": 12,
+        "config_json": {
+          "sampler": 12,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          30,
+          42
+        ],
+        "cfg": [
+          4.0,
+          5.2
+        ],
+        "samplers": [
+          12,
+          10,
+          17
+        ]
+      },
+      "prompt_constraints": [
+        "Specify radial symmetry, concentric rings, repeating motifs, balanced negative space and closed fill regions.",
+        "Keep prompt free of color/material terms; forbid shadows and gray areas.",
+        "If geometric perfection is mandatory, generate/vector-edit SVG/CAD-style art rather than relying on diffusion."
+      ],
+      "negative_prompt": "color, gray fill, grayscale, shadows, gradients, pencil shading, crosshatching, stippling, open line ends, asymmetry, lettering, watermark, dirty paper texture",
+      "example_prompt": "Intricate adult mandala coloring page, perfectly centered radial composition with eight concentric rings of repeating lotus petals, paisley leaves, tiny geometric rosettes and balanced ornamental filigree, clean uniform black outlines, pure white background, every region closed and colourable, no gray, no fill, no shading, no text.",
+      "upscale_policy": "Use non-generative enlargement and line cleanup; inspect radial joins and closed regions before print.",
+      "confidence": "medium"
+    },
+    {
+      "id": "pencil_sketch_engraving",
+      "intent": [
+        "pencil sketch",
+        "graphite",
+        "architectural sketch",
+        "ink engraving",
+        "charcoal study"
+      ],
+      "goal": "Intentional monochrome drawing with visible stroke character and controlled tonal range.",
+      "models": [
+        "juggernaut_xl_v9",
+        "juggernaut_xl_x",
+        "qwen_image_2512"
+      ],
+      "default": {
+        "model": "juggernaut_xl_v9_f16.ckpt",
+        "width": 832,
+        "height": 1216,
+        "steps": 32,
+        "cfg": 4.5,
+        "sampler": 0,
+        "config_json": {
+          "sampler": 0,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          28,
+          38
+        ],
+        "cfg": [
+          3.8,
+          5.5
+        ],
+        "samplers": [
+          0,
+          12,
+          1
+        ]
+      },
+      "prompt_constraints": [
+        "Name the medium precisely (graphite, crosshatching, etching) and distinguish contour lines from tonal shading.",
+        "For colouring-book line art, use the line-art profile instead; sketch prompts intentionally add tone/texture."
+      ],
+      "negative_prompt": "full colour, glossy 3d render, neon colours, text, watermark, blurry",
+      "example_prompt": "A finely observed graphite pencil drawing for an art book: an old reading chair beside a tall window, confident contour lines, subtle cross-hatched shadows, visible paper grain, delicate value range, museum-study sketch, monochrome graphite only.",
+      "upscale_policy": "Prefer a gentle upscaler and preserve fine pencil strokes; inspect for synthetic sharpness and repeated texture.",
+      "confidence": "medium"
+    },
+    {
+      "id": "watercolor_oil_painterly",
+      "intent": [
+        "watercolor painting",
+        "oil painting",
+        "gouache",
+        "traditional painterly",
+        "fine art painting"
+      ],
+      "goal": "Credible medium-specific brushwork, pigment behavior and lighting rather than a generic digital filter.",
+      "models": [
+        "colorfulxl_v6",
+        "juggernaut_xl_v9",
+        "qwen_image_2512"
+      ],
+      "default": {
+        "model": "colorfulxl_v6.0_f16.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 32,
+        "cfg": 5.6,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          28,
+          40
+        ],
+        "cfg": [
+          4.8,
+          6.2
+        ],
+        "samplers": [
+          1,
+          0,
+          12
+        ]
+      },
+      "prompt_constraints": [
+        "Watercolor: transparent washes, soft blooms, granulation, paper tooth, controlled lost edges.",
+        "Oil: impasto, layered pigments, brush marks, glazing and deliberate highlights.",
+        "Use one main medium per prompt; add a suitable LoRA only if installed and intended."
+      ],
+      "negative_prompt": "plastic 3d look, vector flatness, text, watermark, overly smooth airbrush, oversharpened edges",
+      "example_prompt": "A luminous watercolor illustration for a nature book, a red fox standing in a misty meadow at dawn, transparent pigment washes, granulated greens, soft wet-on-wet background, a few crisp dry-brush details on the fox, warm paper-white highlights, restrained natural palette, no lettering.",
+      "upscale_policy": "Avoid aggressive sharpening; keep brush texture natural. Upscale after choosing composition, not during early prompt tests.",
+      "confidence": "medium"
+    },
+    {
+      "id": "anime_2d_manga",
+      "intent": [
+        "anime",
+        "manga",
+        "2d anime",
+        "cel shading",
+        "character illustration"
+      ],
+      "goal": "Clean stylized characters and controlled anime color rendering.",
+      "models": [
+        "animagine_xl_v31",
+        "colorfulxl_v6"
+      ],
+      "default": {
+        "model": "animagine_xl_v3.1_f16.ckpt",
+        "width": 832,
+        "height": 1216,
+        "steps": 26,
+        "cfg": 6.0,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          22,
+          29
+        ],
+        "cfg": [
+          5.0,
+          7.0
+        ],
+        "samplers": [
+          1,
+          12,
+          0
+        ]
+      },
+      "prompt_constraints": [
+        "Use explicit pose, camera angle, expression, hair/clothing details, background and lighting.",
+        "Animagine responds well to quality tags; keep negative prompt focused and not excessively long.",
+        "For repeating characters, save the seed and use a style/character LoRA where licensed and available."
+      ],
+      "negative_prompt": "lowres, worst quality, low quality, jpeg artifacts, watermark, signature, extra digits, missing fingers, bad anatomy, text",
+      "example_prompt": "masterpiece, best quality, very aesthetic, 1girl, teen fantasy cartographer, full body, holding an open star map, expressive eyes, flowing navy cloak with gold constellations, clean 2D anime illustration, crisp line art, cel shading, moonlit observatory, vertical composition.",
+      "upscale_policy": "Use restrained illustration upscaling and inspect line art and faces; avoid photo-oriented sharpeners if they distort clean contours.",
+      "confidence": "high"
+    },
+    {
+      "id": "digital_cartoon_3d_illustration",
+      "intent": [
+        "digital drawing",
+        "cartoon",
+        "stylized 3d",
+        "3d illustration",
+        "clay render",
+        "storybook 3d"
+      ],
+      "goal": "Stylized rendered illustration with clear material cues, readable shape design and intentional lighting.",
+      "models": [
+        "colorfulxl_v6",
+        "juggernaut_xl_x",
+        "juggernaut_xl_v9",
+        "flux2_klein_distilled"
+      ],
+      "default": {
+        "model": "colorfulxl_v6.0_f16.ckpt",
+        "width": 1024,
+        "height": 1024,
+        "steps": 30,
+        "cfg": 5.8,
+        "sampler": 1,
+        "config_json": {
+          "sampler": 1,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          26,
+          36
+        ],
+        "cfg": [
+          4.8,
+          6.5
+        ],
+        "samplers": [
+          1,
+          0,
+          12
+        ]
+      },
+      "prompt_constraints": [
+        "Choose either 2D/flat graphic or 3D rendered look explicitly.",
+        "For 3D name materials (clay, felt, polished wood), key/fill/rim lighting and camera angle.",
+        "Use simple shapes and a controlled palette for younger children."
+      ],
+      "negative_prompt": "unwanted text, watermark, blurry, cluttered composition, oversharpened edges",
+      "example_prompt": "A polished 3D storybook illustration of a tiny robot librarian carrying a stack of oversized books, soft clay-and-felt materials, rounded friendly proportions, warm studio key light with gentle rim light, richly coloured but restrained palette, clean background, eye-level camera, no text.",
+      "upscale_policy": "For polished 3D, mild 1.5x upscale with low denoise; ensure small material textures do not become noisy.",
+      "confidence": "medium"
+    },
+    {
+      "id": "photorealism_photography",
+      "intent": [
+        "photorealistic",
+        "photography",
+        "book photo",
+        "realistic portrait",
+        "wildlife photo",
+        "still life"
+      ],
+      "goal": "Natural, optically plausible photographic result with realistic textures and controlled contrast.",
+      "models": [
+        "juggernaut_xl_v9",
+        "juggernaut_xl_x",
+        "qwen_image_2512",
+        "flux2_klein_distilled"
+      ],
+      "default": {
+        "model": "juggernaut_xl_v9_f16.ckpt",
+        "width": 832,
+        "height": 1216,
+        "steps": 35,
+        "cfg": 4.5,
+        "sampler": 0,
+        "config_json": {
+          "sampler": 0,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          30,
+          40
+        ],
+        "cfg": [
+          3.0,
+          6.0
+        ],
+        "samplers": [
+          0,
+          4,
+          12
+        ]
+      },
+      "prompt_constraints": [
+        "State shot type, lens/focal-length feel, camera distance, lighting, focus plane and material/skin detail.",
+        "Begin with no negative prompt for Juggernaut XL v9; add specific defects only after a first render.",
+        "Lower CFG generally favors natural realism; avoid piling up quality buzzwords."
+      ],
+      "negative_prompt": "text, watermark, overprocessed skin, plastic texture, exaggerated HDR, oversharpening",
+      "example_prompt": "Editorial wildlife photograph of a kookaburra perched on a weathered eucalyptus branch after rain, 200mm telephoto look, natural overcast light, lifelike feather detail, soft out-of-focus Australian bush background, accurate proportions, gentle contrast, natural colour science.",
+      "upscale_policy": "Start around 832x1216 or 1024x1024; after approval use a supported photo/detail upscaler at about 1.5x and low denoise (roughly 0.25-0.35) to reduce composition drift.",
+      "confidence": "high"
+    },
+    {
+      "id": "book_cover_editorial_layout",
+      "intent": [
+        "book cover",
+        "poster",
+        "cover art",
+        "editorial layout",
+        "typography"
+      ],
+      "goal": "Strong composition and reserved negative space for professional type layout.",
+      "models": [
+        "qwen_image_2512",
+        "flux2_klein_distilled",
+        "juggernaut_xl_v9"
+      ],
+      "default": {
+        "model": "qwen_image_2512_bf16_q8p.ckpt",
+        "width": 1024,
+        "height": 1536,
+        "steps": 40,
+        "cfg": 4.2,
+        "sampler": 10,
+        "config_json": {
+          "sampler": 10,
+          "shift": 1.0,
+          "resolutionDependentShift": true,
+          "loras": []
+        }
+      },
+      "candidate_ranges": {
+        "steps": [
+          32,
+          44
+        ],
+        "cfg": [
+          3.8,
+          5.2
+        ],
+        "samplers": [
+          10,
+          17
+        ]
+      },
+      "prompt_constraints": [
+        "Define title/subtitle safe zones in the prompt as empty space; do not rely on rendered words for final typography.",
+        "State focal-point position and reading direction; keep the center/bottom clear if title/author will be placed there.",
+        "Check aspect ratio against trim/bleed before generation."
+      ],
+      "negative_prompt": "random letters, misspelled text, watermark, busy focal area, clutter, low contrast subject",
+      "example_prompt": "Vertical cover illustration for a children's book about ocean exploration, a small submarine and a curious sea turtle in the lower third, luminous blue water and sunbeams, rich but calm colors, elegant depth, keep the upper third clean and low-detail for title typography, no words or letters.",
+      "upscale_policy": "Generate art separately from final type; upscale/compose at actual trim ratio and add bleed/safe margins in page-layout software.",
+      "confidence": "medium-high"
+    }
+  ],
+  "selection_rules": [
+    {
+      "priority": 1,
+      "when": "User explicitly names a model/checkpoint",
+      "action": "Keep that model unless unsupported; tune only its family-compatible values."
+    },
+    {
+      "priority": 2,
+      "when": "Prompt asks for anime/manga illustration",
+      "action": "Prefer animagine_xl_v31; start Euler A (1), 22-29 steps, CFG 5-7."
+    },
+    {
+      "priority": 3,
+      "when": "Prompt asks for natural photography/realism",
+      "action": "Prefer juggernaut_xl_v9; start DPM++ 2M Karras (0), 30-40 steps, CFG 3-5."
+    },
+    {
+      "priority": 4,
+      "when": "Prompt asks for exact textual layout, broad prompt adherence, poster/cover art",
+      "action": "Prefer Qwen Image 2512; start Euler A Trailing (10), CFG 4, 30-40 steps. Add typography in post if exact spelling is critical."
+    },
+    {
+      "priority": 5,
+      "when": "Prompt asks for quick draft/low latency and model is distilled FLUX.2 Klein",
+      "action": "Use 4 steps, CFG 1, Euler A Trailing (10); do not apply the base-model profile."
+    },
+    {
+      "priority": 6,
+      "when": "Prompt asks for clean coloring page/mandala",
+      "action": "Prefer Qwen Image 2512 as starting point; use explicit black-outline/white-fill constraints and negative prompts for shade/texture; never assume diffusion geometry is production-perfect."
+    },
+    {
+      "priority": 7,
+      "when": "Prompt asks for traditional painterly or vivid storybook art",
+      "action": "Prefer ColorfulXL v6; start 26-36 steps, CFG 5-6.2, Euler A (1) or DPM++ 2M Karras (0)."
+    },
+    {
+      "priority": 8,
+      "when": "User gives target age",
+      "action": "Adjust shape language, detail density, tone, visual hierarchy and subject matter. Do not change CFG solely because the audience is younger/older."
+    },
+    {
+      "priority": 9,
+      "when": "User requests facts, scientific diagrams, anatomical accuracy or educational labels",
+      "action": "Render clean, label-free components and overlay vetted labels/diagrams in a vector/layout tool; generated imagery is not proof of factual correctness."
+    },
+    {
+      "priority": 10,
+      "when": "A LoRA is requested or available",
+      "action": "Only choose a LoRA whose base family and version match the selected checkpoint; begin around 0.6-0.85 weight for style LoRAs and validate. For trained trigger words, include the trigger. Keep loras=[] if none."
+    }
+  ],
+  "iteration_policy": {
+    "baseline": "Save model filename, CLI version, seed, prompt, negative prompt, resolution, steps, CFG, sampler, shift, LoRA filenames/weights and upscaler used.",
+    "comparison": "Compare samplers with the same seed/prompt/size/steps/CFG. Change one variable at a time.",
+    "small_sweep": {
+      "cfg_delta": [
+        -0.7,
+        0,
+        0.7
+      ],
+      "steps_delta": [
+        -4,
+        0,
+        4
+      ],
+      "seed_count": 2
+    },
+    "diagnostics": [
+      {
+        "symptom": "Prompt details ignored",
+        "action": "Improve prompt structure and spatial relations first; then raise CFG by 0.3-0.7 only within family range."
+      },
+      {
+        "symptom": "Over-saturated, harsh edges, plastic skin",
+        "action": "Lower CFG 0.5-1.0; shorten negative prompt; check model choice."
+      },
+      {
+        "symptom": "Line art has gray fills or broken lines",
+        "action": "Strengthen pure black/white constraints, reduce stylistic texture, use non-generative cleanup/vectorization; don't solve via more steps alone."
+      },
+      {
+        "symptom": "Muddy painterly result",
+        "action": "Specify medium, pigment/brush behavior and light; compare Euler A (1) with DPM++ 2M Karras (0)."
+      },
+      {
+        "symptom": "Text inaccurate",
+        "action": "Remove text request from image generation and compose actual text after generation."
+      },
+      {
+        "symptom": "Upscaling changes shape/composition",
+        "action": "Reduce second-pass denoise toward 0.25-0.3, lower upscale multiplier or use non-generative resampling."
+      }
+    ]
+  },
+  "upscaler_policy": {
+    "rule": "Upscale only after selecting a correct composition. Use the exact upscaler filename listed by the installed draw-things-cli generate --help; do not assume a filename exists locally.",
+    "photography": {
+      "strategy": "roughly 1.5x and low second-pass denoise ~0.25-0.35",
+      "candidate_names_to_check": [
+        "4x_NMKD-Siax_200k",
+        "4x_foolhardy_Remacri"
+      ]
+    },
+    "storybook_digital_illustration": {
+      "strategy": "moderate 1.25-1.5x; inspect faces, edges and texture",
+      "candidate_names_to_check": [
+        "4x_NMKD-Siax_200k",
+        "4x_foolhardy_Remacri"
+      ]
+    },
+    "coloring_page_mandala": {
+      "strategy": "prefer Lanczos/threshold/vector cleanup outside diffusion; generative upscale may add gray fills or break contours",
+      "avoid": [
+        "high-denoise generative upscaling",
+        "strong sharpening that creates broken/closed lines"
+      ]
+    },
+    "print": {
+      "strategy": "Generate clean art, upscale, then layout at trim size/bleed/safe margins; final print DPI and pixel dimensions are a separate production check."
+    }
+  },
+  "validation_gates": [
+    "Confirm model file exists and belongs to the model family inferred by its exact filename.",
+    "For FLUX.2 Klein, distinguish distilled filename from Base/undistilled filename before setting steps and CFG.",
+    "Validate numeric sampler IDs against the installed CLI's current schema after version changes.",
+    "Check whether selected LoRA/upscaler files exist and match the model family.",
+    "Check output dimensions and aspect ratio for intended page/spread/cover; preserve space for layout text.",
+    "Inspect actual output at full size for line closure, hands, faces, text, anatomy, repeated motifs, and factual diagram defects.",
+    "For educational material, review factual accuracy independently; for print, verify final resolution, color profile, bleed and safe margins in publishing software."
+  ],
+  "sources": [
+    {
+      "title": "Draw Things current sampler enum and generation config fields",
+      "url": "https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Libraries/DataModels/Sources/config.fbs"
+    },
+    {
+      "title": "Draw Things invocation/config parameters",
+      "url": "https://raw.githubusercontent.com/drawthingsai/draw-things-community/main/Libraries/Invocation/Sources/Parameters.swift"
+    },
+    {
+      "title": "Official FLUX.2 model overview and distilled/base distinction",
+      "url": "https://github.com/black-forest-labs/flux2"
+    },
+    {
+      "title": "Official FLUX.2 Klein 4B model card",
+      "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4B"
+    },
+    {
+      "title": "Juggernaut XL v9 recommended settings",
+      "url": "https://huggingface.co/KillerBohne420/Juggernaut-XL-v9"
+    },
+    {
+      "title": "Animagine XL v3.1 recommended settings",
+      "url": "https://huggingface.co/cagliostrolab/animagine-xl-3.1"
+    },
+    {
+      "title": "Qwen/Draw Things practical defaults (community plugin; validate against local install)",
+      "url": "https://github.com/wysie/drawthings-grpc-hermes-plugin"
+    }
+  ]
+}

@@ -402,7 +402,7 @@ Also, can you suggest strategies on how to create good prompts, and strategies f
 
 All example commands should be executable in and should use `--config-json` in this format:
 
-```json
+```bash
 draw-things-cli generate \
 --model qwen_image_2512_bf16_q8p.ckpt \
 --output '~/Dev/tmp/sdxl_coloring_adult_owl.png' \
@@ -410,8 +410,35 @@ draw-things-cli generate \
 --negative-prompt "3d render, shading, gray shadows, sketch, charcoal, messy lines, text, bg color..." \
 --width 768 --height 768 --steps 28 --cfg 5.5 \
 --config-json '{
-"sampler": 0
+"sampler": 0,
+"loras": ''
 }'
 ```
 
 Can you also create a comprehensive recommendation rules JSON, that will store recommendation as data for the AI agent. Each profile should identify the goal, candidate settings, constraints, confidence and validation requirements. A Machine-readable settings and selection rules designed for an agent to map a request to a model, sampler, CFG, steps, dimensions, upscaler and prompt constraints.
+
+
+## cfg, samplers and schedules
+
+Settings like cfg, upscalers and schedules are extremely important for generating the best results for different types and styles of images.
+
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with qwen_image_2512_bf16_q8p.ckpt (Qwen BF16 8-bit S) and Flux.2-Klein and SDXL (juggernaut_xl_v9_f16, juggernaut_xl_x_f16, colorfulxl_v6.0_f16, and animagine_xl_v3.1_f16) to create images for Kids Reading Books, Illustrations books, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketch books, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, and other types of books.
+
+For each groups (could be based on categories, genres, and age groups, etc), give comprehensive but concise (not too verbose) tips, strategies and suggestions on how and what cfg, samplers, etc to set. Also include (in brackets) numberic value for sampler.
+
+Give example prompts and a brief explanation of why the specific values were used. An AI recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+
+All example commands should be executable and should use `--config-json` in this format:
+
+```bash
+draw-things-cli generate \
+--model qwen_image_2512_bf16_q8p.ckpt \
+--output '~/Dev/tmp/sdxl_coloring_adult_owl.png' \
+--prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
+--negative-prompt "3d render, shading, gray shadows, sketch, charcoal, messy lines, text, bg color..." \
+--width 768 --height 768 --steps 28 --cfg 5.5 \
+--config-json '{
+"sampler": 0,
+"loras": ''
+}'
+```
