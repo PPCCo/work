@@ -157,7 +157,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 28 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
@@ -178,7 +177,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.85, "mode": "all"}
@@ -198,7 +196,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 32 --cfg 5.5 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
@@ -218,7 +215,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
-"schedule_sampler": 15,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
@@ -236,7 +232,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
@@ -257,7 +252,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.95, "mode": "all"}
@@ -277,7 +271,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 32 --cfg 6.0 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.9, "mode": "all"},
@@ -297,7 +290,6 @@ draw-things-cli generate \
 --width 1216 --height 1600 --steps 8 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
-"schedule_sampler": 15,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
@@ -315,7 +307,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 34 --cfg 6.0 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
@@ -337,7 +328,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 32 --cfg 7.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
@@ -358,7 +348,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
     {"file": "redmond_coloringbook_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
@@ -380,7 +369,6 @@ draw-things-cli generate \
 --width 896 --height 1152 --steps 30 --cfg 5.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
     {"file": "sketch_style_lora_f16.ckpt", "weight": 0.85, "mode": "all"},
@@ -401,7 +389,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 30 --cfg 5.5 \
 --config-json '{
 "sampler": 1,
-"schedule_sampler": 10,
 "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
     {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
@@ -422,7 +409,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 28 --cfg 5.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_nmkd_superscale_sp_178000_g_f16.ckpt",
 "loras": [
     {"file": "sketch_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
@@ -443,7 +429,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 28 --cfg 6.0 \
 --config-json '{
 "sampler": 1,
-"schedule_sampler": 10,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
@@ -461,7 +446,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 28 --cfg 7.0 \
 --config-json '{
 "sampler": 1,
-"schedule_sampler": 10,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
     {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
@@ -481,7 +465,6 @@ draw-things-cli generate \
 --width 832 --height 1216 --steps 28 --cfg 6.0 \
 --config-json '{
 "sampler": 1,
-"schedule_sampler": 10,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": [
     {"file": "redmondv2_lineart_lineani_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
@@ -502,7 +485,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 30 --cfg 5.5 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "pixar_style_lora_f16.ckpt", "weight": 0.8, "mode": "all"},
@@ -523,7 +505,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 32 --cfg 5.0 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
     {"file": "pixar_style_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
@@ -545,7 +526,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 30 --cfg 5.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
     {"file": "3d_render_style_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
@@ -564,7 +544,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
-"schedule_sampler": 15,
 "upscaler": "realesrgan_x4plus_anime_6b_f16.ckpt",
 "loras": []
 }'
@@ -582,7 +561,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.6, "mode": "all"}
@@ -602,7 +580,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 34 --cfg 4.5 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
     {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.5, "mode": "all"}
@@ -622,7 +599,6 @@ draw-things-cli generate \
 --width 896 --height 1152 --steps 35 --cfg 4.5 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.4, "mode": "all"}
@@ -642,7 +618,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 32 --cfg 5.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": [
     {"file": "redmondv2_analog_lora_f16.ckpt", "weight": 0.7, "mode": "all"},
@@ -663,7 +638,6 @@ draw-things-cli generate \
 --width 1024 --height 1024 --steps 32 --cfg 5.0 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_ultrasharp_f16.ckpt",
 "loras": [
     {"file": "add_detail_xl_lora_f16.ckpt", "weight": 0.8, "mode": "all"}
@@ -682,7 +656,6 @@ draw-things-cli generate \
 --width 1360 --height 1024 --steps 4 --cfg 1.0 \
 --config-json '{
 "sampler": 10,
-"schedule_sampler": 15,
 "upscaler": "realesrgan_x4plus_f16.ckpt",
 "loras": []
 }'
@@ -700,7 +673,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 32 --cfg 5.5 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "oil_painting_slider_lora_f16.ckpt", "weight": 1.0, "mode": "all"},
@@ -721,7 +693,6 @@ draw-things-cli generate \
 --width 896 --height 1152 --steps 32 --cfg 6.0 \
 --config-json '{
 "sampler": 4,
-"schedule_sampler": 14,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "oil_painting_slider_epic_lora_f16.ckpt", "weight": 1.0, "mode": "all"}
@@ -741,7 +712,6 @@ draw-things-cli generate \
 --width 1216 --height 832 --steps 30 --cfg 6.0 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 12,
 "upscaler": "4x_foolhardy_remacri_extrasmoother_f16.ckpt",
 "loras": [
     {"file": "redmondv2_kids_storybook_lora_f16.ckpt", "weight": 0.5, "mode": "all"},

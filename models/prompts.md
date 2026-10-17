@@ -1,6 +1,6 @@
 I'm using Flux Klein and SDXL (juggernaut_xl_v9_f16, juggernaut_xl_x_f16, colorfulxl_v6.0_f16, and animagine_xl_v3.1_f16) to create Kids Reading Book Illustrations, Kids and adults Coloring Books & Line Art, Adults Mandala Coloring Books, Pencil & Artistic Sketches, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
 
-For each genre, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, sampler, schedule_sampler.
+For each genre, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, sampler.
 
 ---
 On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_f16.ckpt.
@@ -9,7 +9,7 @@ I wanted to use WikiQwen-Illustrator for how-to illustration books for kids but 
 
 ---
 
-For each genre and age group, can you think hard and come up with good examples that would illustrate good use of models, loras, as well as prompting (prompt and --negative-prompt), sampler, schedule_sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+For each genre and age group, can you think hard and come up with good examples that would illustrate good use of models, loras, as well as prompting (prompt and --negative-prompt), sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
 
 All commands should be executable in and should use `--config-json` in this format:
 
@@ -22,7 +22,6 @@ draw-things-cli generate \
 --width 768 --height 768 --steps 28 --cfg 5.5 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 1,
 "loras": [
     {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
     {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
@@ -77,6 +76,9 @@ pixar_style_lora_f16.ckpt
 sketch_style_lora_f16.ckpt
 redmondv2_kids_storybook_lora_f16.ckpt
 
+klein_4b_colorize_3500k_lora_f16.ckpt
+klein_4b_outpaint_lora_f16.ckpt
+klein_4b_zoom_red_lora_f16.ckpt
 
 ## Klein LoRAs - Original Names
 
@@ -90,6 +92,11 @@ wikiqwen_illustrator_lora_f16.ckpt
 Flux_klein_4b_anime_Koni.safetensors
 minoteflux-klein.safetensors
 pixelart_lora.safetensors
+
+pytorch_lora_weights.safetensors
+flux2_klein_4b_colorize_3500k_lora_f16.ckpt
+flux-outpaint-lora.safetensors
+flux-red-zoom-lora.safetensors
 
 ## Klein LoRAs - New Names
 
@@ -136,9 +143,9 @@ remacri_4x_f16.ckpt
 
 ## TASK
 
-For each genre and age group, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, upscaler, sampler, and schedule_sampler. Also include (in brackets) numberic value for sampler and schedule_sampler.
+For each genre and age group, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, upscaler, and sampler. Also include (in brackets) numberic value for sampler.
 
-For each genre and age group, can you think hard and come up with good examples that would illustrate good use of models, loras, as well as prompting (prompt and --negative-prompt), sampler, schedule_sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+For each genre and age group, can you think hard and come up with good examples that would illustrate good use of models, loras, as well as prompting (prompt and --negative-prompt), sampler (if needed), steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
 
 All commands should be executable in and should use `--config-json` in this format:
 
@@ -151,7 +158,6 @@ draw-things-cli generate \
 --width 768 --height 768 --steps 28 --cfg 5.5 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 1,
 "loras": [
     {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
     {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
@@ -171,7 +177,6 @@ Each recipe has the keywords it should match, a brief reason for its settings, a
 
 A few things are assumptions or deviations, all flagged in section 0 of the file:
 
-- **`schedule_sampler`:** I couldn't find this as a native key in the Draw Things config, so I kept it from your template and treated it as the fallback sampler (the Karras, AYS or Trailing sibling of the main one). The agent is told to drop the key if the CLI rejects it. Is it meant to be something else?
 - **Sampler numbers:** I took them from a published copy of the Draw Things `SamplerType` list (0 = DPM++ 2M Karras, 1 = Euler A, 4 = DPM++ SDE Karras, 10 = Euler A Trailing, and so on). Newer builds may add values, so nothing above 18 should be used without checking.
 - **Upscaler:** I pass `"upscaler"` in the config JSON and left out any scale-factor key because I couldn't confirm its name.
 - **Klein:** Klein recipes have no `--negative-prompt` and no LoRAs, since Klein ignores negatives.
@@ -264,7 +269,6 @@ draw-things-cli generate \
 --width 768 --height 768 --steps 28 --cfg 5.5 \
 --config-json '{
 "sampler": 0,
-"schedule_sampler": 1,
 "loras": [
     {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
     {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
@@ -365,6 +369,54 @@ Sources:
 - [easygoing0114/FLUX.2-klein-4B_clear](https://huggingface.co/easygoing0114/FLUX.2-klein-4B_clear)
 
 ---
+
+---
+---
+---
+
+---
+
+# More Flux-2-Klein LoRAs
+
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_q8p.ckpt to creating photographs, Coloring Books, Line Art, Mandala Coloring Books, Pencil & Artistic Sketches, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
+
+With my flux_2_klein_4b_q8p, I want to use these LoRAs:
+
+- https://huggingface.co/HaaDeej/Flux2-3500K
+- https://huggingface.co/xocialize/outpaint-FLUX.2-klein-4B-lora
+- https://huggingface.co/fal/flux-2-klein-4B-zoom-lora
+- https://huggingface.co/fal/flux-2-klein-4B-outpaint-lora
+
+Can you create a markdown table with columns containing information on each , including LoRA strength/benefit, best used for, and the ideal confiuguration ranges for each LoRA, for example, sampler (if needed), steps, cfg, etc.
+
+Also, since Klein doesn't support negative-prompt, can you give examples of good positive prompts, specifically for the above LoRAs that show good use of these LoRAs. For each genre and age group, can you think hard and come up with good examples that would illustrate good use of loras, as well as good prompting, and appropriate values for upscaler, sampler, steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. Also suggest if it's better to use these LoRAs with other LoRAs.
+
+An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+
+For the upscalers examples, use appropriate upscalers only out of these four:
+
+- 4x_foolhardy_Remacri_ExtraSmoother
+- 4x_NMKD-Superscale-SP_178000_G
+- RealESRGAN_x4plus
+- RealESRGAN_x4plus_anime_6B
+
+All example commands should be executable in and should use `--config-json` in this format:
+
+```json
+draw-things-cli generate \
+--model flux_2_klein_4b_q8p.ckpt \
+--output '~/Dev/t2/klein_coloring_adult_owl.png' \
+--prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
+--width 768 --height 768 --steps 28 --cfg 5.5 \
+--config-json '{
+"sampler": 0,
+"loras": [
+    {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
+  ]
+}'
+```
+
 
 ---
 ---

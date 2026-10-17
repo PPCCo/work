@@ -80,7 +80,7 @@ Rules: flow models (Klein) want **Trailing** samplers [V — Draw Things wiki]. 
 | `wikiqwen` | `devon7y/WikiQwen-Illustrator` | `klein_wikiqwen_illustrator_lora_f16.ckpt` | prompt = plain description of what is visible; never name an art style; card: 512×384, 16 steps, CFG 4.0, **Base only** | 1.0 [H] | Non-fiction how-to/instructional illustration | **CC BY-NC-SA 4.0 (non-commercial; credit line required)** |
 
 
-Edit-only 4B LoRAs (need an input image; not for text-to-image): `fal/flux-2-klein-4B-outpaint-lora` (`flux-outpaint-lora.ckpt`), `fal/flux-2-klein-4B-zoom-lora`, `xocialize/spritesheet-FLUX.2-klein-4B-lora`, `HaaDeej/Flux2-3500K` (B&W colorize).
+Edit-only 4B LoRAs (need an input image; not for text-to-image): `fal/flux-2-klein-4B-outpaint-lora` (`klein_4b_outpaint_lora_f16.ckpt`), `fal/flux-2-klein-4B-zoom-lora`, `xocialize/spritesheet-FLUX.2-klein-4B-lora`, `HaaDeej/Flux2-3500K` (B&W colorize).
 **Incompatible (9B; would be silently ignored):** `artificialguybr/COLORINGBOOK-REDMOND-FLUXKLEIN9B`, `artificialguybr/LineartAnime-Redmond-Flux9BKlein`, `neonforestmist/flux-storybook-anime-lora`, `SOLRICKS/Flux2-Klein-9B-Realistic-Detail`, everything in `Alex995647/loras-flux2-klein-9b`, `joyfox/FLUX.2-klein-AC-Style-LORA`.
 
 **Always verify a LoRA is applied** (silent drop otherwise) [V method]:

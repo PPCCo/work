@@ -50,6 +50,12 @@ caffeinate -i gh release upload v1 *.safetensors --repo PPCCo/loras-upscalers-mi
 caffeinate -i gh release upload v1 rrdb_psnr_x4.pth --repo PPCCo/loras-upscalers-mirror --clobber
 
 caffeinate -i gh release upload v2 *.safetensors --repo PPCCo/loras-upscalers-mirror --clobber
+
+caffeinate -i gh release create v3 * \
+--repo PPCCo/loras-upscalers-mirror \
+--title "Release v3 - More Klein loras" \
+--notes "Klein loras and upscalers"
+
 ```
 
 ## 3. Then, download on the other machine

@@ -7,7 +7,6 @@ Scope: SDXL checkpoints (Juggernaut XL v9, Juggernaut XL X, ColorfulXL v6, Anima
 
 - **Not run end to end.** Draw Things is macOS-only and these recipes were written on Linux. JSON validity, shell syntax, LoRA filenames and 64-pixel dimension multiples were checked by script. Image quality was not. Treat every numeric value as a tuned starting point.
 - **Sampler integers are UNVERIFIED.** The official source for the enum could not be fetched. The mapping in section 2 is recalled, not confirmed. Fix: run `draw-things-cli generate --help`, or compare against the Draw Things app config JSON. If it differs, change section 2 and apply it to every `"sampler"` value.
-- **`schedule_sampler` is omitted.** As far as I know, Draw Things encodes the schedule inside the sampler variant (Karras, Trailing, AYS), so no separate key is needed. If your build requires it, add `"schedule_sampler": <n>` to each `--config-json`.
 - **LoRA files** must be resolvable by Draw Things (models folder). If `file` is not found, import or convert the LoRA first (`draw-things-cli models import`, unverified syntax).
 - **Klein filename** `flux_2_klein_4b_q6p.ckpt` comes from the official README example. Use your installed Klein filename if it differs.
 - **Output path** uses `"$HOME/..."` in double quotes. A quoted `'~/...'` is not expanded by the shell and would create a literal `~` folder.
