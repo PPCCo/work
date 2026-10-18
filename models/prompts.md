@@ -421,7 +421,68 @@ draw-things-cli generate \
 ---
 ---
 ---
-## Claude Response (klein_drawthings_guide_claude.md)
+qqq
+
+# Sprites Flux-2-Klein LoRAs
+
+I'm using Flux Klein and SDXL (juggernaut_xl_v9_f16, juggernaut_xl_x_f16, colorfulxl_v6.0_f16, and animagine_xl_v3.1_f16) to create Kids Reading Book Illustrations, Kids and adults Coloring Books & Line Art, Adults Mandala Coloring Books, Pencil & Artistic Sketches, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
+
+For each genre, can you create a markdown table with recommendations on which models, loras (multi-loras are okay if needed), along with other settings like steps, guidanceScale, sampler.
+
+I'm using "draw-things-cli" with SDXL to create Kids Reading Book Illustrations, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketches, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
+
+I can only use these Models, LoRAs, and Upscalers:
+
+## Models
+
+- juggernaut_xl_v9_f16.ckpt
+- juggernaut_xl_x_f16.ckpt
+- colorfulxl_v6.0_f16.ckpt
+- animagine_xl_v3.1_f16.ckpt
+
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with flux_2_klein_4b_q8p.ckpt to creating photographs, Coloring Books, Line Art, Mandala Coloring Books, Pencil & Artistic Sketches, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, etc.
+
+With my flux_2_klein_4b_q8p, I want to use these LoRAs:
+
+- https://huggingface.co/HaaDeej/Flux2-3500K
+- https://huggingface.co/xocialize/outpaint-FLUX.2-klein-4B-lora
+- https://huggingface.co/fal/flux-2-klein-4B-zoom-lora
+- https://huggingface.co/fal/flux-2-klein-4B-outpaint-lora
+
+Can you create a markdown table with columns containing information on each , including LoRA strength/benefit, best used for, and the ideal confiuguration ranges for each LoRA, for example, sampler (if needed), steps, cfg, etc.
+
+Also, since Klein doesn't support negative-prompt, can you give examples of good positive prompts, specifically for the above LoRAs that show good use of these LoRAs. For each genre and age group, can you think hard and come up with good examples that would illustrate good use of loras, as well as good prompting, and appropriate values for upscaler, sampler, steps, cfg, etc etc with a brief explanation of why the specific values and prompts were used. Also suggest if it's better to use these LoRAs with other LoRAs.
+
+An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+
+For the upscalers examples, use appropriate upscalers only out of these four:
+
+- 4x_foolhardy_Remacri_ExtraSmoother
+- 4x_NMKD-Superscale-SP_178000_G
+- RealESRGAN_x4plus
+- RealESRGAN_x4plus_anime_6B
+
+All example commands should be executable in and should use `--config-json` in this format:
+
+```json
+draw-things-cli generate \
+--model flux_2_klein_4b_q8p.ckpt \
+--output '~/Dev/t2/klein_coloring_adult_owl.png' \
+--prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
+--width 768 --height 768 --steps 28 --cfg 5.5 \
+--config-json '{
+"sampler": 0,
+"loras": [
+    {"file": "LORA_1.ckpt", "weight": 0.85, "mode": "all"},
+    {"file": "LORA_2.ckpt", "weight": 0.50, "mode": "all"}
+  ]
+}'
+```
+
+
+---
+---
+---
 
 
 ---
@@ -494,3 +555,13 @@ draw-things-cli generate \
 "loras": ''
 }'
 ```
+
+---
+---
+---
+---
+
+On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli" with qwen_image_2512_bf16_q8p.ckpt (Qwen BF16 8-bit S) to create book cover images with embedded book title, series name, and publisher name
+
+do an extensive research on how the different ways I can specify coordinates for positioning the book title, etc. Validate and test to see if it's working
+

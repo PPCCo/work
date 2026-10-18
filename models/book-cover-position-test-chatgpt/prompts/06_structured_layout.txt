@@ -1,0 +1,8 @@
+Create a premium illustrated fantasy book-cover FRONT, portrait 2:3 composition, exactly 1024 x 1536 pixels. A mysterious silver observatory rises above an ancient pine forest beneath an indigo star-filled sky; a narrow luminous path leads toward the observatory, refined cinematic lighting, intricate painterly detail, polished professional publishing design. Use a simple three-row typography layout with precise alignment and generous spacing.
+
+TEXT LAYOUT SPECIFICATION:
+ROW 1 — ROLE: MAIN TITLE; EXACT TEXT: "THE SILENT ATLAS"; ALIGNMENT: horizontal center; REGION: upper title band; STYLE: very large uppercase gold serif.
+ROW 2 — ROLE: SERIES NAME; EXACT TEXT: "THE WAYFINDER CHRONICLES"; ALIGNMENT: horizontal center; REGION: immediately below row 1; STYLE: smaller uppercase ivory serif.
+ROW 3 — ROLE: PUBLISHER; EXACT TEXT: "NORTH STAR PRESS"; ALIGNMENT: horizontal center; REGION: bottom imprint band; STYLE: small uppercase ivory.
+
+Render no other lettering, logos, numbers, or watermarks. Keep each string on its own line, in the specified order, well separated, legible and correctly spelled. Preserve the exact wording.
