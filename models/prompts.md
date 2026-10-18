@@ -565,3 +565,64 @@ On my Macbook Pro M4 (12-core, 48 GB Unified Memory), I'm using "draw-things-cli
 
 do an extensive research on how the different ways I can specify coordinates for positioning the book title, etc. Validate and test to see if it's working
 
+
+---
+---
+---
+---
+
+I'm using "draw-things-cli" on my Macbook Pro M4 (12-core, 48 GB Unified Memory) for image generating and editing book cover images with embedded book title, series name, and publisher name. In earlier version "Qwen image 2512", I had to use a different "edit" model version for editing the generated images, but I've recently downloaded `qwen_image_2.1_q8p.ckpt`. I have discovered that Qwen-Image-2.1 model natively supports both text-to-image generation and image editing in a single unified architecture.
+
+I also found that Image Editing in Qwen-Image-2.1 comes with these features:
+
+- Unified Model: You do not need a separate "edit version" checkpoint; the core 7 billion parameter model handles both tasks.
+- Multiple Reference Images: It supports up to 10–16 reference images in a single pipeline to guide character identity, clothing, style, or products.
+- Local and Regional Edits: You can specify where changes happen using circles, painted annotations, or separate masks.
+- Transparency Support: It can handle native RGBA transparency and product cutout compositing.
+
+Can you generate a single document that explains these features with good examples that show how best to use these features?
+
+Note that I will be creating book covers for different types of books, like Kids Reading Books, Illustrations books, Kids and adults Coloring Books & Line Art, Storybooks and Non-fiction Informative books for kids and teens, Adults Mandala Coloring Books, Pencil & Artistic Sketch books, oil and watercolor paintings, 2D/3D anime illustrations, digital drawings, photography, oil painting, Photorealism, and other types of books.
+
+These are the only upscalers I can use:
+
+- 4x_foolhardy_Remacri_ExtraSmoother.safetensors
+- 4x_NMKD-Superscale-SP_178000_G.safetensors
+- RealESRGAN_x4plus.safetensors
+- RealESRGAN_x4plus_anime_6B.safetensors
+
+For each categories, genres, and age groups, can you suggest which upscalers I should use, and the different tips and configuration to use for example, which steps, cfg, upscaler, sampler, etc to use. Also include (in brackets) numberic value for sampler.
+
+Can you also briefly explain the features as well as suggest tips and tricks for this new models, strategies on how to create good prompts, and negtive prompts. For each genre and age group, can you think hard and come up with good examples that would illustrate good use of loras, as well as prompt, upscaler, sampler (if needed), steps, cfg, etc. An AI Agent and recommendation engine will be the consumer of this info, so keep the explanations very brief and not verbose. Think hard and add any other info that will help AI Agent in evaulation and making recommendations based on certain undeterministic user requirements.
+
+All example commands should be executable in and should use `--config-json` in this format:
+
+```json
+draw-things-cli generate \
+--model qwen_image_2.1_q8p.ckpt \
+--output '~/Dev/tmp/sdxl_coloring_adult_owl.png' \
+--prompt "intricate adult coloring book page, mystical owl on a crescent moon, complex mandala patterns..." \
+--negative-prompt "3d render, shading, gray shadows, sketch, charcoal, messy lines, text, bg color..." \
+--width 1024 --height 1024 --steps 28 --cfg 4.0
+```
+
+## RESPONSE
+
+I'll verify the Qwen-Image-2.1 claims and the `draw-things-cli` flag syntax first, then write the guide as a single Markdown file for your agent.
+
+I've written the playbook as one Markdown file for your agent. It covers the unified generate/edit model, prompt and negative-prompt rules, sampler IDs, and upscaler picks. It also has settings and runnable commands for 17 genres, plus recipes for edits, transparency and multi-reference work. I couldn't run `draw-things-cli` here, so I only checked that all 22 commands parse as shell, the `--config-json` payloads are valid JSON, and sizes are multiples of 64.
+
+Things that change how you use it:
+
+- **Licence:** Qwen-Image-2.1 is released under the Qwen Research License, which allows non-commercial research and evaluation only. Commercial use needs a separate licence from Qwen. If these covers are for sale, the playbook flags this first and suggests `qwen_image_2512` and `qwen_image_edit_2511` (Apache 2.0 per published reports; confirm on their model cards) or asking Qwen for a licence. The licence text doesn't say whether the images it produces are covered.
+- **Reference images:** the limit is 10, not 10–16.
+- **Negative prompts:** the official recipe is 40 steps at CFG 1.0 with no negative prompt. At CFG 1.0 a negative prompt does nothing, so my examples use CFG 2.0–3.5 with negatives, and the playbook tells the agent to compare against CFG 1.0 on the same seed.
+- **Sampler numbers:** these come from the Draw Things enum, where 15 is DPM++ 2M Trailing and 10 is Euler A Trailing. Karras and AYS samplers are marked as ones to avoid.
+- **Command format:** I used `"$HOME/Dev/tmp/..."` instead of `'~/...'`, because a tilde inside quotes isn't expanded by the shell. I also kept your flag style and put sampler, upscaler and LoRAs in `--config-json`.
+
+The playbook tags each value so your agent knows how far to trust it. `[V]` means checked in published sources, `[R]` means my starting default, and `[P]` means probe your local CLI first. Steps, CFG, sampler and upscaler choices are all `[R]`, so run a fixed-seed A/B test before relying on them. These are still unconfirmed and need a probe: whether `--image` acts as an edit reference, how to pass multiple references or a mask, and whether `upscalerScaleFactor` and your upscaler filenames are accepted. The probe commands are in section 3.3. The LoRA section shows how to use them but names no specific files, since I couldn't confirm which 2.1-trained LoRAs work in Draw Things.
+
+Files are in /home/claude:
+- qwen-image-2.1-draw-things-cover-playbook.md
+
+Sources are listed at the end of the file.
