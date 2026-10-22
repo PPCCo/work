@@ -1,0 +1,137 @@
+{
+  "schema_version": "1.0",
+  "description": "Creative and structural policy for book-cover prompt packages targeting draw-things-cli with Qwen Image.",
+  "modes": {
+    "brief": {
+      "minimum_directions": 3,
+      "direction_rule": "Create at least three materially different art directions from the current book brief. Differences must be conceptual, compositional, or representational, not just palette changes."
+    },
+    "reference_inspired": {
+      "minimum_references": 1,
+      "directions_per_reference": 1,
+      "direction_rule": "Create one distinct book-specific direction for each supplied reference image, preserving source IDs and abstract design lessons while changing distinctive expression."
+    }
+  },
+  "review": {
+    "score_scale": {
+      "minimum": 1,
+      "maximum": 5,
+      "descriptions": {
+        "1": "Failed: major mismatch or unusable.",
+        "2": "Weak: several significant problems; substantial redesign needed.",
+        "3": "Adequate: workable, but ordinary or with meaningful weaknesses.",
+        "4": "Strong: convincing, coherent, book-specific and close to production quality.",
+        "5": "Exceptional: memorable and unusually well resolved."
+      }
+    },
+    "dimension_weights": {
+      "book_specificity": 20,
+      "visual_hook": 15,
+      "composition": 15,
+      "palette_and_rendering": 10,
+      "typography": 15,
+      "audience_fit": 10,
+      "thumbnail_readability": 10,
+      "originality": 5
+    },
+    "critical_dimensions": [
+      "book_specificity",
+      "visual_hook",
+      "composition",
+      "typography",
+      "audience_fit",
+      "thumbnail_readability",
+      "originality"
+    ],
+    "minimum_critical_score": 4.0,
+    "minimum_weighted_score": 84.0,
+    "maximum_revision_cycles": 2,
+    "all_requested_directions_must_pass": true
+  },
+  "references": {
+    "one_direction_per_image": true,
+    "copy_policy": "Transfer only abstract design principles such as contrast, negative space, visual density, broad palette relationships, surface, depth, balance, and typographic hierarchy. Re-invent subject, silhouette, viewpoint, distinctive arrangement, motifs, typography and wording for the current book.",
+    "do_not_copy": [
+      "exact or recognisably close composition, crop, or placement of distinctive objects",
+      "specific characters, mascots, proprietary illustrations, or identifiable fictional characters",
+      "logos, wordmarks, author or publisher text, or exact lettering from a reference",
+      "distinctive ornamental motifs, signatures, watermarks, or identifiable trade dress",
+      "a named living artist's style or an instruction to pass off the work as that artist's work"
+    ]
+  },
+  "text": {
+    "required_fields": [
+      "title",
+      "subtitle",
+      "series_name",
+      "publisher_name"
+    ],
+    "always_require_title_and_publisher": true,
+    "allow_empty_subtitle": true,
+    "allow_empty_series_name": true,
+    "exact_text_required": true,
+    "no_unrequested_text": true,
+    "garbled_or_incorrect_required_text_is_blocker": true,
+    "fallback": "If embedded text remains inaccurate after targeted retries, preserve a deliberate title-safe area and hand exact typography to the established layout/typesetting stage. Do not silently accept incorrect lettering."
+  },
+  "generation": {
+    "model_family": "qwen_image_2512",
+    "backend": "draw-things-cli",
+    "do_not_invent_cli_flags": true,
+    "preserve_existing_sampler_and_parameter_policy": true,
+    "one_first_pass_image_per_direction_unless_existing_policy_overrides": true,
+    "inspect_full_size_and_thumbnail": true
+  },
+  "package": {
+    "schema_version": "1.0",
+    "required_top_level_keys": [
+      "schema_version",
+      "book",
+      "mode",
+      "reference_analysis",
+      "directions",
+      "critic_review",
+      "generation_plan"
+    ],
+    "required_book_keys": [
+      "project_id",
+      "title",
+      "subtitle",
+      "series_name",
+      "publisher_name",
+      "product_type",
+      "audience",
+      "book_summary",
+      "cover_promise",
+      "visual_thesis",
+      "format",
+      "text_to_render",
+      "assumptions"
+    ],
+    "required_direction_keys": [
+      "id",
+      "concept_name",
+      "reader_effect",
+      "book_specific_rationale",
+      "visual_hook",
+      "focal_subject",
+      "composition",
+      "palette",
+      "rendering_language",
+      "typography_plan",
+      "prompt",
+      "negative_prompt",
+      "reference_id",
+      "distinctiveness_note"
+    ],
+    "required_rating_keys": [
+      "direction_id",
+      "dimension_scores",
+      "weighted_score",
+      "blockers",
+      "revision_actions",
+      "decision"
+    ],
+    "passing_decision": "pass"
+  }
+}
