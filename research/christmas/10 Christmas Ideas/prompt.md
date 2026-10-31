@@ -23,12 +23,5 @@ Based on the research you do, the task and the final goal is to come up with a p
 Include any information that would be needed for Etsy, like the best title, categories, tags, labels, Etsy Description, product offers, cover images, etc, and any ideas on what the text and image content would be good for those digital product and attract buyers.
 
 ---
-
-Since I sell my books on Amazon/Etsy/ebay/KDP/AppleBooks/etc, and since book covers are the first impression, I need you to add to the above Klein-4B setup or modify any files you created above (to make the cover-generation compatable with the Klein setup), the tools/skills/agents/rules/standards/etc needed to design awesome covers for the books.
-
-Create a comprehensive setup for whatever skills, agents, standards, rules, scripts etc that would be needed for Claude to autonomously create the best book covers (including front cover, back cover, and cover-spine). If there are Claude built in agents for advertizing, media, marketing, designer, publishing, etc, then refer to those skills in the requirements, otherwise create new agents and/or skills and/or standards etc
-
----
----
 ---
 

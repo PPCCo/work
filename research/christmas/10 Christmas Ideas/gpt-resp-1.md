@@ -2,8 +2,6 @@
 
 Research date: 21 October 2026 · Market: Etsy, primarily US buyers, with products sellable worldwide · Business model: AI-assisted digital downloads
 
-Language style: Use US English spelling and terminology throughout. Check spelling against a US English dictionary (for example, use “organize,” “colorful,” and “center”).
-
 ## Reference Links
 
 ```
@@ -27,20 +25,13 @@ The strategy below prioritizes ten products that can be built with AI-assisted r
 
 # 2. What the research tells us
 
-Sources:
-
-- `https://www.etsy.com/au/seller-handbook/article/1521255894814`
-- `https://community.etsy.com/forum/etsy-success-300/topic/etsy-insights-etsy-trend-edit-fallwinter-26-190171/?focus_post=2613725`
-
 **A. The strongest 2026 demand signals**:
 
-1. Christmas DIY and shared activities
-+8,500%
+1 - Christmas DIY and shared activities (+8,500%)
 
 Holiday craft nights, family projects, printable craft instructions, and beginner-friendly creative activities. The percentage is a search-growth signal, not a forecast of sales for a particular download.
 
-2. Friendsmas and personalized friendship gifts
-+1,400%
+2 - Friendsmas and personalized friendship gifts (+1,400%)
 
 Friendsmas party packs, group games, memory books, secret gift exchanges, and friend-group keepsakes. Friendsmas party-supply sales rose 37%. 
 
@@ -48,19 +39,23 @@ Friendsmas party packs, group games, memory books, secret gift exchanges, and fr
 
 Pet Christmas passports, keepsake certificates, custom portrait templates, pet-sitter instruction sheets, and pet-themed family activities. Pet tree decorations also rose 22%. 
 
-4. Expressive, maximalist holiday style
-+110%
+4. Expressive, maximalist holiday style (+110%)
+
 Searches for whimsical items
 
 Bold ornament designs, colourful gift packaging, playful wall art, and coordinated party printables. Bedazzled-kit searches rose 218%. 
 
-5. Christmas hosting and table styling
-+841%
+5. Christmas hosting and table styling (+841%)
+
 Searches for ruffle tablecloths
 
 This is a physical-product signal that suggests an adjacent opportunity in printable place cards, menu cards, table games, food labels, and coordinated hosting kits. 
 
-Source: Etsy's Fall/Winter 2026 report. Figures compare the three months ending 14 September 2026 with the corresponding period a year earlier, except where Etsy specifies a different comparison. The report's demographic findings largely reflect US Etsy activity. 
+Sources: 
+Etsy's Fall/Winter 2026 report. Figures compare the three months ending 14 September 2026 with the corresponding period a year earlier, except where Etsy specifies a different comparison. The report's demographic findings largely reflect US Etsy activity. 
+
+- `https://www.etsy.com/au/seller-handbook/article/1521255894814`
+- `https://community.etsy.com/forum/etsy-success-300/topic/etsy-insights-etsy-trend-edit-fallwinter-26-190171/?focus_post=2613725`
 
 **B. What competitors are already selling**:
 
@@ -72,15 +67,13 @@ Public Etsy search pages reveal a crowded market for generic Christmas downloads
 | Kids' Christmas printables | 5,000+ results on a broad activity-bundle page | Target a specific age, learning objective, setting, or problem. |
 | Christmas activity packs | Examples range from inexpensive mini-packs to more comprehensive bundles | A higher price needs a clear, demonstrable advantage in usability, originality, or completeness.  Etsy Australia |
 
-These pages also show listings with hundreds or thousands of displayed review counts, evidence of established competition. However, review counts are not sales counts, and search-result totals do not establish how many products are genuinely comparable to a new idea.
-
 **C. Where I would look for a competitive advantage**:
 
-- Narrow the buyer: e.g., a pet owner, a teacher of 5–7-year-olds, a busy host, or a family hosting a mixed-age gathering.
-- Sell a complete outcome: not just pages, but instructions, answers, setup steps, print sizes, and variations.
-- Combine proven behaviours: DIY + Christmas, pets + personalized keepsakes, or Friendsmas + party games.
-- Use a visual identity: coordinated colours, typography, illustrations, and page layouts across every file.
-- Make the download immediately usable: clear print instructions, ink-friendly alternatives, and US Letter/A4 versions wherever relevant.
+- **Narrow the buyer**: e.g., a pet owner, a teacher of 5–7-year-olds, a busy host, or a family hosting a mixed-age gathering.
+- **Sell a complete outcome**: not just pages, but instructions, answers, setup steps, print sizes, and variations.
+- **Combine proven behaviours**: DIY + Christmas, pets + personalized keepsakes, or Friendsmas + party games.
+- **Use a visual identity**: coordinated colours, typography, illustrations, and page layouts across every file.
+- **Make the download immediately usable**: clear print instructions, ink-friendly alternatives, and US Letter/A4 versions wherever relevant.
 
 My assessment is that these combinations are promising hypotheses to validate, not verified low-competition niches. Etsy's own Marketplace Insights tool is the appropriate next check because it compares actual shopper search activity with the number of competing listings. 
 
@@ -88,13 +81,14 @@ My assessment is that these combinations are promising hypotheses to validate, n
 
 These products are ranked by the combination of demand signals, buyer clarity, differentiation potential, production feasibility, and bundle opportunities. The prices below are proposed launch prices in USD, not observed market averages.
 
-**01. Christmas Craft Night in a Box**:
+**01. Christmas Craft Night in a Box (Priority 1)**:
 
-- Priority 1
-- Example: Vintage Christmas Ornaments Craft Kit Bundle - Garland, Gift Tags, & Ornaments [./img/1-Vintage-Christmas-Craft-Kit.jpeg](https://www.teacherspayteachers.com/Product/Vintage-Christmas-Ornaments-Craft-Kit-Bundle-Garland-Gift-Tags-Ornaments-14899089)
-- Target: families, parents, grandparents, and hosts of Christmas craft nights
 
-Tags:
+**Example**: Vintage Christmas Ornaments Craft Kit Bundle - Garland, Gift Tags, & Ornaments [./img/1-Vintage-Christmas-Craft-Kit.jpeg](https://www.teacherspayteachers.com/Product/Vintage-Christmas-Ornaments-Craft-Kit-Bundle-Garland-Gift-Tags-Ornaments-14899089)
+
+**Target**: families, parents, grandparents, and hosts of Christmas craft nights
+
+**Tags**:
 - DIY trend
 - Bundle potential
 
@@ -102,13 +96,14 @@ A complete, low-preparation craft-night experience rather than a generic activit
 
 Proposed price: $8.99–$12.99
 
-**02. My Pet's First Christmas & Holiday Keepsake Kit**:
+**02. My Pet's First Christmas & Holiday Keepsake Kit (Priority 2)**:
 
-- Priority 2
-- Example: Paw-Print-Gift-Certificate - 60+ Gift Ideas for 2025 [./img/2-Paw-Print-Gift-Certificate.jpeg](https://www.etsy.com/market/paw_print_gift_certificate)
-- Target: dog and cat owners buying meaningful gifts or keepsakes
 
-Tags:
+**Example**: Paw-Print-Gift-Certificate - 60+ Gift Ideas for 2025 [./img/2-Paw-Print-Gift-Certificate.jpeg](https://www.etsy.com/market/paw_print_gift_certificate)
+
+**Target**: dog and cat owners buying meaningful gifts or keepsakes
+
+**Tags**:
 - Pet gifting
 - Personalization
 
@@ -116,13 +111,15 @@ A coordinated printable keepsake collection with editable name and date fields.
 
 Proposed price: $5.99–$9.99
 
-**03. Friendsmas Party Planner & Games Bundle**:
+**03. Friendsmas Party Planner & Games Bundle (Priority 3)**:
 
 - Priority 3
-- Example: 10 Printable Activities (digital Download) [./img/3-Friendsmas-Party-Games-Bundle](https://www.etsy.com/listing/1359771034/friendsmas-party-games-bundle-10)
-- Target: friend groups, young adults, apartment hosts, and casual party organizers
 
-Tags:
+**Example**: 10 Printable Activities (digital Download) [./img/3-Friendsmas-Party-Games-Bundle](https://www.etsy.com/listing/1359771034/friendsmas-party-games-bundle-10)
+
+**Target**: friend groups, young adults, apartment hosts, and casual party organizers
+
+**Tags**:
 - Friendsmas
 - Social events
 
@@ -134,10 +131,12 @@ Proposed price: $7.99–$12.99
 
 - A complete planning system for budgets, gifts, meals, deadlines, shopping, and family responsibilities.
 - Proposed price: $6.99–$10.99
-- Example: Printable Expenses and Shopping Trackers, Holiday Savings Lists, Presents and Cards Checklists - [./img/4-Christmas-Gift-Budget-Template.jpeg](https://www.etsy.com/listing/1573686091/christmas-gift-budget-template-printable)
-- Target: busy parents, household managers, and people coordinating large family celebrations
 
-Tags:
+**Example**: Printable Expenses and Shopping Trackers, Holiday Savings Lists, Presents and Cards Checklists - [./img/4-Christmas-Gift-Budget-Template.jpeg](https://www.etsy.com/listing/1573686091/christmas-gift-budget-template-printable)
+
+**Target**: busy parents, household managers, and people coordinating large family celebrations
+
+**Tags**:
 - Practical utility
 - Recurring problem
 
@@ -145,10 +144,12 @@ Tags:
 
 - A low-preparation set of differentiated activities for busy end-of-term days.
 - Proposed price: $8.99–$14.99
-- Example: [./img/5-Classroom-Christmas-Party-Games-Activities-Kit.jpeg](https://www.teacherspayteachers.com/Product/Class-Christmas-Party-Activities-Games-and-Holiday-Stations--4203936)
-- Target: primary teachers, substitute teachers, homeschoolers, and classroom aides
 
-Tags:
+**Example**: [./img/5-Classroom-Christmas-Party-Games-Activities-Kit.jpeg](https://www.teacherspayteachers.com/Product/Class-Christmas-Party-Activities-Games-and-Holiday-Stations--4203936)
+
+**Target**: primary teachers, substitute teachers, homeschoolers, and classroom aides
+
+**Tags**:
 - Time-saving
 - Education
 
@@ -156,10 +157,12 @@ Tags:
 
 - A functional handover pack with feeding routines, contacts, medication instructions, and emergency information.
 - Proposed price: $4.99–$7.99
-- Example: [./img/6-Pet-Sitter.jpeg](https://www.etsy.com/au/market/pet_sitter_christmas)
-- Target: pet owners travelling or leaving animals with a sitter over the holidays
 
-Tags:
+**Example**: [./img/6-Pet-Sitter.jpeg](https://www.etsy.com/au/market/pet_sitter_christmas)
+
+**Target**: pet owners travelling or leaving animals with a sitter over the holidays
+
+**Tags**:
 - Practical utility
 - Pet niche
 
@@ -167,10 +170,12 @@ Tags:
 
 - A coordinated visual system for menus, place cards, food labels, dietary notices, and seating.
 - Proposed price: $6.99–$11.99
-- Example: Holiday Name Card, Table Decor and Menu Bundle, Holiday Menu and Place Card Template, Christmas Party Menu Template [./img/7-Holiday-Christmas-Table-Decor-Party-Menu-Template.jpeg](https://www.etsy.com/listing/1610985241/holiday-name-card-and-menu-bundle)
-- Target: people hosting Christmas dinner, Friendsmas, and festive potlucks
 
-Tags:
+**Example**: Holiday Name Card, Table Decor and Menu Bundle, Holiday Menu and Place Card Template, Christmas Party Menu Template [./img/7-Holiday-Christmas-Table-Decor-Party-Menu-Template.jpeg](https://www.etsy.com/listing/1610985241/holiday-name-card-and-menu-bundle)
+
+**Target**: people hosting Christmas dinner, Friendsmas, and festive potlucks
+
+**Tags**:
 - Table styling
 - Hosting
 
@@ -178,10 +183,12 @@ Tags:
 
 - A printable guided memory book with reflection prompts, shared moments, and space for photos.
 - Proposed price: $7.99–$12.99
-- Example: Printable Christmas Memory Book | Printable Christmas Journal | Family Christmas Tradition [./img/8-Printable-Christmas-Memory-Book-Journal.jpeg](https://www.etsy.com/au/listing/1822524510/christmas-memory-book-personalized)
-- Target: best friends, long-distance friends, couples, and families creating annual traditions
 
-Tags:
+**Example**: Printable Christmas Memory Book | Printable Christmas Journal | Family Christmas Tradition [./img/8-Printable-Christmas-Memory-Book-Journal.jpeg](https://www.etsy.com/au/listing/1822524510/christmas-memory-book-personalized)
+
+**Target**: best friends, long-distance friends, couples, and families creating annual traditions
+
+**Tags**:
 - Personalized gifting
 - Emotional value
 
@@ -189,10 +196,12 @@ Tags:
 
 - A bold, coordinated collection of party signs, gift labels, mini-posters, and ornament colouring designs.
 - Proposed price: $5.99–$9.99
-- Example: [./img/9-Christmas-Ornaments-Craft-Activity-printable-decorations-to-color.jpeg](https://www.teacherspayteachers.com/Product/Christmas-Ornaments-Coloring-Craft-Activity-printable-decorations-to-color-14805153)
-- Target: Gen Z shoppers, maximalist decorators, and people planning playful festive parties
 
-Tags:
+**Example**: [./img/9-Christmas-Ornaments-Craft-Activity-printable-decorations-to-color.jpeg](https://www.teacherspayteachers.com/Product/Christmas-Ornaments-Coloring-Craft-Activity-printable-decorations-to-color-14805153)
+
+**Target**: Gen Z shoppers, maximalist decorators, and people planning playful festive parties
+
+**Tags**:
 - Visual trend
 - Distinctive aesthetic
 
@@ -200,10 +209,12 @@ Tags:
 
 - A structured system for gift preferences, spending limits, name drawing, rules, and exchange games.
 - Proposed price: $5.99–$9.99
-- Example: [./img/10-Gift-Exchange-Family-Office-Holiday-Game-for-Christmas-Activity.jpeg](https://www.etsy.com/uk/listing/1566325579/fun-gift-exchange-game-for-christmas)
-- Target: extended families, offices, community groups, and people coordinating gift exchanges
 
-Tags:
+**Example**: [./img/10-Gift-Exchange-Family-Office-Holiday-Game-for-Christmas-Activity.jpeg](https://www.etsy.com/uk/listing/1566325579/fun-gift-exchange-game-for-christmas)
+
+**Target**: extended families, offices, community groups, and people coordinating gift exchanges
+
+**Tags**:
 - Practical utility
 - Group coordination
 
@@ -211,7 +222,7 @@ The mockup images above illustrate the intended product direction; they are not 
 
 ---
 
-The text used for titles in above example products:
+The text used for titles (this info can be used for SEO) in above example products:
 
 Christmas Ornaments
 Christmas Activity
@@ -589,15 +600,7 @@ Generate the final SEO title, 13 tags, description, listing images, file manifes
 
 Etsy's current Creativity Standards allow original seller-designed digital downloads and seller-prompted AI creations, but require disclosure when AI is used to create the listed item. AI prompt bundles themselves are not eligible under the stated standards. The seller remains responsible for originality and compliance.
 
-Example: [image](https://www.google.com/s2/favicons?domain=https://www.etsy.com\&sz=32)
-
-Etsy
-
-+1
-
-
-
-Important implementation rules:
+**Important implementation rules**:
 
 - AI disclosure: Include a clear statement in the listing description, such as “This product includes original artwork and/or content created with AI assistance and curated and designed by the seller.”
 
@@ -605,17 +608,9 @@ Important implementation rules:
 
 - Titles: Etsy's April 2026 guidance favours clear, descriptive, scannable titles, generally under 15 words where possible. Avoid repetitive keyword stuffing.
 
-Example: [image](https://www.google.com/s2/favicons?domain=https://www.etsy.com\&sz=32)
-
-Etsy
-
 - Tags: Use all 13 relevant tags, prioritising specific buyer-intent phrases. Use the title, attributes, description, and first listing image together to communicate relevance.
 
 - Digital listings: Etsy allows up to five digital files per listing. Package related pages into organised PDFs or ZIP files as needed, and explain the contents clearly.
-
-Example: [image](https://www.google.com/s2/favicons?domain=https://help.etsy.com\&sz=32)
-
-Etsy Help
 
 - Personalisation: If the buyer needs to edit a name or date, specify exactly how. Do not imply that the seller will personally customise a file if the product is a self-editable template.
 

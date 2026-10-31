@@ -1,5 +1,7 @@
 # Prompts
 
+niche hyper-targeting
+
 ## 50 different digital product on Etsy that are "niche" products with "high" demand and "low" competition
 
 I want you to do extensive Market research, systematically collect, analyze, and interpret information about the target market, consumers, competitors, etc on 50 different digital product on Etsy that are "niche" products with "high" demand and "low" competition, and can be created using AI Agentic tools. Also give ideas of similar products that might be almost non-existing, and why those products would be good and will attract buyers and will do good sales. Also give best titles, categories, labels to put those ideas/prodcuts under, and some ideas on what the text and image content would be good fo those digital product and attract buyers. Also ideas on wht the titles, cover images, etc would attract people
@@ -23,6 +25,13 @@ It could be any products with potential, but ideally, products that are "niche" 
 
 ---
 
+---
+
+Since I sell my books on Amazon/Etsy/ebay/KDP/AppleBooks/etc, and since book covers are the first impression, I need you to add to the above Klein-4B setup or modify any files you created above (to make the cover-generation compatable with the Klein setup), the tools/skills/agents/rules/standards/etc needed to design awesome covers for the books.
+
+Create a comprehensive setup for whatever skills, agents, standards, rules, scripts etc that would be needed for Claude to autonomously create the best book covers (including front cover, back cover, and cover-spine). If there are Claude built in agents for advertizing, media, marketing, designer, publishing, etc, then refer to those skills in the requirements, otherwise create new agents and/or skills and/or standards etc
+
+---
 
 ---
 ---
