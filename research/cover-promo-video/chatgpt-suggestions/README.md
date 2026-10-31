@@ -72,12 +72,6 @@ Your Etsy template must be designed as a silent product-demonstration video, not
 
 Etsy also recommends showcasing product details, answering common buyer questions and demonstrating products in use. These recommendations are particularly applicable to digital books and printable collections.&#x20;
 
-[image](https://www.google.com/s2/favicons?domain=https://www.etsy.com\&sz=32)
-
-Etsy
-
-
-
 ## 3. Deliverables
 
 I've created two Markdown documents and packaged them together.
@@ -134,12 +128,6 @@ Third: keep template selection evidence-based.
 Generate six initial candidates for each channel, evaluate them, select four provisional winners, and subsequently validate their performance using actual marketing metrics.
 
 One technical caveat is documented in the blueprint: the public `draw-things-cli` documentation does not currently establish a supported video-generation CLI command, despite video generation being supported in Draw Things itself. The implementation must verify this rather than assume an interface exists.&#x20;
-
-[image](https://www.google.com/s2/favicons?domain=https://github.com\&sz=32)
-
-GitHub+2
-
-
 
 My suggested starting point: Give ClaudeCode both documents, start with repository discovery, and implement Phases 0–2 first. That establishes the core renderer and a production-quality Etsy pipeline before expanding into social advertising and AI-generated footage.
 
