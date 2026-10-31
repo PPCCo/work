@@ -1,0 +1,20 @@
+{
+  "_comment": "DRAFT. Phase 0 MUST replace lumenImportPrefixes with the package/import paths confirmed by the lumen-knowledgebase MCP, and adjust aliases to the repo tsconfig paths. '@cba/lumen-ui' comes from an example and is UNVERIFIED.",
+  "lumenImportPrefixes": ["@cba/lumen-ui"],
+  "allowedImportPrefixes": ["react", "react/", "react-dom", "next/", "next"],
+  "storyExtraImportPrefixes": ["@storybook/", "storybook/"],
+  "allowedAliasPrefixes": ["@/", "~/"],
+  "forbiddenRawElements": ["button", "input", "select", "textarea"],
+  "forbidInlineStyle": true,
+  "forbidHexColors": true,
+  "forbidRawPx": true,
+  "forbidAny": true,
+  "warnOnRawLayoutElements": true,
+  "warnOnClassName": true,
+  "requireGeneratedHeader": true,
+  "globs": {
+    "components": ["src/components/**/*.tsx"],
+    "layouts": ["src/layouts/**/*.tsx"],
+    "screens": ["src/screens/**/*.tsx"]
+  }
+}

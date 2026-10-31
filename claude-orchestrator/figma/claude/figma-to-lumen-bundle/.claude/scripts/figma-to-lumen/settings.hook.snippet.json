@@ -1,0 +1,16 @@
+{
+  "_comment": "MERGE into the existing .claude/settings.json 'hooks' section; do not replace the file. Confirm the hook schema against the installed Claude Code version in Phase 0. If it differs, adapt and re-run selftest.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/.claude/scripts/figma-to-lumen/hook-validate-on-write.mjs\""
+          }
+        ]
+      }
+    ]
+  }
+}

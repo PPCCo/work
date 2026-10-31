@@ -1,0 +1,20 @@
+{
+  "_comment": "FIXTURE ONLY",
+  "fileKey": "abc123",
+  "entries": [
+    {
+      "name": "Demo",
+      "kind": "component",
+      "status": "generated",
+      "figmaNodeIds": ["1:2"],
+      "variants": ["Default", "Loading"],
+      "files": {
+        "component": "src/components/Demo/Demo.tsx",
+        "story": "src/components/Demo/Demo.stories.tsx"
+      }
+    }
+  ],
+  "gaps": [
+    { "figmaNodeId": "2:1", "name": "Legacy Banner", "reason": "No Lumen equivalent found via MCP search", "suggestion": "Ask designer to replace with Lumen banner pattern" }
+  ]
+}

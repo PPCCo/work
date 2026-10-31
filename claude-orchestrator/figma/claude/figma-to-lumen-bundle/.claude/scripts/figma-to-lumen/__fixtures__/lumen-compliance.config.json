@@ -1,0 +1,15 @@
+{
+  "_comment": "FIXTURE ONLY. Used by selftest.mjs to test the validator. Not real Lumen API.",
+  "lumenImportPrefixes": ["@fixture/lumen"],
+  "allowedImportPrefixes": ["react", "next/"],
+  "storyExtraImportPrefixes": ["@storybook/"],
+  "allowedAliasPrefixes": ["@/"],
+  "forbiddenRawElements": ["button", "input", "select", "textarea"],
+  "forbidInlineStyle": true,
+  "forbidHexColors": true,
+  "forbidRawPx": true,
+  "forbidAny": true,
+  "warnOnRawLayoutElements": true,
+  "warnOnClassName": true,
+  "requireGeneratedHeader": true
+}

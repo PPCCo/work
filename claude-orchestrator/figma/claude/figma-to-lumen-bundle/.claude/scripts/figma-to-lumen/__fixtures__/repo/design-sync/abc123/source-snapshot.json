@@ -1,0 +1,10 @@
+{
+  "_comment": "FIXTURE ONLY",
+  "fileKey": "abc123",
+  "nodeId": null,
+  "inventory": [
+    { "id": "1:2", "name": "Demo", "type": "COMPONENT_SET", "classification": "component", "expected": true },
+    { "id": "1:9", "name": "Cover", "type": "FRAME", "classification": "ignored", "ignoreReason": "Designer cover page, not UI", "expected": false },
+    { "id": "2:1", "name": "Legacy Banner", "type": "FRAME", "classification": "screen", "expected": true }
+  ]
+}

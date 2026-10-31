@@ -1,0 +1,11 @@
+{
+  "_comment": "FIXTURE ONLY. Component and prop names are fictional placeholders for testing the validator. They are NOT the real Lumen API.",
+  "fileKey": "abc123",
+  "components": {
+    "Button": { "import": "@fixture/lumen", "props": ["variant", "size", "onClick", "disabled", "loading"], "mcpTool": "fixture/get_component_specs", "query": "Button" },
+    "Stack": { "import": "@fixture/lumen", "props": ["gap", "direction", "align"], "mcpTool": "fixture/get_component_specs", "query": "Stack" },
+    "Text": { "import": "@fixture/lumen", "props": ["variant", "color"], "mcpTool": "fixture/get_component_specs", "query": "Text" }
+  },
+  "tokens": {},
+  "gaps": []
+}

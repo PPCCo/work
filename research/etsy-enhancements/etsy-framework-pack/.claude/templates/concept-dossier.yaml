@@ -1,0 +1,135 @@
+# Concept dossier — one product IDEA researched end-to-end before /product-new.
+# Produced by /idea-research. Lives at research/ideas/<slug>/dossier.yaml.
+# Rules:
+#  - Every non-trivial claim carries evidence_refs (ids in findings.json, e.g. F-012).
+#  - Anything not verified by a Tier 0-3 source is labelled `unverified` and says why.
+#  - Numbers (searches, sales, prices, competitor counts) are NEVER invented. Unknown = null.
+#  - Craft literals (page size, counts, style) are ADVISORY; design policy decides at init (rule 20).
+
+dossier_id: "idea-001"
+schema_version: 1
+idea_input: ""                 # exact text the human typed after /idea-research
+slug: ""
+researched_on: ""              # ISO date
+channel_profile: etsy          # etsy | gumroad | kdp | multi
+status: draft                  # draft | ready-for-human | approved-for-product-new | rejected | needs-data
+
+# ---------------------------------------------------------------- 1. Classification
+classification:
+  working_title: ""
+  product_family: ""           # e.g. party-kit | planner | keepsake-kit | game-pack | wall-art | template-pack
+  occasion_or_use_case: ""     # e.g. Friendsmas party, craft night, pet keepsake
+  audience_band: ""            # must map to a valid age_bands.json key
+  buyer_vs_user: ""            # who pays vs who uses (often different: host buys, guests use)
+  seasonality:
+    is_seasonal: false
+    peak_window: ""            # e.g. "Nov 15 - Dec 20"
+    recommended_listing_by: "" # date; derived from lead-time assumption below
+    lead_time_assumption: ""   # e.g. "list >= 6 weeks before peak" -> mark unverified
+    lead_time_verified: false
+
+# ---------------------------------------------------------------- 2. Validation
+validation:
+  verdict: ""                  # GO | PIVOT | NO-GO | NEEDS-DATA
+  confidence: ""               # low | medium | high  (high requires >=2 verified independent sources)
+  verdict_rationale: ""
+  demand:
+    signals: []                # [{claim, source_ref, tier, verified, captured_at}]
+    search_term_clusters: []   # [{cluster, example_terms, evidence_ref, volume: null}]
+    gaps_vs_assumptions: []    # what we would need to see to be confident
+  competition:
+    saturation: ""             # low | medium | high | unknown
+    reference_listings: []     # [{url, what_they_offer, price_if_visible, weaknesses}] (observation only; no copying)
+    top_complaints_in_reviews: []   # [{complaint, evidence_ref}] -> differentiation fuel
+    differentiation_options: []     # [{angle, why_defensible, effort}]
+  risks: []                    # [{risk, severity, mitigation}]
+  human_data_requests: []      # pointers into queries.md for blocked sources (Etsy search, eRank, Trends)
+
+# ---------------------------------------------------------------- 3. Positioning
+positioning:
+  promise: ""                  # one sentence, buyer outcome not product features
+  buyer_job_to_be_done: ""
+  proof_points: []             # only claims verifiable from the built artifacts
+  not_for: []                  # honest exclusions (reduces refunds/complaints)
+  tone_register: ""
+  claims_to_avoid: []
+
+# ---------------------------------------------------------------- 4. Offer architecture
+offer:
+  main_product: ""
+  tiers: []                    # [{name, contents, price_hypothesis (nullable), purpose: core|upsell|bundle}]
+  files:                       # what the buyer actually downloads
+    - name: ""
+      format: ""               # pdf-print | pdf-fillable | png | svg | docx | pptx | canva-link-pdf
+      page_size: ""            # US Letter | A4 | both
+      purpose: ""
+      editable: false
+      licensing_notes: ""      # must resolve against digital-licensing-contract
+  editable_delivery:
+    wanted: false
+    method: ""                 # canva-template-link | docx | pptx | google-slides-copy | none
+    licensing_status: unknown  # clear | blocked-pro-content | unknown
+    evidence_refs: []
+  buyer_instructions_file: true   # a how-to-use PDF is required (see offer-architecture-contract)
+  license_terms_file: true        # personal vs commercial use stated
+
+# ---------------------------------------------------------------- 5. Content plan (SUGGESTED, human-approved before generation)
+content_plan:
+  rationale: ""
+  items:
+    - id: "C-001"
+      title: ""
+      type: ""                 # game | invitation | sign | worksheet | checklist | tag | tracker | craft-template ...
+      why_included: ""         # tied to a demand signal, review complaint, or buyer job
+      evidence_refs: []
+      generation_method: ""    # code | llm-draft+review | human-design | template-fill
+      rights_complexity: low   # low | moderate | high
+      est_pages_or_units: null
+  total_estimate: null
+  cut_candidates: []           # items to drop first if scope must shrink
+  approval:
+    required: true
+    status: pending            # pending | approved | revised
+
+# ---------------------------------------------------------------- 6. SEO and listing research (feeds product-listing-kit)
+seo:
+  primary_keyword: ""
+  title_candidates: []         # [{text, char_count, keyword_front_loaded, evidence_refs}]
+  tag_candidates: []           # [{tag, char_count, intent: buyer|occasion|style|format, evidence_ref}]  (13 max, each <= 20 chars)
+  attribute_candidates: {}     # Etsy attributes (occasion, holiday, theme, etc.) -> verify against live form
+  category_path_candidates: [] # verify against live Etsy category tree before listing gate
+  trademark_flags: []          # terms needing human review
+  verified_against_live_etsy: false
+
+# ---------------------------------------------------------------- 7. Visual direction
+visual:
+  style_basis: ""              # direction in words; NO living-artist names (rule 07)
+  palette_and_type_notes: ""
+  cover_thumbnail_concept: ""  # the first image: must read at thumbnail size
+  listing_image_plan: []       # [{slot, purpose: hero|contents|how-it-works|size-and-format|use-in-context|license, concept}]
+  font_and_asset_sources: []   # each must get an asset source record (source-and-claim-contract)
+  originality_notes: ""
+
+# ---------------------------------------------------------------- 8. Rights, compliance, platform
+compliance:
+  ai_disclosure_required: true
+  ai_disclosure_wording_ref: ""    # points to approved wording; never improvised
+  trademark_ip_screen: []          # [{term_or_theme, concern, action}]
+  child_safety_notes: ""           # scissors/heat/supervision wording where crafts involve them
+  platform_policy_checked_on: ""   # date of etsy-policy-check run
+  platform_policy_findings: []
+
+# ---------------------------------------------------------------- 9. Economics and effort (advisory)
+economics:
+  pricing_hypothesis: null     # optional, never presented as fact
+  production_effort: ""        # low | moderate | high
+  expected_human_touchpoints: []
+  portfolio_fit: ""            # how it cross-sells with existing shop products
+  bundle_or_series_potential: ""
+
+# ---------------------------------------------------------------- 10. Handoff
+handoff:
+  recommended_next_command: ""       # e.g. /product-new "<title>" ... seeded from this dossier
+  inputs_for_product_new: {}         # working_title, audience, product_type, formats (authoritative human inputs)
+  open_questions: []
+  unverified_items: []               # everything a human should double-check
