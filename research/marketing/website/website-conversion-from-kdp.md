@@ -70,4 +70,79 @@ Can you check the Etsy & KDP Rules and restrictions, and how best to avoid break
 
 Also list all the different types of offers and strategies other sellers have, for converting KDP & Etsy buyers to registered email subscribers, monthly/yearly packages, referrals, etc. If possible, also include some stats on proven methods.
 
+# Claude Response
 
+I have the search results, which only returned links. I'll read the key policy pages directly.
+
+I need to correct something from my last answer. I said a bonus link inside an Etsy file is "common practice". Etsy's own policy text says otherwise, so for Etsy I'd now treat it as off-limits.
+
+## Etsy
+
+- **QR codes are named as an example.** Etsy's [off-platform policy](https://www.etsy.com/legal/policy/off-platform-transactions/1254654515806) says taking communications and transactions off-platform is not allowed. Its examples include "Using a QR code to direct users off of the Etsy platform."
+- **Etsy's wording doesn't say whether a free email-signup QR counts.** I found no Etsy text that permits it, and the [seller policy](https://www.etsy.com/legal/sellers/) also bars content that would "Encourage or facilitate an off-platform transaction." A paid membership or bundle on your own site is arguably that.
+- **Buyers' emails are off-limits.** Per Etsy's [seller policy](https://www.etsy.com/legal/sellers/), you "may not add any Etsy member to your email or physical mailing list" without consent. Buyer contact details may only be used for Etsy-related communications.
+- **Referral codes.** You can't create a listing "for the purpose of sharing a referral code."
+- **Practical rule:** put no links, QR codes or URLs in Etsy listings, images, delivered files or messages. Etsy buyers can only become subscribers by finding you elsewhere, such as Pinterest, Instagram or search, and opting in themselves.
+
+## KDP
+
+- **Eligible links.** The official [Kindle eBook hyperlink guidelines](https://kdp.amazon.com/en_US/help/topic/GQ6JQ7FM6C72HE4X) allow external links that add value, with "printable ancillary materials", topical websites and book-related social media as examples.
+- **Prohibited links.** The same page bans rival eBook stores and "forms requesting customer information". A signup page is such a form, so this is a real grey area. It's about eBooks, not print.
+- **No official print-interior rule found.** The [content guidelines](https://kdp.amazon.com/en_US/help/topic/G200672390) I read don't mention links. They do bar content "typically disappointing to customers". An unsourced community answer says [QR codes to your website are fine](https://community.selfpublishingtitans.com/questions/D1y5/what-are-kdp-rules-on-links).
+- **Dated secondhand guidance.** A [2016 article](https://selfpublishingadvice.org/amazon-rules-for-authors/) relays that Amazon said "links to mailing list signups are fine". The condition is that readers aren't required to submit a form to read the book they bought. It also says bonus content must be "relevant and not disruptive". It's old, and enforcement was inconsistent.
+- **Not in the product page.** Amazon's [A+ Content page](https://kdp.amazon.com/en_US/help/topic/G4WB7VPPEAREHAAD) bans QR codes, off-site redirects and words like "free" and "bonus". Per the 2016 article, descriptions can't ask for reviews or promote other products.
+
+## How to avoid breaking the rules
+
+1. Make the book complete without the link. Keep answer keys inside the book. Offer extra content (bonus pages, large-print version, seasonal pack) through the link, so nothing the reader needs is behind an email form.
+2. Put one relevant offer on one back-matter page, with descriptive text instead of "click here". Don't link to other retailers or to a page selling the same book.
+3. Use a redirect on your own domain, such as `yourdomain.com/bonus-bookname`. A printed QR can't be changed ([Kindlepreneur](https://kindlepreneur.com/qr-code-generator-for-authors/)), and this lets you fix links and count scans.
+4. Don't tie any offer to reviews. I didn't check Amazon's review policy, so confirm it before testing anything.
+5. Email compliance for US subscribers ([FTC CAN-SPAM guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business)):
+   - accurate headers and subject lines
+   - a clear ad disclosure
+   - a valid postal address
+   - an unsubscribe method, honored within 10 business days
+   - penalties up to $53,088 per violating email
+   - Use double opt-in. That's my recommendation, since Etsy's consent rule is stricter than CAN-SPAM's. Aim the signup at adults, not children (COPPA wasn't researched).
+6. Test on 3–5 books first. A policy sweep can remove titles.
+
+## Offer types sellers use, and what the evidence says
+
+| Type | Examples | Evidence found |
+|---|---|---|
+| Lead magnet | Bonus pages, extra puzzles, larger print version, seasonal pack, printable calendar | Rates below |
+| Free monthly page or puzzle | Newsletter with one new page | None specific |
+| Paid club | Weekly or monthly pages. Gumroad listings: [$5/month](https://suzyleelo.gumroad.com/l/coloring-pages-subscription) (page price data conflicts), [$9.97/month with a 1-week trial](https://easycreativelearning.gumroad.com/l/coloringpagesweekly). One search result showed a $97/year club (unopened) | No member counts or churn found |
+| Referral | "Share a pack, both get a pack" | Below |
+| Contests / community | Finished-page gallery, monthly challenge | Giveaways convert well but subscribers are less engaged long-term ([Opensend](https://www.opensend.com/post/email-opt-in-rate-statistics-ecommerce)) |
+| Series cross-sell | "Next book" page | None |
+
+**Opt-in rates.** These are website-visitor rates, not print QR scans.
+- Standard popups convert about 4–5%, and the best about 20%.
+- Average landing pages convert about 6–7% (a landing-page-vs-popup comparison that isn't like-for-like).
+- Gated ebooks convert under 0.9% (HubSpot, 2024, B2B).
+- These are cited by [Opensend](https://www.opensend.com/post/email-opt-in-rate-statistics-ecommerce) and [Shno](https://www.shno.co/marketing-statistics/lead-magnet-conversion-statistics).
+
+**The missing number.** I found no data on how many print readers scan a QR code, and I'd call my earlier "3% signup" guess unsupported. As an illustration only: if 5% of readers scan and 20% of those sign up, that's about 1% of buyers. Both inputs are guesses. Your redirect scan counts will replace them.
+
+**Referral stats** (undated, vendor-aggregated, via [Rivo](https://www.rivo.io/blog/referral-program-statistics)):
+- 83% of satisfied customers say they'd refer, but only 29% do.
+- The average referral rate is 2.35%.
+- Rewarding both sides raises participation 29%.
+
+**Membership.** I found no real churn data. The only figure is an unsourced "under 5% monthly is good" ([Indie Hackers](https://www.indiehackers.com/post/what-is-a-good-churn-rate-for-membership-businesses-67231afb93)).
+- Platform fees per [Checkout Page](https://checkoutpage.com/blog/how-to-sell-memberships): Patreon 10%, Ko-fi 5%, Payhip 5% on the free plan.
+- Stripe is 2.9% + 30¢ plus 0.7% for recurring billing.
+- By my arithmetic, a $5 charge loses about 10% to Stripe and a $9.97 charge about 7%.
+
+I couldn't verify:
+- Etsy's full policy text, which I read through a summarizing tool
+- Etsy's 2024 marketing-crackdown coverage, because the EcommerceBytes pages are defunct
+- Amazon's review rules
+- Australia's Spam Act
+- US state privacy laws
+
+For anything high-stakes, ask Etsy or KDP support to confirm in writing.
+
+I can draft the back-matter bonus page, the redirect and scan-tracking setup, and the opt-in email sequence for your first 3–5 books.

@@ -51,11 +51,11 @@ The workflow is not complete when Claude has written files. It must build the ap
 
 ## Recommended execution
 
-Give Claude Code these three inputs:
+Claude Code should use these three inputs:
 
-1. The master prompt above
+1. The master prompt `chatgpt-mega-prompt.md`
 
-2. Your UI designer's Figma file URL
+2. UI designer's Figma file URL
 
 3. The existing Next.js application repository and `.claude/` framework
 
